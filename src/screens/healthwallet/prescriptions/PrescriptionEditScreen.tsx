@@ -7,110 +7,141 @@ import {
   StatusBar,
   TouchableOpacity,
   TextInput,
-  Switch,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTheme } from '../../../theme/ThemeProvider';
 import BottomNavBar from '../../../components/BottomNavBar';
 
 export default function PrescriptionEditScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
-  const { theme } = useTheme();
-  const c = theme.colors;
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
   const [timeline, setTimeline] = useState('');
   const [shareFamily, setShareFamily] = useState(true);
-  const [hasFile] = useState(true);
 
   return (
-    <View style={[styles.container, { backgroundColor: c.background }]}>
+    <View style={[styles.container, { backgroundColor: '#050505' }]}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
 
-      <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
+      {/* Header */}
+      <View style={[styles.header, { paddingTop: insets.top + 28 }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={24} color={c.text} />
+          <Ionicons name="chevron-back" size={22} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: c.text, fontFamily: 'Inter' }]}>Prescription</Text>
-        <View style={{ width: 24 }} />
+        <Text style={styles.headerTitle}>Prescription</Text>
+        <View style={{ width: 22 }} />
       </View>
 
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 120 }}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: 120 }]}
         showsVerticalScrollIndicator={false}
       >
-        {/* Modal Card */}
-        <View style={[styles.modalCard, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}>
+        {/* Glass modal card */}
+        <View style={styles.modalCard}>
+          {/* Close button */}
           <TouchableOpacity style={styles.closeBtn} onPress={() => navigation.goBack()}>
-            <Ionicons name="close" size={16} color={c.textMuted} />
+            <Ionicons name="close" size={15.77} color="rgba(255,255,255,0.6)" />
           </TouchableOpacity>
-          <Text style={[styles.protocolLabel, { color: c.primary, fontFamily: 'Inter' }]}>SYSTEM PROTOCOL</Text>
-          <Text style={[styles.modalTitle, { color: c.text, fontFamily: 'Inter' }]}>Edit{'\n'}Prescription</Text>
+
+          {/* Header */}
+          <Text style={styles.protocolLabel}>SYSTEM PROTOCOL</Text>
+          <Text style={styles.modalTitle}>Edit{'\n'}Prescription</Text>
 
           {/* Form Fields */}
           <View style={styles.form}>
+            {/* Prescription Name */}
             <View style={styles.fieldGroup}>
-              <Text style={[styles.fieldLabel, { color: c.textSecondary, fontFamily: 'Inter' }]}>Prescription Name</Text>
-              <View style={[styles.inputWrap, { backgroundColor: c.inputBackground, borderColor: c.inputBorder }]}>
-                <TextInput style={[styles.input, { color: c.text, fontFamily: 'Inter' }]} value={name} onChangeText={setName} placeholderTextColor={c.inputPlaceholder} placeholder="Enter name" />
+              <Text style={styles.fieldLabel}>Prescription Name</Text>
+              <View style={styles.inputWrap}>
+                <TextInput
+                  style={styles.input}
+                  value={name}
+                  onChangeText={setName}
+                  placeholderTextColor="rgba(255,255,255,0.15)"
+                  placeholder=""
+                />
               </View>
             </View>
 
+            {/* Date */}
             <View style={styles.fieldGroup}>
-              <Text style={[styles.fieldLabel, { color: c.textSecondary, fontFamily: 'Inter' }]}>Date</Text>
-              <View style={[styles.inputWrap, { backgroundColor: c.inputBackground, borderColor: c.inputBorder }]}>
-                <TextInput style={[styles.input, { color: c.text, fontFamily: 'Inter' }]} value={date} onChangeText={setDate} placeholderTextColor={c.inputPlaceholder} placeholder="Select date" />
+              <Text style={styles.fieldLabel}>Date</Text>
+              <View style={styles.inputWrap}>
+                <TextInput
+                  style={styles.input}
+                  value={date}
+                  onChangeText={setDate}
+                  placeholderTextColor="rgba(255,255,255,0.15)"
+                  placeholder=""
+                />
               </View>
             </View>
 
+            {/* Timeline */}
             <View style={styles.fieldGroup}>
-              <Text style={[styles.fieldLabel, { color: c.textSecondary, fontFamily: 'Inter' }]}>Timeline</Text>
-              <View style={[styles.inputWrap, { backgroundColor: c.inputBackground, borderColor: c.inputBorder }]}>
-                <TextInput style={[styles.input, { color: c.text, fontFamily: 'Inter' }]} value={timeline} onChangeText={setTimeline} placeholderTextColor={c.inputPlaceholder} placeholder="Enter timeline" />
+              <Text style={styles.fieldLabel}>Timeline</Text>
+              <View style={styles.inputWrap}>
+                <TextInput
+                  style={styles.input}
+                  value={timeline}
+                  onChangeText={setTimeline}
+                  placeholderTextColor="rgba(255,255,255,0.15)"
+                  placeholder=""
+                />
               </View>
             </View>
 
+            {/* Prescription Files */}
             <View style={styles.filesSection}>
               <View style={styles.filesHeader}>
-                <Text style={[styles.filesLabel, { color: c.textSecondary, fontFamily: 'Inter' }]}>PRESCRIPTION FILES</Text>
+                <Text style={styles.filesLabel}>PRESCRIPTION FILES</Text>
                 <TouchableOpacity style={styles.addFileBtn}>
-                  <Ionicons name="add" size={10} color={c.primary} />
-                  <Text style={[styles.addFileText, { color: c.primary, fontFamily: 'Inter' }]}>ADD NEW FILE</Text>
+                  <Ionicons name="add" size={9} color="#6FFB85" />
+                  <Text style={styles.addFileText}>ADD NEW FILE</Text>
                 </TouchableOpacity>
               </View>
-              {hasFile && (
-                <View style={[styles.fileRow, { backgroundColor: c.cardElevated, borderColor: c.cardGlassBorder }]}>
-                  <View style={styles.fileLeft}>
-                    <Ionicons name="document-outline" size={18} color={c.textSecondary} />
-                    <Text style={[styles.fileName, { color: c.text, fontFamily: 'Inter' }]}>Metformin_Scan.pdf</Text>
-                  </View>
-                  <TouchableOpacity style={{ opacity: 0.4 }}>
-                    <Ionicons name="trash-outline" size={16} color={c.text} />
-                  </TouchableOpacity>
+              <View style={styles.fileRow}>
+                <View style={styles.fileLeft}>
+                  <Ionicons name="document-outline" size={18} color="#FFFFFF" />
+                  <Text style={styles.fileName}>Metformin_Scan.pdf</Text>
                 </View>
-              )}
+                <TouchableOpacity style={{ opacity: 0.4 }}>
+                  <Ionicons name="trash-outline" size={16} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
             </View>
 
-            <View style={[styles.toggleCard, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}>
+            {/* Share with family toggle */}
+            <View style={styles.toggleCard}>
               <View style={styles.toggleLeft}>
-                <View style={[styles.toggleIconWrap, { backgroundColor: c.accentSoft }]}>
-                  <Ionicons name="people-outline" size={16} color={c.primary} />
+                <View style={styles.toggleIconWrap}>
+                  <Ionicons name="people-outline" size={14.6} color="#6FFB85" />
                 </View>
                 <View>
-                  <Text style={[styles.toggleTitle, { color: c.text, fontFamily: 'Inter' }]}>Share with your family</Text>
-                  <Text style={[styles.toggleSub, { color: c.textSecondary, fontFamily: 'Inter' }]}>Grant access to trusted{'\n'}members</Text>
+                  <Text style={styles.toggleTitle}>Share with your family</Text>
+                  <Text style={styles.toggleSub}>Grant access to trusted{'\n'}members</Text>
                 </View>
               </View>
-              <Switch value={shareFamily} onValueChange={setShareFamily} trackColor={{ false: c.cardElevated, true: c.primary }} thumbColor={shareFamily ? c.textOnPrimary : c.text} />
+              <TouchableOpacity
+                style={[styles.switchTrack, { backgroundColor: shareFamily ? '#6FFB85' : '#333' }]}
+                onPress={() => setShareFamily(!shareFamily)}
+                activeOpacity={0.8}
+              >
+                <View style={[styles.switchThumb, shareFamily ? { right: 3.42 } : { left: 3.42 }]} />
+              </TouchableOpacity>
             </View>
 
+            {/* Action Footer */}
             <View style={styles.actionFooter}>
-              <TouchableOpacity style={[styles.deleteBtn, { backgroundColor: c.error + '0D', borderColor: c.error }]}>
-                <Text style={[styles.deleteBtnText, { color: c.error, fontFamily: 'Inter' }]}>DELETE Prescription</Text>
+              <TouchableOpacity style={styles.deleteBtn}>
+                <Text style={styles.deleteBtnText}>DELETE Prescription</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.saveBtn, { backgroundColor: c.primary }]} onPress={() => navigation.goBack()}>
-                <Text style={[styles.saveBtnText, { color: c.textOnPrimary, fontFamily: 'Inter' }]}>SAVE CHANGES</Text>
+              <TouchableOpacity
+                style={styles.saveBtn}
+                activeOpacity={0.8}
+                onPress={() => navigation.goBack()}
+              >
+                <Text style={styles.saveBtnText}>SAVE CHANGES</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -128,36 +159,194 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingBottom: 12,
+    paddingHorizontal: 29,
+    paddingBottom: 16,
   },
-  backBtn: { width: 24, alignItems: 'center' },
-  headerTitle: { fontSize: 28, fontWeight: '600' },
-  modalCard: { marginHorizontal: 22, borderRadius: 33, borderWidth: 1, padding: 33, position: 'relative' },
-  closeBtn: { position: 'absolute', top: 24, right: 24, zIndex: 10 },
-  protocolLabel: { fontSize: 12, fontWeight: '400', marginBottom: 18 },
-  modalTitle: { fontSize: 34, fontWeight: '700', letterSpacing: -0.68, marginBottom: 26 },
+  backBtn: { width: 22, alignItems: 'center' },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: '600',
+    fontFamily: 'Inter',
+    color: '#FFFFFF',
+  },
+  scrollContent: { paddingHorizontal: 0 },
+  modalCard: {
+    marginHorizontal: 22,
+    borderRadius: 33,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: 'rgba(23,23,23,0.4)',
+    paddingTop: 33,
+    paddingBottom: 49,
+    paddingHorizontal: 33,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  closeBtn: {
+    position: 'absolute',
+    top: 24,
+    right: 24,
+    zIndex: 10,
+    padding: 4,
+  },
+  protocolLabel: {
+    fontSize: 12,
+    fontWeight: '400',
+    fontFamily: 'Inter',
+    color: '#6FFB85',
+    marginBottom: 18,
+  },
+  modalTitle: {
+    fontSize: 34,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    color: '#FFFFFF',
+    letterSpacing: -0.68,
+    lineHeight: 40,
+    marginBottom: 26,
+  },
   form: { gap: 24 },
-  fieldGroup: { gap: 8 },
-  fieldLabel: { fontSize: 16, fontWeight: '500', paddingHorizontal: 4 },
-  inputWrap: { borderRadius: 33, borderWidth: 1, padding: 17 },
-  input: { fontSize: 16, fontWeight: '500', height: 24 },
+  fieldGroup: { gap: 14 },
+  fieldLabel: {
+    fontSize: 16,
+    fontWeight: '500',
+    fontFamily: 'Inter',
+    color: '#AAAAAA',
+    paddingHorizontal: 4,
+  },
+  inputWrap: {
+    borderRadius: 33,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: 'rgba(23,23,23,0.4)',
+    padding: 17,
+    height: 58,
+    justifyContent: 'center',
+  },
+  input: {
+    fontSize: 16,
+    fontWeight: '500',
+    fontFamily: 'Inter',
+    color: '#FFFFFF',
+  },
   filesSection: { gap: 16 },
-  filesHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  filesLabel: { fontSize: 16, fontWeight: '500' },
+  filesHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  filesLabel: {
+    fontSize: 16,
+    fontWeight: '500',
+    fontFamily: 'Inter',
+    color: '#AAAAAA',
+  },
   addFileBtn: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  addFileText: { fontSize: 10, fontWeight: '800', letterSpacing: 1 },
-  fileRow: { borderRadius: 33, borderWidth: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 21, paddingVertical: 17 },
+  addFileText: {
+    fontSize: 10,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#6FFB85',
+    letterSpacing: 1,
+  },
+  fileRow: {
+    borderRadius: 33,
+    borderWidth: 1,
+    borderColor: 'rgba(68,73,51,0.1)',
+    backgroundColor: 'rgba(31,31,31,0.5)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 21,
+    paddingVertical: 17,
+  },
   fileLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  fileName: { fontSize: 14, fontWeight: '200', letterSpacing: 0.35 },
-  toggleCard: { borderRadius: 33, borderWidth: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 18 },
-  toggleLeft: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  toggleIconWrap: { width: 41, height: 41, borderRadius: 999, alignItems: 'center', justifyContent: 'center' },
-  toggleTitle: { fontSize: 14, fontWeight: '500' },
-  toggleSub: { fontSize: 12, lineHeight: 16 },
-  actionFooter: { gap: 16, marginTop: 8 },
-  deleteBtn: { height: 48, borderRadius: 40, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
-  deleteBtnText: { fontSize: 14, fontWeight: '800', textTransform: 'capitalize' },
-  saveBtn: { height: 48, borderRadius: 33, alignItems: 'center', justifyContent: 'center' },
-  saveBtnText: { fontSize: 14, fontWeight: '800', textTransform: 'uppercase' },
+  fileName: {
+    fontSize: 14,
+    fontWeight: '200',
+    fontFamily: 'Manrope',
+    color: '#FFFFFF',
+    letterSpacing: 0.35,
+  },
+  toggleCard: {
+    borderRadius: 33,
+    borderWidth: 0.85,
+    borderColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: 'rgba(23,23,23,0.4)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 17.93,
+  },
+  toggleLeft: { flexDirection: 'row', alignItems: 'center', gap: 13.66 },
+  toggleIconWrap: {
+    width: 40.82,
+    height: 40.98,
+    borderRadius: 999,
+    backgroundColor: 'rgba(85,248,115,0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  toggleTitle: {
+    fontSize: 13.66,
+    fontWeight: '500',
+    fontFamily: 'Inter',
+    color: '#FFFFFF',
+  },
+  toggleSub: {
+    fontSize: 12,
+    fontFamily: 'Inter',
+    color: '#ABABAB',
+    lineHeight: 16,
+  },
+  switchTrack: {
+    width: 40.85,
+    height: 20.49,
+    borderRadius: 999,
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  switchThumb: {
+    width: 13.66,
+    height: 13.66,
+    borderRadius: 999,
+    backgroundColor: '#141414',
+    position: 'absolute',
+  },
+  actionFooter: {
+    gap: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(68,73,51,0.1)',
+    paddingTop: 1,
+  },
+  deleteBtn: {
+    height: 48,
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: '#DB5034',
+    backgroundColor: 'rgba(219,80,52,0.05)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  deleteBtnText: {
+    fontSize: 14,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#DB5034',
+    textTransform: 'capitalize',
+  },
+  saveBtn: {
+    height: 48,
+    borderRadius: 33,
+    backgroundColor: '#6FFB85',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  saveBtnText: {
+    fontSize: 14,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#141414',
+    textTransform: 'uppercase',
+  },
 });

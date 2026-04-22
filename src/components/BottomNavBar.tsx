@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { useTheme } from '../theme/ThemeProvider';
+import SvgIcon from './SvgIcon';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 
@@ -54,42 +55,15 @@ function CardIcon({ active, activeColor, inactiveColor }: { active: boolean; act
   );
 }
 
-// ── Plus / Add icon ──
-function AddIcon() {
-  return (
-    <Svg width={20} height={20} viewBox="0 0 13 13" fill="none">
-      <Path
-        fillRule="evenodd" clipRule="evenodd"
-        d="M6.32798 0C6.93383 0 7.42501 0.491146 7.42501 1.09703V11.553C7.42501 12.159 6.93383 12.65 6.32798 12.65C5.72213 12.65 5.23096 12.159 5.23096 11.553V1.09703C5.23096 0.491146 5.72213 0 6.32798 0Z"
-        fill="#000"
-      />
-      <Path
-        fillRule="evenodd" clipRule="evenodd"
-        d="M0 6.32164C0 5.71578 0.491161 5.22461 1.09703 5.22461H11.5639C12.1697 5.22461 12.6609 5.71578 12.6609 6.32164C12.6609 6.92749 12.1697 7.41866 11.5639 7.41866H1.09703C0.491161 7.41866 0 6.92749 0 6.32164Z"
-        fill="#000"
-      />
-    </Svg>
-  );
+// ── Logo icon (center button) ──
+function LogoIcon() {
+  return <SvgIcon name="logo" size={32} />;
 }
 
-// ── SOS icon (circle with X) — uses Frame 1171279178.svg ──
+// ── SOS icon from assets ──
 function SOSIcon({ active, activeColor, inactiveColor }: { active: boolean; activeColor: string; inactiveColor: string }) {
   const color = active ? activeColor : inactiveColor;
-  return (
-    <Svg width={24} height={24} viewBox="0 0 30 30" fill="none">
-      <Path
-        fillRule="evenodd" clipRule="evenodd"
-        d="M19.9498 10.0509C20.3403 10.4414 20.2725 11.1423 19.7984 11.6165L11.6159 19.799C11.1417 20.2732 10.4408 20.3409 10.0503 19.9504C9.65978 19.5598 9.72744 18.859 10.2017 18.3847L18.3842 10.2022C18.8583 9.72811 19.5593 9.66035 19.9498 10.0509Z"
-        fill={color}
-      />
-      <Path
-        fillRule="evenodd" clipRule="evenodd"
-        d="M10.0502 10.0509C10.4407 9.66035 11.1414 9.72779 11.6151 10.2015L19.7991 18.3855C20.2728 18.8592 20.3402 19.5598 19.9497 19.9504C19.5592 20.3409 18.8586 20.2734 18.3848 19.7997L10.2009 11.6157C9.72715 11.142 9.65971 10.4414 10.0502 10.0509Z"
-        fill={color}
-      />
-      <Circle cx={15} cy={15} r={14} stroke={color} strokeWidth={2} />
-    </Svg>
-  );
+  return <SvgIcon name="sos" size={24} color={color} />;
 }
 
 // ── AI icon (sparkle-style using Ionicons fallback) ──
@@ -123,6 +97,12 @@ export default function BottomNavBar({ activeTab, navigation }: BottomNavBarProp
       case 'card':
         navigation.navigate('HealthWallet');
         break;
+      case 'sos':
+        navigation.navigate('SOSMain');
+        break;
+      case 'ai':
+        navigation.navigate('AskAI');
+        break;
       default:
         break;
     }
@@ -143,7 +123,7 @@ export default function BottomNavBar({ activeTab, navigation }: BottomNavBarProp
 
         {/* Add (center FAB) */}
         <TouchableOpacity style={[styles.centerBtn, { backgroundColor: c.navFabBg, borderColor: c.navBorder }]} activeOpacity={0.8} onPress={() => handlePress('add')}>
-          <AddIcon />
+          <LogoIcon />
         </TouchableOpacity>
 
         {/* Card / Health Wallet */}

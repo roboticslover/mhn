@@ -10,121 +10,159 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTheme } from '../../../theme/ThemeProvider';
 import BottomNavBar from '../../../components/BottomNavBar';
 
-function PrescriptionCard({
-  name, date, timeline, status, statusLabel, isLatest, onPress, onEdit, colors,
-}: {
-  name: string; date: string; timeline: string; status: string; statusLabel: string; isLatest?: boolean; onPress?: () => void; onEdit?: () => void; colors: any;
-}) {
-  const isActive = status === 'In Progress';
+function ActivePrescriptionCard({ onPress, onEdit }: { onPress: () => void; onEdit: () => void }) {
   return (
-    <TouchableOpacity style={[styles.prescriptionCard, { backgroundColor: colors.card, borderColor: colors.cardGlassBorder }]} activeOpacity={0.7} onPress={onPress}>
-      {isLatest && (
-        <View style={[styles.latestBadge, { backgroundColor: colors.accentSoft, borderColor: colors.primary + '70' }]}>
-          <Text style={[styles.latestBadgeText, { color: colors.primary, fontFamily: 'Inter' }]}>LATEST</Text>
-        </View>
-      )}
-      {!isLatest && (
-        <View style={styles.finishedBadgeRow}>
-          <Text style={[styles.prescriptionName, { color: colors.text, fontFamily: 'Inter' }]}>{name}</Text>
-          <View style={[styles.finishedBadge, { backgroundColor: colors.accentSoft, borderColor: colors.primary + '70' }]}>
-            <Text style={[styles.finishedBadgeText, { color: colors.primary, fontFamily: 'Inter' }]}>{statusLabel}</Text>
-          </View>
-        </View>
-      )}
-      {isLatest && <Text style={[styles.prescriptionName, { color: colors.text, fontFamily: 'Inter', marginTop: 8 }]}>{name}</Text>}
-      <Text style={[styles.prescriptionMeta, { color: colors.textSecondary, fontFamily: 'Inter' }]}>
-        Date: {date}              Timeline: {timeline}
-      </Text>
+    <TouchableOpacity style={styles.activeCard} activeOpacity={0.8} onPress={onPress}>
+      <TouchableOpacity style={styles.editIconBtn} onPress={onEdit}>
+        <Ionicons name="create-outline" size={15} color="rgba(255,255,255,0.74)" />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.collapseIconBtn}>
+        <Ionicons name="chevron-up" size={16} color="rgba(255,255,255,0.5)" />
+      </TouchableOpacity>
 
-      {isActive && (
-        <View style={styles.statusSection}>
-          <Text style={[styles.statusLabel, { color: colors.textSecondary, fontFamily: 'Inter' }]}>Prescription status</Text>
-          <Text style={[styles.statusValue, { color: colors.text, fontFamily: 'Inter' }]}>{status}</Text>
-          <View style={styles.progressRow}>
-            <Text style={[styles.endDate, { color: colors.textSecondary, fontFamily: 'Inter' }]}>END DATE: 31 March</Text>
-            <Text style={[styles.progressPercent, { color: colors.text, fontFamily: 'Inter' }]}>85%</Text>
-          </View>
-          <View style={[styles.progressTrack, { backgroundColor: colors.cardGlassBorder }]}>
-            <View style={[styles.progressFill, { width: '85%', backgroundColor: colors.primary }]} />
-          </View>
-        </View>
-      )}
-
-      {!isActive && (
-        <View style={styles.statusSection}>
-          <Text style={[styles.completedStatus, { color: colors.text, fontFamily: 'Inter' }]}>Course Completed</Text>
-          <View style={[styles.completedLine, { backgroundColor: colors.cardGlassBorder }]} />
-        </View>
-      )}
-
-      <View style={styles.cardActions}>
-        <TouchableOpacity style={[styles.viewDigitalBtn, { backgroundColor: colors.primary }]}>
-          <Text style={[styles.viewDigitalText, { color: colors.textOnPrimary, fontFamily: 'Inter' }]}>VIEW DIGITAL{'\n'}COPY</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.downloadBtn, { backgroundColor: colors.card, borderColor: colors.cardGlassBorder }]}>
-          <Text style={[styles.downloadBtnText, { color: colors.text, fontFamily: 'Inter' }]}>DOWNLOAD</Text>
-        </TouchableOpacity>
+      <View style={styles.latestBadge}>
+        <Text style={styles.latestBadgeText}>LATEST</Text>
       </View>
 
-      <TouchableOpacity style={styles.editIcon} onPress={onEdit}>
-        <Ionicons name="create-outline" size={15} color={colors.textSecondary} />
+      <Text style={styles.activePrescName}>Nexus Prescription</Text>
+      <Text style={styles.activePrescMeta}>Date: 23 March              Timeline: 3 months</Text>
+
+      <Text style={styles.statusLabel}>Prescription status</Text>
+      <Text style={styles.statusValue}>In Progress</Text>
+
+      <View style={styles.progressRow}>
+        <Text style={styles.endDateText}>END DATE: 31 March</Text>
+        <Text style={styles.progressPct}>85%</Text>
+      </View>
+      <View style={styles.progressTrack}>
+        <View style={[styles.progressFill, { width: '85%' }]} />
+      </View>
+
+      <View style={styles.cardActions}>
+        <TouchableOpacity style={styles.viewDigitalBtn}>
+          <Text style={styles.viewDigitalText}>VIEW DIGITAL{'\n'}COPY</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.downloadBtn}>
+          <Text style={styles.downloadBtnText}>DOWNLOAD</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+function FinishedPrescriptionCard({
+  name, onPress, onEdit, collapsed,
+}: { name: string; onPress: () => void; onEdit: () => void; collapsed?: boolean }) {
+  return (
+    <TouchableOpacity style={styles.finishedCard} activeOpacity={0.8} onPress={onPress}>
+      <TouchableOpacity style={styles.editIconBtn} onPress={onEdit}>
+        <Ionicons name="create-outline" size={15} color="rgba(255,255,255,0.74)" />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.expandIcon}>
-        <Ionicons name="chevron-up" size={16} color={colors.textSecondary} />
+      <TouchableOpacity style={styles.collapseIconBtn}>
+        <Ionicons name={collapsed ? 'chevron-down' : 'chevron-up'} size={16} color="rgba(255,255,255,0.5)" />
       </TouchableOpacity>
+
+      <View style={styles.finishedTopRow}>
+        <Text style={styles.finishedName}>{name}</Text>
+        <View style={styles.finishedBadge}>
+          <Text style={styles.finishedBadgeText}>FINISHED</Text>
+        </View>
+      </View>
+      <Text style={styles.finishedMeta}>Date: 23 March              Timeline: 3 months</Text>
+      <Text style={styles.completedStatus}>Course Completed</Text>
+      <View style={styles.completedLine} />
+      <View style={styles.cardActions}>
+        <TouchableOpacity style={styles.viewDigitalBtn}>
+          <Text style={styles.viewDigitalText}>VIEW DIGITAL{'\n'}COPY</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.downloadBtn}>
+          <Text style={styles.downloadBtnText}>DOWNLOAD</Text>
+        </TouchableOpacity>
+      </View>
     </TouchableOpacity>
   );
 }
 
 export default function AllPrescriptionsScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
-  const { theme } = useTheme();
-  const c = theme.colors;
   const [search, setSearch] = useState('');
 
   return (
-    <View style={[styles.container, { backgroundColor: c.background }]}>
+    <View style={[styles.container, { backgroundColor: '#050505' }]}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
 
-      <ScrollView contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 16, paddingBottom: 120 }]} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 28, paddingBottom: 120 }]}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={24} color={c.text} />
+            <Ionicons name="chevron-back" size={22} color="#FFFFFF" />
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: c.text, fontFamily: 'Inter' }]}>Prescriptions</Text>
-          <View style={{ width: 24 }} />
+          <Text style={styles.headerTitle}>Prescriptions</Text>
+          <View style={{ width: 22 }} />
         </View>
 
         {/* Search + Filters */}
         <View style={styles.searchSection}>
-          <View style={[styles.searchBar, { backgroundColor: c.inputBackground, borderColor: c.inputBorder }]}>
-            <Ionicons name="search" size={20} color={c.textSecondary} />
-            <TextInput style={[styles.searchInput, { color: c.text, fontFamily: 'Inter' }]} placeholder="SEARCH PRESCRIPTION" placeholderTextColor={c.inputPlaceholder} value={search} onChangeText={setSearch} />
+          <View style={styles.searchBar}>
+            <Ionicons name="search" size={20} color="rgba(255,255,255,0.5)" style={styles.searchIcon} />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="SEARCH PRESCRIPTION"
+              placeholderTextColor="rgba(170,170,170,0.5)"
+              value={search}
+              onChangeText={setSearch}
+            />
           </View>
           <View style={styles.filterRow}>
-            <TouchableOpacity style={[styles.filterBtn, { backgroundColor: c.cardElevated, borderColor: c.cardGlassBorder }]}>
-              <Ionicons name="options-outline" size={12} color={c.text} />
-              <Text style={[styles.filterBtnText, { color: c.text, fontFamily: 'Inter' }]}>FILTERS</Text>
+            <TouchableOpacity style={styles.filterBtn}>
+              <Ionicons name="options-outline" size={10} color="#E2E2E2" />
+              <Text style={styles.filterBtnText}>FILTERS</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.addBtn, { backgroundColor: c.primary }]} onPress={() => navigation.navigate('PrescriptionUpload')}>
-              <Text style={[styles.addBtnText, { color: c.textOnPrimary, fontFamily: 'Inter' }]}>ADD</Text>
+            <TouchableOpacity
+              style={styles.addBtn}
+              onPress={() => navigation.navigate('PrescriptionUpload')}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.addBtnText}>ADD</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        <Text style={[styles.sectionTitle, { color: c.text, fontFamily: 'Inter' }]}>Active Prescriptions</Text>
-        <PrescriptionCard name="Nexus Prescription" date="23 March" timeline="3 months" status="In Progress" statusLabel="LATEST" isLatest={true} onPress={() => navigation.navigate('PrescriptionDetail')} onEdit={() => navigation.navigate('PrescriptionEdit')} colors={c} />
+        {/* Active Prescriptions */}
+        <Text style={styles.sectionTitle}>Active Prescriptions</Text>
+        <ActivePrescriptionCard
+          onPress={() => navigation.navigate('PrescriptionDetail')}
+          onEdit={() => navigation.navigate('PrescriptionEdit')}
+        />
 
-        <Text style={[styles.sectionTitle, { color: c.text, fontFamily: 'Inter', marginTop: 24 }]}>All Prescriptions</Text>
-        <PrescriptionCard name="Apollo" date="23 March" timeline="3 months" status="Completed" statusLabel="FINISHED" onPress={() => navigation.navigate('PrescriptionDetail')} onEdit={() => navigation.navigate('PrescriptionEdit')} colors={c} />
-        <PrescriptionCard name="Apollo" date="23 March" timeline="3 months" status="Completed" statusLabel="FINISHED" onPress={() => navigation.navigate('PrescriptionDetail')} onEdit={() => navigation.navigate('PrescriptionEdit')} colors={c} />
+        {/* All Prescriptions */}
+        <Text style={[styles.sectionTitle, { marginTop: 16 }]}>All Prescriptions</Text>
+        <FinishedPrescriptionCard
+          name="Apollo"
+          onPress={() => navigation.navigate('PrescriptionDetail')}
+          onEdit={() => navigation.navigate('PrescriptionEdit')}
+        />
+        <FinishedPrescriptionCard
+          name="Apollo"
+          onPress={() => navigation.navigate('PrescriptionDetail')}
+          onEdit={() => navigation.navigate('PrescriptionEdit')}
+        />
+        <FinishedPrescriptionCard
+          name="Apollo"
+          onPress={() => navigation.navigate('PrescriptionDetail')}
+          onEdit={() => navigation.navigate('PrescriptionEdit')}
+          collapsed
+        />
 
+        {/* See All */}
         <TouchableOpacity style={styles.seeAllBtn}>
-          <Text style={[styles.seeAllText, { color: c.primary, fontFamily: 'Inter' }]}>See All</Text>
-          <Ionicons name="chevron-down" size={14} color={c.primary} />
+          <Text style={styles.seeAllText}>See All</Text>
+          <Ionicons name="chevron-down" size={14} color="#6FFB85" />
         </TouchableOpacity>
       </ScrollView>
 
@@ -140,45 +178,267 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
+    paddingHorizontal: 29,
     paddingBottom: 16,
   },
-  backBtn: { width: 24, alignItems: 'center' },
-  headerTitle: { fontSize: 28, fontWeight: '600' },
-  searchSection: { paddingHorizontal: 20, gap: 16, marginBottom: 24 },
-  searchBar: { height: 58, borderRadius: 33, borderWidth: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 24, gap: 12 },
-  searchInput: { flex: 1, fontSize: 16, fontWeight: '500' },
+  backBtn: { width: 22, alignItems: 'center' },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: '600',
+    fontFamily: 'Inter',
+    color: '#FFFFFF',
+  },
+  searchSection: { paddingHorizontal: 20, gap: 16, marginBottom: 20 },
+  searchBar: {
+    height: 58,
+    borderRadius: 33,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: 'rgba(23,23,23,0.4)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    overflow: 'hidden',
+  },
+  searchIcon: { marginRight: 0 },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '500',
+    fontFamily: 'Inter',
+    color: '#AAAAAA',
+    paddingLeft: 16,
+  },
   filterRow: { flexDirection: 'row', gap: 8 },
-  filterBtn: { height: 48, borderRadius: 33, borderWidth: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 25, gap: 8 },
-  filterBtnText: { fontSize: 10, fontWeight: '800', textTransform: 'uppercase' },
-  addBtn: { height: 48, borderRadius: 33, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 },
-  addBtnText: { fontSize: 18, fontWeight: '800', textTransform: 'uppercase' },
-  sectionTitle: { fontSize: 24, fontWeight: '700', letterSpacing: -0.6, paddingHorizontal: 25, marginBottom: 16 },
-  prescriptionCard: { marginHorizontal: 20, borderRadius: 33, borderWidth: 1, padding: 24, marginBottom: 16, position: 'relative' },
-  latestBadge: { borderWidth: 1, borderRadius: 12, paddingHorizontal: 13, paddingVertical: 4, alignSelf: 'flex-start' },
-  latestBadgeText: { fontSize: 10, fontWeight: '800', letterSpacing: 1 },
-  finishedBadgeRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  finishedBadge: { borderWidth: 1, borderRadius: 12, paddingHorizontal: 13, paddingVertical: 4 },
-  finishedBadgeText: { fontSize: 10, fontWeight: '800', letterSpacing: 1 },
-  prescriptionName: { fontSize: 24, fontWeight: '700', letterSpacing: -0.6 },
-  prescriptionMeta: { fontSize: 12, marginTop: 6, marginBottom: 12 },
-  statusSection: { marginBottom: 16 },
-  statusLabel: { fontSize: 12, marginBottom: 4 },
-  statusValue: { fontSize: 20, fontWeight: '700', marginBottom: 8 },
-  progressRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
-  endDate: { fontSize: 10, fontWeight: '700', textTransform: 'uppercase' },
-  progressPercent: { fontSize: 12, fontWeight: '700' },
-  progressTrack: { height: 4, borderRadius: 2, overflow: 'hidden' },
-  progressFill: { height: '100%', borderRadius: 2 },
-  completedStatus: { fontSize: 18, fontWeight: '700', marginBottom: 8 },
-  completedLine: { height: 2, borderRadius: 1 },
+  filterBtn: {
+    height: 48,
+    borderRadius: 33,
+    borderWidth: 1,
+    borderColor: 'rgba(143,147,120,0.15)',
+    backgroundColor: 'rgba(31,31,31,0.4)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 25,
+    gap: 8,
+  },
+  filterBtnText: {
+    fontSize: 10,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#E2E2E2',
+    textTransform: 'uppercase',
+  },
+  addBtn: {
+    height: 48,
+    borderRadius: 33,
+    backgroundColor: '#6FFB85',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+  },
+  addBtnText: {
+    fontSize: 18,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#141414',
+    textTransform: 'uppercase',
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    color: '#E2E2E2',
+    letterSpacing: -0.6,
+    paddingHorizontal: 25,
+    marginBottom: 16,
+  },
+  activeCard: {
+    marginHorizontal: 20,
+    borderRadius: 33,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: 'rgba(23,23,23,0.4)',
+    padding: 32,
+    marginBottom: 16,
+    position: 'relative',
+  },
+  editIconBtn: { position: 'absolute', top: 24, right: 52 },
+  collapseIconBtn: { position: 'absolute', top: 24, right: 24 },
+  latestBadge: {
+    borderWidth: 1,
+    borderColor: 'rgba(52,199,89,0.44)',
+    borderRadius: 12,
+    paddingHorizontal: 13,
+    paddingVertical: 4,
+    alignSelf: 'flex-start',
+    backgroundColor: 'rgba(52,199,89,0.13)',
+    marginBottom: 8,
+  },
+  latestBadgeText: {
+    fontSize: 10,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#6FFB85',
+    letterSpacing: 1,
+  },
+  activePrescName: {
+    fontSize: 24,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    color: '#E2E2E2',
+    letterSpacing: -0.6,
+    marginBottom: 6,
+  },
+  activePrescMeta: {
+    fontSize: 12,
+    fontFamily: 'Inter',
+    color: '#AAAAAA',
+    marginBottom: 16,
+  },
+  statusLabel: {
+    fontSize: 12,
+    fontFamily: 'Inter',
+    color: '#AAAAAA',
+    marginBottom: 4,
+  },
+  statusValue: {
+    fontSize: 20,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    color: '#FFFFFF',
+    marginBottom: 8,
+  },
+  progressRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  endDateText: {
+    fontSize: 10,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    color: '#AAAAAA',
+    textTransform: 'uppercase',
+  },
+  progressPct: {
+    fontSize: 12,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    color: '#FFFFFF',
+  },
+  progressTrack: {
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    overflow: 'hidden',
+    marginBottom: 20,
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: 2,
+    backgroundColor: '#6FFB85',
+  },
   cardActions: { flexDirection: 'row', gap: 12 },
-  viewDigitalBtn: { borderRadius: 33, paddingHorizontal: 16, paddingVertical: 10 },
-  viewDigitalText: { fontSize: 10, fontWeight: '800', textAlign: 'center', textTransform: 'uppercase' },
-  downloadBtn: { borderRadius: 33, borderWidth: 1, paddingHorizontal: 20, paddingVertical: 14, justifyContent: 'center' },
-  downloadBtnText: { fontSize: 10, fontWeight: '800', textTransform: 'uppercase' },
-  editIcon: { position: 'absolute', top: 24, right: 48 },
-  expandIcon: { position: 'absolute', top: 24, right: 24 },
-  seeAllBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 12 },
-  seeAllText: { fontSize: 16, fontWeight: '600' },
+  viewDigitalBtn: {
+    borderRadius: 33,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    backgroundColor: '#6FFB85',
+  },
+  viewDigitalText: {
+    fontSize: 10,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#141414',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+  },
+  downloadBtn: {
+    borderRadius: 33,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(23,23,23,0.4)',
+  },
+  downloadBtnText: {
+    fontSize: 10,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#FFFFFF',
+    textTransform: 'uppercase',
+  },
+  finishedCard: {
+    marginHorizontal: 20,
+    borderRadius: 33,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: 'rgba(23,23,23,0.4)',
+    padding: 24,
+    marginBottom: 16,
+    position: 'relative',
+  },
+  finishedTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 6,
+    marginRight: 60,
+  },
+  finishedName: {
+    fontSize: 24,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    color: '#FFFFFF',
+    letterSpacing: -0.6,
+  },
+  finishedBadge: {
+    borderWidth: 1,
+    borderColor: 'rgba(52,199,89,0.44)',
+    borderRadius: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    backgroundColor: 'rgba(52,199,89,0.13)',
+  },
+  finishedBadgeText: {
+    fontSize: 10,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#6FFB85',
+    letterSpacing: 1,
+  },
+  finishedMeta: {
+    fontSize: 12,
+    fontFamily: 'Inter',
+    color: '#AAAAAA',
+    marginBottom: 12,
+  },
+  completedStatus: {
+    fontSize: 18,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    color: '#FFFFFF',
+    marginBottom: 8,
+  },
+  completedLine: {
+    height: 2,
+    borderRadius: 1,
+    backgroundColor: '#6FFB85',
+    marginBottom: 16,
+  },
+  seeAllBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 16,
+  },
+  seeAllText: {
+    fontSize: 16,
+    fontWeight: '600',
+    fontFamily: 'Inter',
+    color: '#6FFB85',
+    textAlign: 'center',
+  },
 });

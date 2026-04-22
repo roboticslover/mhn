@@ -143,7 +143,7 @@ export default function HealthWalletScreen({ navigation }: { navigation: any }) 
         <View style={styles.categoriesGrid}>
           <CategoryCard icon="document-text-outline" label="Lab Reports" count="12 Files Found" onPress={() => navigation.navigate('HealthReportsEmpty')} colors={c} />
           <CategoryCard icon="receipt-outline" label="Prescriptions" count="12 Files Found" onPress={() => navigation.navigate('PrescriptionsEmpty')} colors={c} />
-          <CategoryCard icon="scan-outline" label="Scans" count="12 Files Found" onPress={() => navigation.navigate('ScansEmpty')} colors={c} />
+          <CategoryCard icon="scan-outline" label="Scans" count="12 Files Found" onPress={() => navigation.navigate('ScansList')} colors={c} />
           <CategoryCard icon="medkit-outline" label="Vaccinations" count="12 Files Found" onPress={() => navigation.navigate('VaccinesEmpty')} colors={c} />
         </View>
 

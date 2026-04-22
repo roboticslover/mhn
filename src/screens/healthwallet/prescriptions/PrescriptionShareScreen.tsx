@@ -8,13 +8,9 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTheme } from '../../../theme/ThemeProvider';
-import BottomNavBar from '../../../components/BottomNavBar';
 
 export default function PrescriptionShareScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
-  const { theme } = useTheme();
-  const c = theme.colors;
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [selectAll, setSelectAll] = useState(false);
 
@@ -29,73 +25,104 @@ export default function PrescriptionShareScreen({ navigation }: { navigation: an
   };
 
   const toggleSelectAll = () => {
-    if (selectAll) {
-      setSelectedFiles([]);
-    } else {
-      setSelectedFiles(files.map(f => f.id));
-    }
-    setSelectAll(!selectAll);
+    const newSelectAll = !selectAll;
+    setSelectAll(newSelectAll);
+    setSelectedFiles(newSelectAll ? files.map(f => f.id) : []);
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: c.background }]}>
+    <View style={[styles.container, { backgroundColor: '#050505' }]}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
 
-      <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
+      {/* Header */}
+      <View style={[styles.header, { paddingTop: insets.top + 28 }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={24} color={c.text} />
+          <Ionicons name="chevron-back" size={22} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: c.text, fontFamily: 'Inter' }]}>Prescription</Text>
+        <Text style={styles.headerTitle}>Prescription</Text>
         <View style={styles.headerRight}>
-          <TouchableOpacity>
-            <Ionicons name="create-outline" size={21} color={c.textSecondary} />
+          <TouchableOpacity onPress={() => navigation.navigate('PrescriptionEdit')} style={styles.headerIconBtn}>
+            <Ionicons name="create-outline" size={21} color="rgba(255,255,255,0.74)" />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons name="share-outline" size={21} color={c.primary} />
+          <TouchableOpacity style={styles.headerIconBtn}>
+            <Ionicons name="share-outline" size={21} color="#6FFB85" />
           </TouchableOpacity>
         </View>
       </View>
 
+      {/* Dimmed background content (prescription detail preview) */}
       <View style={styles.dimmedContent}>
         <View style={styles.tagsRow}>
-          <View style={[styles.publicTag, { backgroundColor: c.accentSoft }]}>
-            <Text style={[styles.publicTagText, { color: c.primary, fontFamily: 'Inter' }]}>PUBLIC</Text>
+          <View style={styles.publicTag}>
+            <Text style={styles.publicTagText}>PUBLIC</Text>
           </View>
-          <View style={[styles.typeTag, { backgroundColor: c.cardElevated }]}>
-            <Text style={[styles.typeTagText, { color: c.textSecondary, fontFamily: 'Inter' }]}>PRESCRIPTION</Text>
+          <View style={styles.typeTag}>
+            <Text style={styles.typeTagText}>PRESCRIPTION</Text>
           </View>
         </View>
-        <Text style={[styles.prescriptionTitle, { color: c.text, fontFamily: 'Inter' }]}>Prescription Nam</Text>
+        <Text style={styles.prescriptionTitle}>Prescription Nam</Text>
+        <View style={styles.metaRight}>
+          <Text style={styles.timelineLabel}>TIME LINE</Text>
+          <Text style={styles.timelineValue}>3 Months</Text>
+          <Text style={styles.dateLabel}>DATE OF ANALYSIS</Text>
+          <Text style={styles.dateValue}>April 02, 2026</Text>
+        </View>
+        {/* Image placeholder */}
+        <View style={styles.imgPlaceholder} />
       </View>
 
-      <View style={[styles.shareModal, { backgroundColor: c.modal, borderColor: c.cardGlassBorder }]}>
-        <View style={styles.modalHeader}>
-          <Ionicons name="share-outline" size={20} color={c.primary} />
-          <Text style={[styles.modalTitle, { color: c.text, fontFamily: 'Inter' }]}>Select files to share</Text>
+      {/* Share bottom sheet */}
+      <View style={[styles.shareSheet, { paddingBottom: insets.bottom + 16 }]}>
+        {/* Modal header */}
+        <View style={styles.sheetHeader}>
+          <View style={styles.sheetIconWrap}>
+            <Ionicons name="share-outline" size={20} color="#6FFB85" />
+          </View>
+          <Text style={styles.sheetTitle}>Select files to share</Text>
         </View>
+
+        {/* Select All row */}
         <View style={styles.selectAllRow}>
-          <TouchableOpacity style={[styles.checkbox, { borderColor: c.textSecondary }, selectAll && { backgroundColor: c.primary, borderColor: c.primary }]} onPress={toggleSelectAll}>
-            {selectAll && <Ionicons name="checkmark" size={12} color={c.textOnPrimary} />}
+          <TouchableOpacity
+            style={[styles.checkbox, selectAll && styles.checkboxChecked]}
+            onPress={toggleSelectAll}
+            activeOpacity={0.7}
+          >
+            {selectAll && <Ionicons name="checkmark" size={11} color="#141414" />}
           </TouchableOpacity>
-          <Text style={[styles.selectAllText, { color: c.text, fontFamily: 'Inter' }]}>Select  All</Text>
-          <Text style={[styles.fileCountText, { color: c.text, fontFamily: 'Inter' }]}>{selectedFiles.length} Files Selected</Text>
+          <Text style={styles.selectAllText}>Select  All</Text>
+          <Text style={styles.fileCountText}>{selectedFiles.length} Files Selected</Text>
         </View>
-        <View style={[styles.divider, { backgroundColor: c.cardGlassBorder }]} />
+
+        {/* Divider */}
+        <View style={styles.divider} />
+
+        {/* File list */}
         {files.map(file => (
           <View key={file.id} style={styles.fileRow}>
-            <TouchableOpacity style={[styles.checkbox, { borderColor: c.textSecondary }, selectedFiles.includes(file.id) && { backgroundColor: c.primary, borderColor: c.primary }]} onPress={() => toggleFile(file.id)}>
-              {selectedFiles.includes(file.id) && <Ionicons name="checkmark" size={12} color={c.textOnPrimary} />}
+            <TouchableOpacity
+              style={[styles.checkbox, selectedFiles.includes(file.id) && styles.checkboxChecked]}
+              onPress={() => toggleFile(file.id)}
+              activeOpacity={0.7}
+            >
+              {selectedFiles.includes(file.id) && <Ionicons name="checkmark" size={11} color="#141414" />}
             </TouchableOpacity>
-            <Ionicons name="document-outline" size={20} color={c.error} />
-            <Text style={[styles.fileNameText, { color: c.text, fontFamily: 'Inter' }]}>{file.name}</Text>
+            <View style={styles.pdfIconWrap}>
+              <Ionicons name="document-outline" size={16} color="#DB5034" />
+            </View>
+            <Text style={styles.fileNameText}>{file.name}</Text>
           </View>
         ))}
-        <TouchableOpacity style={[styles.shareBtn, { backgroundColor: c.primary }]} onPress={() => navigation.goBack()}>
-          <Text style={[styles.shareBtnText, { color: c.textOnPrimary, fontFamily: 'Inter' }]}>Share</Text>
+
+        {/* Share button */}
+        <TouchableOpacity
+          style={styles.shareBtn}
+          activeOpacity={0.8}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.shareBtnText}>Share</Text>
         </TouchableOpacity>
       </View>
-
-      <BottomNavBar activeTab="card" navigation={navigation} />
     </View>
   );
 }
@@ -106,30 +133,201 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingBottom: 12,
+    paddingHorizontal: 29,
+    paddingBottom: 16,
   },
-  backBtn: { width: 24, alignItems: 'center' },
-  headerTitle: { fontSize: 28, fontWeight: '600' },
-  headerRight: { flexDirection: 'row', gap: 12 },
-  dimmedContent: { opacity: 0.4, paddingHorizontal: 31, marginBottom: 20 },
+  backBtn: { width: 22, alignItems: 'center' },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: '600',
+    fontFamily: 'Inter',
+    color: '#FFFFFF',
+  },
+  headerRight: { flexDirection: 'row', gap: 16 },
+  headerIconBtn: { padding: 2 },
+  dimmedContent: {
+    flex: 1,
+    opacity: 0.4,
+    paddingHorizontal: 31,
+  },
   tagsRow: { flexDirection: 'row', gap: 8, marginBottom: 16 },
-  publicTag: { borderRadius: 12, paddingHorizontal: 12, paddingVertical: 4 },
-  publicTagText: { fontSize: 10, fontWeight: '800', letterSpacing: 1 },
-  typeTag: { borderRadius: 12, paddingHorizontal: 12, paddingVertical: 4 },
-  typeTagText: { fontSize: 10, fontWeight: '800', letterSpacing: 1 },
-  prescriptionTitle: { fontSize: 48, fontWeight: '300', letterSpacing: -2.4 },
-  shareModal: { position: 'absolute', bottom: 100, left: 0, right: 0, borderTopLeftRadius: 33, borderTopRightRadius: 33, borderWidth: 1, paddingHorizontal: 36, paddingTop: 30, paddingBottom: 40 },
-  modalHeader: { flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 24 },
-  modalTitle: { fontSize: 18, fontWeight: '700' },
-  selectAllRow: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingVertical: 8 },
-  checkbox: { width: 18, height: 18, borderRadius: 4, borderWidth: 0.7, alignItems: 'center', justifyContent: 'center' },
-  checkboxChecked: {},
-  selectAllText: { fontSize: 14, fontWeight: '700', flex: 1 },
-  fileCountText: { fontSize: 14, fontWeight: '700' },
-  divider: { height: 1, marginVertical: 12 },
-  fileRow: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingVertical: 8, marginBottom: 20 },
-  fileNameText: { fontSize: 14, textTransform: 'uppercase' },
-  shareBtn: { height: 52, borderRadius: 33, alignItems: 'center', justifyContent: 'center' },
-  shareBtnText: { fontSize: 18, fontWeight: '700' },
+  publicTag: {
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    backgroundColor: 'rgba(52,199,89,0.16)',
+  },
+  publicTagText: {
+    fontSize: 10,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#34C759',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+  },
+  typeTag: {
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    backgroundColor: '#1F1F1F',
+  },
+  typeTagText: {
+    fontSize: 10,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#C5C9AC',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+  },
+  prescriptionTitle: {
+    fontSize: 48,
+    fontWeight: '300',
+    fontFamily: 'Manrope',
+    color: '#FFFFFF',
+    letterSpacing: -2.4,
+    lineHeight: 48,
+    marginBottom: 8,
+  },
+  metaRight: { alignItems: 'flex-end', marginBottom: 12 },
+  timelineLabel: {
+    fontSize: 10,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#C5C9AC',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+  },
+  timelineValue: {
+    fontSize: 20,
+    fontWeight: '200',
+    fontFamily: 'Manrope',
+    color: '#FFFFFF',
+    lineHeight: 28,
+  },
+  dateLabel: {
+    fontSize: 10,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#34C759',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+  },
+  dateValue: {
+    fontSize: 20,
+    fontWeight: '200',
+    fontFamily: 'Manrope',
+    color: '#FFFFFF',
+    lineHeight: 28,
+  },
+  imgPlaceholder: {
+    height: 160,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    marginTop: 8,
+  },
+  shareSheet: {
+    borderTopLeftRadius: 33,
+    borderTopRightRadius: 33,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: 'rgba(23,23,23,0.95)',
+    paddingHorizontal: 36,
+    paddingTop: 30,
+  },
+  sheetHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    marginBottom: 24,
+  },
+  sheetIconWrap: {
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sheetTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    color: '#FFFFFF',
+  },
+  selectAllRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    paddingVertical: 8,
+  },
+  checkbox: {
+    width: 18,
+    height: 18,
+    borderRadius: 4,
+    borderWidth: 0.7,
+    borderColor: '#DFDFDF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  checkboxChecked: {
+    backgroundColor: '#6FFB85',
+    borderColor: '#6FFB85',
+  },
+  selectAllText: {
+    fontSize: 14,
+    fontWeight: '700',
+    fontFamily: 'Manrope',
+    color: '#FFFFFF',
+    flex: 1,
+  },
+  fileCountText: {
+    fontSize: 14,
+    fontWeight: '700',
+    fontFamily: 'Manrope',
+    color: '#FFFFFF',
+  },
+  divider: {
+    height: 0.7,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    marginVertical: 8,
+  },
+  fileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    paddingVertical: 12,
+    marginBottom: 8,
+  },
+  pdfIconWrap: {
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fileNameText: {
+    fontSize: 14,
+    fontFamily: 'Manrope',
+    fontWeight: '400',
+    color: '#FFFFFF',
+    textTransform: 'uppercase',
+    flex: 1,
+  },
+  shareBtn: {
+    height: 58,
+    borderRadius: 33,
+    backgroundColor: '#6FFB85',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+    shadowColor: 'rgba(0,110,40,0.3)',
+    shadowOffset: { width: 0, height: 20 },
+    shadowOpacity: 1,
+    shadowRadius: 50,
+    elevation: 10,
+  },
+  shareBtnText: {
+    fontSize: 18,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    color: '#141414',
+  },
 });

@@ -7,9 +7,20 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 
-const SCAN_TYPES = ['MRI', 'CT', 'X-Ray', 'Ultrasound', 'PET', 'Mammography'];
+interface FileItem {
+  id: string;
+  name: string;
+  size: string;
+  status: string;
+  icon: 'document-outline' | 'document-text-outline';
+}
 
-export default function ScanUploadScreen({ navigation }: { navigation: any }) {
+const MOCK_FILES: FileItem[] = [
+  { id: '1', name: 'SCAN_RESONAN01.DICOM', size: '42.8 MB', status: 'READY', icon: 'document-outline' },
+  { id: '2', name: 'NEXUS_REPORT_FINAL.PDF', size: '1.2 MB', status: 'SIGNED', icon: 'document-text-outline' },
+];
+
+export default function ScanEditScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const c = theme.colors;
@@ -20,14 +31,24 @@ export default function ScanUploadScreen({ navigation }: { navigation: any }) {
   const [bodyPart, setBodyPart] = useState('');
   const [dateError, setDateError] = useState(true);
 
-  const handleUpload = () => {
+  const handleUpdate = () => {
     if (!captureDate) {
       setDateError(true);
       return;
     }
-    setDateError(false);
-    Alert.alert('Uploading scan...', 'Your scan has been submitted.');
+    Alert.alert('Updated', 'Scan record has been updated.');
     navigation.goBack();
+  };
+
+  const handleDelete = () => {
+    Alert.alert(
+      'Delete Record',
+      'Are you sure you want to delete this scan?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: () => navigation.goBack() },
+      ]
+    );
   };
 
   return (
@@ -42,19 +63,8 @@ export default function ScanUploadScreen({ navigation }: { navigation: any }) {
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
             <Ionicons name="chevron-back" size={22} color={c.text} />
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: c.text }]}>Scans</Text>
+          <Text style={[styles.headerTitle, { color: c.text }]}>Edit Scans</Text>
           <View style={{ width: 24 }} />
-        </View>
-
-        {/* Hero section */}
-        <View style={styles.heroSection}>
-          <View style={styles.neuralBadge}>
-            <Text style={styles.neuralBadgeText}>NEURAL INTERFACE ACTIVE</Text>
-          </View>
-          <Text style={styles.heroTitle}>Scan Upload</Text>
-          <Text style={styles.heroSubtitle}>
-            Initialize high-resolution diagnostic upload.{'\n'}Support for DICOM, NIfTI, and structured{'\n'}radiology reports with automated metadata{'\n'}extraction.
-          </Text>
         </View>
 
         {/* 01 / CATEGORY */}
@@ -103,7 +113,7 @@ export default function ScanUploadScreen({ navigation }: { navigation: any }) {
           </View>
           <Text style={styles.cardFieldLabel}>CLINICAL FACILITY</Text>
           <TextInput
-            style={[styles.cardBigPlaceholder]}
+            style={styles.cardBigPlaceholder}
             placeholder="ENTER FACILITY NAME"
             placeholderTextColor="rgba(255,255,255,0.1)"
             value={facility}
@@ -118,9 +128,9 @@ export default function ScanUploadScreen({ navigation }: { navigation: any }) {
             <Text style={[styles.cardLabel, { color: '#34C759' }]}>04 / PART OF THE BODY</Text>
             <Ionicons name="add-circle-outline" size={17} color="rgba(255,255,255,0.4)" />
           </View>
-          <Text style={[styles.cardFieldLabel, { color: 'rgba(255,255,255,0.4)', letterSpacing: -0.5 }]}>ENTER TEXT</Text>
+          <Text style={[styles.cardFieldLabel, { letterSpacing: -0.5 }]}>ENTER TEXT</Text>
           <TextInput
-            style={[styles.cardBigPlaceholder]}
+            style={styles.cardBigPlaceholder}
             placeholder="ENTER FACILITY NAME"
             placeholderTextColor="rgba(255,255,255,0.1)"
             value={bodyPart}
@@ -129,21 +139,61 @@ export default function ScanUploadScreen({ navigation }: { navigation: any }) {
           <View style={styles.divider} />
         </View>
 
-        {/* Upload dropzone */}
-        <TouchableOpacity
-          style={styles.dropzone}
-          activeOpacity={0.7}
-          onPress={() => Alert.alert('Upload', 'Choose files to upload')}
-        >
-          <Ionicons name="cloud-upload-outline" size={32} color="rgba(255,255,255,0.5)" style={{ marginBottom: 8 }} />
-          <Text style={styles.dropzoneTitle}>Drag and drop Scans files</Text>
-          <Text style={styles.dropzoneSub}>Max size: 500MB per file. Encryption active.</Text>
-        </TouchableOpacity>
+        {/* File Management */}
+        <View style={styles.fileManagementSection}>
+          <View style={styles.fileManagementHeader}>
+            <Text style={styles.fileManagementTitle}>File Management</Text>
+            <TouchableOpacity
+              style={styles.addFileBtn}
+              onPress={() => Alert.alert('Add File', 'Choose a file to upload')}
+            >
+              <Ionicons name="add" size={9} color="#6FFB85" />
+              <Text style={styles.addFileBtnText}>ADD NEW FILE</Text>
+            </TouchableOpacity>
+          </View>
 
-        {/* Authorize & Upload button */}
-        <TouchableOpacity style={styles.authorizeBtn} activeOpacity={0.85} onPress={handleUpload}>
-          <Text style={styles.authorizeBtnText}>AUTHORIZE & UPLOAD</Text>
-        </TouchableOpacity>
+          <View style={styles.fileList}>
+            {MOCK_FILES.map(file => (
+              <View
+                key={file.id}
+                style={[styles.fileItem, { borderColor: 'rgba(255,255,255,0.08)' }]}
+              >
+                <View style={styles.fileLeft}>
+                  <View style={styles.fileIconWrap}>
+                    <Ionicons name={file.icon} size={14} color="rgba(255,255,255,0.7)" />
+                  </View>
+                  <View>
+                    <Text style={styles.fileName}>{file.name}</Text>
+                    <Text style={styles.fileMeta}>{file.size} • {file.status}</Text>
+                  </View>
+                </View>
+                <View style={styles.fileActions}>
+                  <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                    <Ionicons name="download-outline" size={14} color="rgba(255,255,255,0.5)" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                    onPress={() => Alert.alert('Remove File', `Remove ${file.name}?`)}
+                  >
+                    <Ionicons name="trash-outline" size={14} color="#DB5034" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Action buttons */}
+        <View style={styles.modalActions}>
+          <TouchableOpacity style={styles.updateBtn} activeOpacity={0.85} onPress={handleUpdate}>
+            <Text style={styles.updateBtnText}>UPDATE SCAN RECORD</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.deleteBtn} activeOpacity={0.7} onPress={handleDelete}>
+            <Text style={styles.deleteBtnText}>DELETE RECORD</Text>
+            <Ionicons name="trash-outline" size={10} color="#FF4D4D" style={{ marginLeft: 4 }} />
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </View>
   );
@@ -161,39 +211,6 @@ const styles = StyleSheet.create({
   },
   backBtn: { width: 24, alignItems: 'center' },
   headerTitle: { fontSize: 28, fontWeight: '600', fontFamily: 'Inter', lineHeight: 22 },
-  heroSection: { paddingHorizontal: 25, marginBottom: 18, gap: 8 },
-  neuralBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-    borderRadius: 12,
-    paddingHorizontal: 13,
-    paddingVertical: 5,
-    marginBottom: 4,
-  },
-  neuralBadgeText: {
-    fontSize: 12,
-    fontWeight: '400',
-    fontFamily: 'Inter',
-    color: '#6FFB85',
-    lineHeight: 16,
-  },
-  heroTitle: {
-    fontSize: 30,
-    fontWeight: '700',
-    fontFamily: 'Inter',
-    color: '#E2E2E2',
-    letterSpacing: -0.75,
-    lineHeight: 36,
-  },
-  heroSubtitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    fontFamily: 'Inter',
-    color: '#AAAAAA',
-    lineHeight: 24,
-  },
   inputCard: {
     marginHorizontal: 25,
     marginBottom: 18,
@@ -224,7 +241,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontFamily: 'Inter',
     color: 'rgba(255,255,255,0.4)',
-    letterSpacing: 0,
     marginBottom: 8,
   },
   cardBigValue: {
@@ -269,49 +285,104 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     marginBottom: 16,
   },
-  dropzone: {
-    marginHorizontal: 25,
-    height: 180,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: 'rgba(255,255,255,0.2)',
-    backgroundColor: 'rgba(31,31,31,0.4)',
+  fileManagementSection: { paddingHorizontal: 25, marginBottom: 24 },
+  fileManagementHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 24,
+    justifyContent: 'space-between',
+    marginBottom: 14,
+  },
+  fileManagementTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: 'rgba(255,255,255,0.4)',
+  },
+  addFileBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 4,
+    paddingHorizontal: 8,
   },
-  dropzoneTitle: {
-    fontSize: 20,
-    fontWeight: '200',
+  addFileBtnText: {
+    fontSize: 10,
+    fontWeight: '800',
     fontFamily: 'Manrope',
-    color: '#E2E2E2',
-    textAlign: 'center',
+    color: '#6FFB85',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
   },
-  dropzoneSub: {
-    fontSize: 14,
-    fontWeight: '200',
-    fontFamily: 'Manrope',
-    color: '#C5C9AC',
-    textAlign: 'center',
-    lineHeight: 20,
+  fileList: { gap: 14 },
+  fileItem: {
+    borderRadius: 47,
+    borderWidth: 1,
+    backgroundColor: 'rgba(23,23,23,0.4)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 20,
   },
-  authorizeBtn: {
-    marginHorizontal: 25,
-    backgroundColor: '#34C759',
-    borderRadius: 12,
-    paddingVertical: 20,
+  fileLeft: { flexDirection: 'row', alignItems: 'center', gap: 16, flex: 1 },
+  fileIconWrap: {
+    width: 47,
+    height: 47,
+    borderRadius: 33,
+    backgroundColor: 'rgba(255,255,255,0.05)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
   },
-  authorizeBtnText: {
+  fileName: {
+    fontSize: 16,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#FFFFFF',
+    textTransform: 'uppercase',
+    lineHeight: 24,
+  },
+  fileMeta: {
+    fontSize: 12,
+    fontWeight: '400',
+    fontFamily: 'Manrope',
+    color: 'rgba(255,255,255,0.3)',
+    textTransform: 'uppercase',
+    lineHeight: 17,
+  },
+  fileActions: { flexDirection: 'row', gap: 12, alignItems: 'center' },
+  modalActions: { paddingHorizontal: 49, gap: 12, paddingTop: 32 },
+  updateBtn: {
+    backgroundColor: '#6FFB85',
+    borderRadius: 40,
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: 'rgba(209,252,0,0.15)',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 30,
+    elevation: 4,
+  },
+  updateBtnText: {
     fontSize: 14,
     fontWeight: '800',
     fontFamily: 'Manrope',
-    color: '#000000',
-    letterSpacing: 1.4,
+    color: '#141414',
+    textTransform: 'uppercase',
+  },
+  deleteBtn: {
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 40,
+    paddingVertical: 17,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  deleteBtnText: {
+    fontSize: 12,
+    fontWeight: '800',
+    fontFamily: 'Manrope',
+    color: '#FF4D4D',
+    letterSpacing: 1.2,
     textTransform: 'uppercase',
   },
 });
