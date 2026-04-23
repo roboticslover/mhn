@@ -14,7 +14,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import Svg, { Circle, Path } from 'react-native-svg';
-import BottomNavBar from '../../components/BottomNavBar';
 import SectionHeader from '../../components/SectionHeader';
 import SvgIcon from '../../components/SvgIcon';
 
@@ -703,7 +702,6 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
         </ScrollView>
       </ScrollView>
 
-      <BottomNavBar activeTab="home" navigation={navigation} />
     </View>
   );
 }

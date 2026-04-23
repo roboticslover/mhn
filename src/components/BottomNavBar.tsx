@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, Animated, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 import { useTheme } from '../theme/ThemeProvider';
@@ -70,11 +70,47 @@ function SOSIcon({ color }: { color: string }) {
   );
 }
 
-// Plus circle icon (for the FAB)
+// Plus icon — bare cross, no circle (circle is the FAB button itself)
 function PlusIcon({ color }: { color: string }) {
   return (
-    <Svg width={30} height={30} viewBox="0 0 30 30" fill="none">
-      <Path d="M15 0C23.2843 0 30 6.71573 30 15C30 23.2843 23.2843 30 15 30C6.71573 30 0 23.2843 0 15C0 6.71573 6.71573 0 15 0ZM15 8C14.4478 8 14.0001 8.54344 14 9.21387V14H9.21289C8.54302 14.0001 8 14.4478 8 15C8 15.5522 8.54302 15.9999 9.21289 16H14V20.7861C14.0001 21.4567 14.4478 22 15 22C15.5522 22 15.9999 21.4567 16 20.7861V16H20.7871C21.457 15.9999 22 15.5522 22 15C22 14.4478 21.457 14.0001 20.7871 14H16V9.21387C15.9999 8.54344 15.5522 8 15 8Z" fill={color} />
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+      <Path d="M12 4C12.5523 4 13 4.44772 13 5V11H19C19.5523 11 20 11.4477 20 12C20 12.5523 19.5523 13 19 13H13V19C13 19.5523 12.5523 20 12 20C11.4477 20 11 19.5523 11 19V13H5C4.44772 13 4 12.5523 4 12C4 11.4477 4.44772 11 5 11H11V5C11 4.44772 11.4477 4 12 4Z" fill={color} />
+    </Svg>
+  );
+}
+
+// Speed-dial: Camera
+function CameraIcon({ color }: { color: string }) {
+  return (
+    <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
+      <Path fillRule="evenodd" clipRule="evenodd" d="M15.04 4.0515C16.05 4.4535 16.359 5.8535 16.772 6.3035C17.185 6.7535 17.776 6.9065 18.103 6.9065C19.841 6.9065 21.25 8.3155 21.25 10.0525V15.8475C21.25 18.1775 19.36 20.0675 17.03 20.0675H6.97C4.639 20.0675 2.75 18.1775 2.75 15.8475V10.0525C2.75 8.3155 4.159 6.9065 5.897 6.9065C6.223 6.9065 6.814 6.7535 7.228 6.3035C7.641 5.8535 7.949 4.4535 8.959 4.0515C9.97 3.6495 14.03 3.6495 15.04 4.0515Z" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M17.495 9.5H17.504" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+      <Path fillRule="evenodd" clipRule="evenodd" d="M15.1788 13.1282C15.1788 11.3722 13.7558 9.94922 11.9998 9.94922C10.2438 9.94922 8.8208 11.3722 8.8208 13.1282C8.8208 14.8842 10.2438 16.3072 11.9998 16.3072C13.7558 16.3072 15.1788 14.8842 15.1788 13.1282Z" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+// Speed-dial: Document / Upload
+function DocumentIcon({ color }: { color: string }) {
+  return (
+    <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
+      <Path d="M15.7161 16.2227H8.49609" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M15.7161 12.0371H8.49609" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M11.2511 7.85938H8.49609" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+      <Path fillRule="evenodd" clipRule="evenodd" d="M15.9085 2.75C15.9085 2.75 8.23149 2.754 8.21949 2.754C5.45949 2.771 3.75049 4.587 3.75049 7.357V16.553C3.75049 19.337 5.47249 21.16 8.25649 21.16C8.25649 21.16 15.9325 21.157 15.9455 21.157C18.7055 21.14 20.4155 19.323 20.4155 16.553V7.357C20.4155 4.573 18.6925 2.75 15.9085 2.75Z" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+// Speed-dial: Scan
+function ScanIcon({ color }: { color: string }) {
+  return (
+    <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
+      <Path d="M22.5 12.8047H1.5" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M20.6299 8.59V7.08C20.6299 5.02 18.9589 3.35 16.8969 3.35H15.6919" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M3.37012 8.59V7.08C3.37012 5.02 5.04112 3.35 7.10312 3.35H8.33912" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M20.6299 12.8047V16.88C20.6299 18.94 18.9589 20.61 16.8969 20.61H15.6919" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M3.37012 12.8047V16.88C3.37012 18.94 5.04112 20.61 7.10312 20.61H8.33912" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
     </Svg>
   );
 }
@@ -90,10 +126,10 @@ const TAB_LABELS: Record<string, string> = {
 };
 
 const TAB_ROUTES: Record<string, string> = {
-  home: 'Home',
-  card: 'HealthWallet',
-  ai: 'AskAI',
-  sos: 'EmergencyContacts',
+  home: 'HomeTab',
+  card: 'CardTab',
+  ai: 'AITab',
+  sos: 'SOSTab',
 };
 
 /* ─── Active Tab Item (pill with icon + label) ─── */
@@ -130,22 +166,54 @@ function InactiveTabContent({ tab, iconColor }: { tab: NavTab; iconColor: string
   }
 }
 
+/* ─── Speed-dial action config ─── */
+const SPEED_DIAL_ITEMS = [
+  { key: 'scan', label: 'Scan', icon: 'scan' },
+  { key: 'document', label: 'Upload', icon: 'document' },
+  { key: 'camera', label: 'Camera', icon: 'camera' },
+] as const;
+
 /* ─── Main Component ─── */
 export default function BottomNavBar({ activeTab, navigation }: BottomNavBarProps) {
   const insets = useSafeAreaInsets();
   const { theme, isDark } = useTheme();
   const c = theme.colors;
 
-  // Theme-dependent colors from Figma
-  const barBg = c.navBackground;          // dark=#FFFFFF, light=#141414
-  const barBorder = c.navBorder;          // dark=rgba(188,203,183,0.28), light=rgba(255,255,255,0.08)
-  const pillBg = c.navActivePill;         // dark=#000000, light=#FFFFFF
-  const pillText = c.navActiveText;       // dark=#FFFFFF, light=#141414
+  const [fabOpen, setFabOpen] = useState(false);
+  const rotateAnim = useRef(new Animated.Value(0)).current;
+  const menuAnim = useRef(new Animated.Value(0)).current;
+
+  const barBg = c.navBackground;
+  const barBorder = c.navBorder;
+  const pillBg = c.navActivePill;
+  const pillText = c.navActiveText;
   const pillIcon = isDark ? '#FFFFFF' : '#000000';
-  const inactiveIcon = c.navInactive;     // dark=#757575, light=#AAAAAA
+  const inactiveIcon = c.navInactive;
   const fabBg = isDark ? '#FFFFFF' : '#141414';
   const fabBorder = barBorder;
   const fabIconColor = isDark ? '#000000' : '#FFFFFF';
+  const menuItemBg = isDark ? '#1A1A1A' : '#F5F5F5';
+  const menuItemBorder = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
+
+  const toggleFab = () => {
+    const toValue = fabOpen ? 0 : 1;
+    Animated.parallel([
+      Animated.spring(rotateAnim, { toValue, useNativeDriver: true, tension: 120, friction: 8 }),
+      Animated.spring(menuAnim, { toValue, useNativeDriver: true, tension: 120, friction: 8 }),
+    ]).start();
+    setFabOpen(!fabOpen);
+  };
+
+  const closeFab = () => {
+    if (!fabOpen) return;
+    Animated.parallel([
+      Animated.spring(rotateAnim, { toValue: 0, useNativeDriver: true, tension: 120, friction: 8 }),
+      Animated.spring(menuAnim, { toValue: 0, useNativeDriver: true, tension: 120, friction: 8 }),
+    ]).start();
+    setFabOpen(false);
+  };
+
+  const rotate = rotateAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '45deg'] });
 
   const handlePress = (key: NavTab) => {
     if (key === activeTab) return;
@@ -153,8 +221,59 @@ export default function BottomNavBar({ activeTab, navigation }: BottomNavBarProp
     if (route) navigation.navigate(route);
   };
 
+  const renderSpeedDialIcon = (icon: string, color: string) => {
+    switch (icon) {
+      case 'camera': return <CameraIcon color={color} />;
+      case 'document': return <DocumentIcon color={color} />;
+      case 'scan': return <ScanIcon color={color} />;
+      default: return null;
+    }
+  };
+
   return (
-    <View style={[styles.wrapper, { paddingBottom: Math.max(insets.bottom, 8) + 4 }]}>
+    <View style={[styles.wrapper, { paddingBottom: Math.max(insets.bottom, 8) + 4 }]} pointerEvents="box-none">
+      {/* Backdrop to close menu on outside tap */}
+      {fabOpen && (
+        <Pressable style={StyleSheet.absoluteFill} onPress={closeFab} />
+      )}
+
+      {/* Speed-dial menu items (slide up above FAB) */}
+      {SPEED_DIAL_ITEMS.map((item, index) => {
+        const itemTranslateY = menuAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -(72 + index * 68)],
+        });
+        const itemOpacity = menuAnim.interpolate({
+          inputRange: [0, 0.4, 1],
+          outputRange: [0, 0, 1],
+        });
+        const iconColor = isDark ? '#FFFFFF' : '#141414';
+        return (
+          <Animated.View
+            key={item.key}
+            style={[
+              styles.speedDialItem,
+              {
+                transform: [{ translateY: itemTranslateY }],
+                opacity: itemOpacity,
+              },
+            ]}
+            pointerEvents={fabOpen ? 'auto' : 'none'}
+          >
+            <Text style={[styles.speedDialLabel, { color: isDark ? '#FFFFFF' : '#141414' }]}>
+              {item.label}
+            </Text>
+            <TouchableOpacity
+              style={[styles.speedDialBtn, { backgroundColor: menuItemBg, borderColor: menuItemBorder }]}
+              activeOpacity={0.7}
+              onPress={closeFab}
+            >
+              {renderSpeedDialIcon(item.icon, iconColor)}
+            </TouchableOpacity>
+          </Animated.View>
+        );
+      })}
+
       <View style={styles.row}>
         {/* Main pill bar */}
         <View style={[styles.bar, { backgroundColor: barBg, borderColor: barBorder }]}>
@@ -164,7 +283,7 @@ export default function BottomNavBar({ activeTab, navigation }: BottomNavBarProp
               <TouchableOpacity
                 key={tab}
                 activeOpacity={0.7}
-                onPress={() => handlePress(tab)}
+                onPress={() => { closeFab(); handlePress(tab); }}
                 onLongPress={tab === 'sos' ? () => navigation.navigate('SOSMain') : undefined}
                 delayLongPress={tab === 'sos' ? 3000 : undefined}
                 style={isActive ? styles.activeTabTouch : styles.inactiveTabTouch}
@@ -184,13 +303,15 @@ export default function BottomNavBar({ activeTab, navigation }: BottomNavBarProp
           })}
         </View>
 
-        {/* Separate circular + button */}
+        {/* FAB — rotates + → × */}
         <TouchableOpacity
           style={[styles.fab, { backgroundColor: fabBg, borderColor: fabBorder }]}
           activeOpacity={0.8}
-          onPress={() => handlePress('add' as NavTab)}
+          onPress={toggleFab}
         >
-          <PlusIcon color={fabIconColor} />
+          <Animated.View style={{ transform: [{ rotate }] }}>
+            <PlusIcon color={fabIconColor} />
+          </Animated.View>
         </TouchableOpacity>
       </View>
     </View>
@@ -253,6 +374,27 @@ const styles = StyleSheet.create({
   fab: {
     width: 64,
     height: 64,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+  },
+  speedDialItem: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  speedDialLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    fontFamily: 'Inter',
+  },
+  speedDialBtn: {
+    width: 48,
+    height: 48,
     borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',

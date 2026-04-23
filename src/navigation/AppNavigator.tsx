@@ -1,5 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import MainTabNavigator from './MainTabNavigator';
 import LoginScreen from '../screens/onboarding/LoginScreen';
 import EnterMobileNumberScreen from '../screens/onboarding/EnterMobileNumberScreen';
 import PhoneNumberKeyboardScreen from '../screens/onboarding/PhoneNumberKeyboardScreen';
@@ -102,6 +103,7 @@ export type RootStackParamList = {
   CheckInbox: { country?: any; phone?: string; email?: string } | undefined;
   Register: undefined;
   AllSet: undefined;
+  MainTabs: undefined;
   Home: undefined;
   EditPinnedVitals: undefined;
   EditPinnedBiomarkers: undefined;
@@ -193,6 +195,7 @@ export default function AppNavigator() {
       <Stack.Screen name="CheckInbox" component={CheckInboxScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="AllSet" component={AllSetScreen} />
+      <Stack.Screen name="MainTabs" component={MainTabNavigator} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="EditPinnedVitals" component={EditPinnedVitalsScreen} />
       <Stack.Screen name="EditPinnedBiomarkers" component={EditPinnedBiomarkersScreen} />

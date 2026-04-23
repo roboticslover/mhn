@@ -44,7 +44,7 @@ export default function AllSetScreen({ navigation }: Props) {
       duration: 140,
       useNativeDriver: false,
     }).start(() => {
-      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+      navigation.reset({ index: 0, routes: [{ name: 'MainTabs' }] });
     });
   };
 
