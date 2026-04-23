@@ -3,8 +3,6 @@ import { View, Text, StyleSheet, ScrollView, StatusBar, TouchableOpacity, TextIn
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
-import BottomNavBar from '../../../components/BottomNavBar';
-
 export default function VaccineUploadScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
@@ -97,8 +95,6 @@ export default function VaccineUploadScreen({ navigation }: { navigation: any })
           </View>
         </View>
       </Modal>
-
-      <BottomNavBar activeTab="card" navigation={navigation} />
     </View>
   );
 }

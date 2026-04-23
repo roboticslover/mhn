@@ -14,7 +14,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import Svg, { Path } from 'react-native-svg';
-import BottomNavBar from '../../components/BottomNavBar';
 import ScreenHeader from '../../components/ScreenHeader';
 
 /* ─── Icons ─────────────────────────────────────────────── */
@@ -165,8 +164,6 @@ export default function AddNewContactScreen({ navigation }: { navigation: any })
           <Text style={styles.addBtnText}>Add Contact</Text>
         </TouchableOpacity>
       </ScrollView>
-
-      <BottomNavBar activeTab="sos" navigation={navigation} />
     </KeyboardAvoidingView>
   );
 }

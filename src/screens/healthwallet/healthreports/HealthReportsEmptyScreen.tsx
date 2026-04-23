@@ -3,8 +3,6 @@ import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from 'react-nativ
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
-import BottomNavBar from '../../../components/BottomNavBar';
-
 export default function HealthReportsEmptyScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
@@ -43,8 +41,6 @@ export default function HealthReportsEmptyScreen({ navigation }: { navigation: a
           <Text style={[styles.addButtonText, { color: c.primary, fontFamily: 'Inter' }]}>ADD HEALTH REPORT</Text>
         </TouchableOpacity>
       </View>
-
-      <BottomNavBar activeTab="card" navigation={navigation} />
     </View>
   );
 }

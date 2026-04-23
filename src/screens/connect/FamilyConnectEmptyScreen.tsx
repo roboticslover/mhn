@@ -10,7 +10,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Path, Circle } from 'react-native-svg';
-import BottomNavBar from '../../components/BottomNavBar';
 import ScreenHeader from '../../components/ScreenHeader';
 
 export default function FamilyConnectEmptyScreen({ navigation }: { navigation: any }) {
@@ -88,8 +87,6 @@ export default function FamilyConnectEmptyScreen({ navigation }: { navigation: a
           By sending an invite, you agree to share your basic vitality metrics with this contact once they accept.
         </Text>
       </View>
-
-      <BottomNavBar activeTab="home" navigation={navigation} />
     </View>
   );
 }

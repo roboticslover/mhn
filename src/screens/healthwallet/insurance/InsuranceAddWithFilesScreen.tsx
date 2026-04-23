@@ -10,8 +10,6 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import BottomNavBar from '../../../components/BottomNavBar';
-
 type AttachedFile = { name: string; id: string };
 
 export default function InsuranceAddWithFilesScreen({ navigation }: { navigation: any }) {
@@ -117,15 +115,11 @@ export default function InsuranceAddWithFilesScreen({ navigation }: { navigation
           ))}
         </View>
       </ScrollView>
-
-      {/* Bottom bar — no BottomNavBar on this screen per Figma (add form) */}
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom + 16 }]}>
         <TouchableOpacity style={styles.saveBtn} activeOpacity={0.85} onPress={handleSave}>
           <Text style={styles.saveBtnText}>Save</Text>
         </TouchableOpacity>
       </View>
-
-      <BottomNavBar activeTab="card" navigation={navigation} />
     </View>
   );
 }

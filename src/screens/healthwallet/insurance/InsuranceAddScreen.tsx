@@ -11,8 +11,6 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import BottomNavBar from '../../../components/BottomNavBar';
-
 export default function InsuranceAddScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
   const [insuranceName, setInsuranceName] = useState('');
@@ -139,8 +137,6 @@ export default function InsuranceAddScreen({ navigation }: { navigation: any }) 
           <Text style={styles.saveBtnText}>Save</Text>
         </TouchableOpacity>
       </View>
-
-      <BottomNavBar activeTab="card" navigation={navigation} />
     </View>
   );
 }

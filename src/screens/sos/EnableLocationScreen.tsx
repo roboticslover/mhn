@@ -9,7 +9,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import Svg, { Path, Circle, Line } from 'react-native-svg';
-import BottomNavBar from '../../components/BottomNavBar';
 import ScreenHeader from '../../components/ScreenHeader';
 
 /* ─── Icons ─────────────────────────────────────────────── */
@@ -101,8 +100,6 @@ export default function EnableLocationScreen({ navigation }: { navigation: any }
           </Text>
         </View>
       </View>
-
-      <BottomNavBar activeTab="sos" navigation={navigation} />
     </View>
   );
 }

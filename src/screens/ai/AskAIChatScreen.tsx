@@ -12,7 +12,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import Svg, { Path, Circle, Line } from 'react-native-svg';
-import BottomNavBar from '../../components/BottomNavBar';
 import ScreenHeader from '../../components/ScreenHeader';
 
 const { width: SCREEN_W } = Dimensions.get('window');
@@ -245,8 +244,6 @@ export default function AskAIChatScreen({ navigation, route }: { navigation: any
           </TouchableOpacity>
         </View>
       </View>
-
-      <BottomNavBar activeTab="ai" navigation={navigation} />
     </View>
   );
 }

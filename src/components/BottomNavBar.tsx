@@ -94,10 +94,7 @@ function CameraIcon({ color }: { color: string }) {
 function DocumentIcon({ color }: { color: string }) {
   return (
     <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
-      <Path d="M15.7161 16.2227H8.49609" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
-      <Path d="M15.7161 12.0371H8.49609" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
-      <Path d="M11.2511 7.85938H8.49609" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
-      <Path fillRule="evenodd" clipRule="evenodd" d="M15.9085 2.75C15.9085 2.75 8.23149 2.754 8.21949 2.754C5.45949 2.771 3.75049 4.587 3.75049 7.357V16.553C3.75049 19.337 5.47249 21.16 8.25649 21.16C8.25649 21.16 15.9325 21.157 15.9455 21.157C18.7055 21.14 20.4155 19.323 20.4155 16.553V7.357C20.4155 4.573 18.6925 2.75 15.9085 2.75Z" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M22 19C22 20.1046 21.1046 21 20 21H4C2.89543 21 2 20.1046 2 19V5C2 3.89543 2.89543 3 4 3H9L11 6H20C21.1046 6 22 6.89543 22 8V19Z" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
     </Svg>
   );
 }
@@ -166,11 +163,11 @@ function InactiveTabContent({ tab, iconColor }: { tab: NavTab; iconColor: string
   }
 }
 
-/* ─── Speed-dial action config ─── */
+/* ─── Speed-dial action config (bottom→top: camera, document, scan) ─── */
 const SPEED_DIAL_ITEMS = [
-  { key: 'scan', label: 'Scan', icon: 'scan' },
-  { key: 'document', label: 'Upload', icon: 'document' },
-  { key: 'camera', label: 'Camera', icon: 'camera' },
+  { key: 'camera', icon: 'camera' },
+  { key: 'document', icon: 'document' },
+  { key: 'scan', icon: 'scan' },
 ] as const;
 
 /* ─── Main Component ─── */
@@ -192,8 +189,8 @@ export default function BottomNavBar({ activeTab, navigation }: BottomNavBarProp
   const fabBg = isDark ? '#FFFFFF' : '#141414';
   const fabBorder = barBorder;
   const fabIconColor = isDark ? '#000000' : '#FFFFFF';
-  const menuItemBg = isDark ? '#1A1A1A' : '#F5F5F5';
-  const menuItemBorder = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
+  const menuItemBg = isDark ? '#FFFFFF' : '#141414';
+  const menuItemBorder = isDark ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
 
   const toggleFab = () => {
     const toValue = fabOpen ? 0 : 1;
@@ -231,90 +228,106 @@ export default function BottomNavBar({ activeTab, navigation }: BottomNavBarProp
   };
 
   return (
-    <View style={[styles.wrapper, { paddingBottom: Math.max(insets.bottom, 8) + 4 }]} pointerEvents="box-none">
-      {/* Backdrop to close menu on outside tap */}
+    <>
+      {/* Full-screen backdrop to close menu on outside tap */}
       {fabOpen && (
-        <Pressable style={StyleSheet.absoluteFill} onPress={closeFab} />
+        <Pressable
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 998,
+          }}
+          onPress={closeFab}
+        />
       )}
 
-      {/* Speed-dial menu items (slide up above FAB) */}
-      {SPEED_DIAL_ITEMS.map((item, index) => {
-        const itemTranslateY = menuAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -(72 + index * 68)],
-        });
-        const itemOpacity = menuAnim.interpolate({
-          inputRange: [0, 0.4, 1],
-          outputRange: [0, 0, 1],
-        });
-        const iconColor = isDark ? '#FFFFFF' : '#141414';
-        return (
-          <Animated.View
-            key={item.key}
-            style={[
-              styles.speedDialItem,
-              {
-                transform: [{ translateY: itemTranslateY }],
-                opacity: itemOpacity,
-              },
-            ]}
-            pointerEvents={fabOpen ? 'auto' : 'none'}
-          >
-            <Text style={[styles.speedDialLabel, { color: isDark ? '#FFFFFF' : '#141414' }]}>
-              {item.label}
-            </Text>
+      <View style={[styles.wrapper, { paddingBottom: Math.max(insets.bottom, 8) + 4 }]} pointerEvents="box-none">
+        <View style={styles.row}>
+          {/* Main pill bar */}
+          <View style={[styles.bar, { backgroundColor: barBg, borderColor: barBorder }]}>
+            {TAB_KEYS.map((tab) => {
+              const isActive = activeTab === tab;
+              return (
+                <TouchableOpacity
+                  key={tab}
+                  activeOpacity={0.7}
+                  onPress={() => { closeFab(); handlePress(tab); }}
+                  onLongPress={tab === 'sos' ? () => navigation.navigate('SOSMain') : undefined}
+                  delayLongPress={tab === 'sos' ? 3000 : undefined}
+                  style={isActive ? styles.activeTabTouch : styles.inactiveTabTouch}
+                >
+                  {isActive ? (
+                    <ActiveTabContent
+                      tab={tab}
+                      pillColor={pillBg}
+                      textColor={pillText}
+                      iconColor={pillIcon}
+                    />
+                  ) : (
+                    <InactiveTabContent tab={tab} iconColor={inactiveIcon} />
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
+          {/* FAB container with speed-dial above */}
+          <View style={styles.fabContainer}>
+            {/* Speed-dial items — icons only, centered above FAB */}
+            {SPEED_DIAL_ITEMS.map((item, index) => {
+              const itemTranslateY = menuAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, -(72 + index * 56)],
+              });
+              const itemScale = menuAnim.interpolate({
+                inputRange: [0, 0.5, 1],
+                outputRange: [0.4, 0.85, 1],
+              });
+              const itemOpacity = menuAnim.interpolate({
+                inputRange: [0, 0.4, 1],
+                outputRange: [0, 0, 1],
+              });
+              const iconColor = isDark ? '#000000' : '#FFFFFF';
+              return (
+                <Animated.View
+                  key={item.key}
+                  style={[
+                    styles.speedDialItem,
+                    {
+                      transform: [{ translateY: itemTranslateY }, { scale: itemScale }],
+                      opacity: itemOpacity,
+                    },
+                  ]}
+                  pointerEvents={fabOpen ? 'auto' : 'none'}
+                >
+                  <TouchableOpacity
+                    style={[styles.speedDialBtn, { backgroundColor: menuItemBg, borderColor: menuItemBorder }]}
+                    activeOpacity={0.7}
+                    onPress={closeFab}
+                  >
+                    {renderSpeedDialIcon(item.icon, iconColor)}
+                  </TouchableOpacity>
+                </Animated.View>
+              );
+            })}
+
+            {/* FAB — rotates + → × */}
             <TouchableOpacity
-              style={[styles.speedDialBtn, { backgroundColor: menuItemBg, borderColor: menuItemBorder }]}
-              activeOpacity={0.7}
-              onPress={closeFab}
+              style={[styles.fab, { backgroundColor: fabBg, borderColor: fabBorder }]}
+              activeOpacity={0.8}
+              onPress={toggleFab}
             >
-              {renderSpeedDialIcon(item.icon, iconColor)}
+              <Animated.View style={{ transform: [{ rotate }] }}>
+                <PlusIcon color={fabIconColor} />
+              </Animated.View>
             </TouchableOpacity>
-          </Animated.View>
-        );
-      })}
-
-      <View style={styles.row}>
-        {/* Main pill bar */}
-        <View style={[styles.bar, { backgroundColor: barBg, borderColor: barBorder }]}>
-          {TAB_KEYS.map((tab) => {
-            const isActive = activeTab === tab;
-            return (
-              <TouchableOpacity
-                key={tab}
-                activeOpacity={0.7}
-                onPress={() => { closeFab(); handlePress(tab); }}
-                onLongPress={tab === 'sos' ? () => navigation.navigate('SOSMain') : undefined}
-                delayLongPress={tab === 'sos' ? 3000 : undefined}
-                style={isActive ? styles.activeTabTouch : styles.inactiveTabTouch}
-              >
-                {isActive ? (
-                  <ActiveTabContent
-                    tab={tab}
-                    pillColor={pillBg}
-                    textColor={pillText}
-                    iconColor={pillIcon}
-                  />
-                ) : (
-                  <InactiveTabContent tab={tab} iconColor={inactiveIcon} />
-                )}
-              </TouchableOpacity>
-            );
-          })}
+          </View>
         </View>
-
-        {/* FAB — rotates + → × */}
-        <TouchableOpacity
-          style={[styles.fab, { backgroundColor: fabBg, borderColor: fabBorder }]}
-          activeOpacity={0.8}
-          onPress={toggleFab}
-        >
-          <Animated.View style={{ transform: [{ rotate }] }}>
-            <PlusIcon color={fabIconColor} />
-          </Animated.View>
-        </TouchableOpacity>
       </View>
-    </View>
+    </>
   );
 }
 
@@ -326,11 +339,14 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: 'center',
     paddingHorizontal: 16,
+    zIndex: 999,
+    overflow: 'visible',
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 7,
+    overflow: 'visible',
   },
   bar: {
     width: 280,
@@ -371,6 +387,13 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontFamily: 'Manrope-ExtraBold',
   },
+  fabContainer: {
+    width: 64,
+    height: 64,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    overflow: 'visible',
+  },
   fab: {
     width: 64,
     height: 64,
@@ -382,15 +405,9 @@ const styles = StyleSheet.create({
   speedDialItem: {
     position: 'absolute',
     bottom: 0,
+    left: 0,
     right: 0,
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-  },
-  speedDialLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    fontFamily: 'Inter',
   },
   speedDialBtn: {
     width: 48,

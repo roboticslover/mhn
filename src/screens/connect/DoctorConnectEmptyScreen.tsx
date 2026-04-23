@@ -10,7 +10,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Path, Circle } from 'react-native-svg';
-import BottomNavBar from '../../components/BottomNavBar';
 import ScreenHeader from '../../components/ScreenHeader';
 
 // Stethoscope icon
@@ -87,8 +86,6 @@ export default function DoctorConnectEmptyScreen({ navigation }: { navigation: a
           Add your primary care physician or specialist to securely share and manage your medical records.
         </Text>
       </View>
-
-      <BottomNavBar activeTab="home" navigation={navigation} />
     </View>
   );
 }

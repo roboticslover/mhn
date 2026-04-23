@@ -10,8 +10,6 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import BottomNavBar from '../../../components/BottomNavBar';
-
 type PolicyCardProps = {
   statusLabel: string;
   title: string;
@@ -133,8 +131,6 @@ export default function InsuranceListScreen({ navigation }: { navigation: any })
           </TouchableOpacity>
         </View>
       </ScrollView>
-
-      <BottomNavBar activeTab="card" navigation={navigation} />
     </View>
   );
 }

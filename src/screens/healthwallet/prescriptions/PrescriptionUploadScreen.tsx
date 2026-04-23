@@ -11,8 +11,6 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import BottomNavBar from '../../../components/BottomNavBar';
-
 export default function PrescriptionUploadScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -168,8 +166,6 @@ export default function PrescriptionUploadScreen({ navigation }: { navigation: a
           </View>
         </View>
       </Modal>
-
-      <BottomNavBar activeTab="card" navigation={navigation} />
     </View>
   );
 }

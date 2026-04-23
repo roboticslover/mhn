@@ -11,8 +11,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import Svg, { Line, Circle, Path } from 'react-native-svg';
-import BottomNavBar from '../../../components/BottomNavBar';
-
 function ChartCard({ title, value, colors }: { title: string; value: string; colors: any }) {
   return (
     <View style={[styles.chartCard, { backgroundColor: colors.card, borderColor: colors.cardGlassBorder }]}>
@@ -76,8 +74,6 @@ export default function AnalyticsDetailScreen({ navigation }: { navigation: any 
           </Text>
         </View>
       </ScrollView>
-
-      <BottomNavBar activeTab="card" navigation={navigation} />
     </View>
   );
 }

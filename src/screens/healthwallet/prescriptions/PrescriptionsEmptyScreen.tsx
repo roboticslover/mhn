@@ -8,8 +8,6 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import BottomNavBar from '../../../components/BottomNavBar';
-
 export default function PrescriptionsEmptyScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
 
@@ -52,8 +50,6 @@ export default function PrescriptionsEmptyScreen({ navigation }: { navigation: a
           <Text style={styles.addButtonText}>+ ADD TO HEALTH REPORTS</Text>
         </TouchableOpacity>
       </View>
-
-      <BottomNavBar activeTab="card" navigation={navigation} />
     </View>
   );
 }

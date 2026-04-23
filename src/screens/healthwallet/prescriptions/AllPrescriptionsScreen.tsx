@@ -10,8 +10,6 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import BottomNavBar from '../../../components/BottomNavBar';
-
 function ActivePrescriptionCard({ onPress, onEdit }: { onPress: () => void; onEdit: () => void }) {
   return (
     <TouchableOpacity style={styles.activeCard} activeOpacity={0.8} onPress={onPress}>
@@ -165,8 +163,6 @@ export default function AllPrescriptionsScreen({ navigation }: { navigation: any
           <Ionicons name="chevron-down" size={14} color="#6FFB85" />
         </TouchableOpacity>
       </ScrollView>
-
-      <BottomNavBar activeTab="card" navigation={navigation} />
     </View>
   );
 }

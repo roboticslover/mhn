@@ -10,8 +10,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
-import BottomNavBar from '../../../components/BottomNavBar';
-
 function SummaryCard({ value, label, color, colors }: { value: string; label: string; color: string; colors: any }) {
   return (
     <View style={[styles.summaryCard, { backgroundColor: colors.card, borderColor: colors.cardGlassBorder }]}>
@@ -98,8 +96,6 @@ export default function AnalyticsListScreen({ navigation }: { navigation: any })
           <BiomarkerCard name="CHOLESTROL" value="100" unit="mg/dL" status="RISK" statusColor={c.warning} statusBg={c.warning + '44'} onPress={() => navigation.navigate('AnalyticsDetail')} colors={c} />
         </View>
       </ScrollView>
-
-      <BottomNavBar activeTab="card" navigation={navigation} />
     </View>
   );
 }

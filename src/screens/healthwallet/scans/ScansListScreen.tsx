@@ -6,8 +6,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
-import BottomNavBar from '../../../components/BottomNavBar';
-
 type ScanStatus = 'NORMAL' | 'WARNING';
 
 interface ScanItem {
@@ -145,7 +143,6 @@ export default function ScansListScreen({ navigation }: { navigation: any }) {
           <Text style={styles.loadMoreText}>LOAD PREVIOUS RECORDS</Text>
         </TouchableOpacity>
       </ScrollView>
-      <BottomNavBar activeTab="card" navigation={navigation} />
     </View>
   );
 }

@@ -10,7 +10,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import Svg, { Path, Circle } from 'react-native-svg';
-import BottomNavBar from '../../components/BottomNavBar';
 import ScreenHeader from '../../components/ScreenHeader';
 
 /* ─── Icons ─────────────────────────────────────────────── */
@@ -155,8 +154,6 @@ export default function AddContactFromFamilyScreen({ navigation }: { navigation:
       </View>
 
       </ScrollView>
-
-      <BottomNavBar activeTab="sos" navigation={navigation} />
     </View>
   );
 }

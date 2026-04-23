@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
-import BottomNavBar from '../../components/BottomNavBar';
 import { useTheme } from '../../theme/ThemeProvider';
 
 interface VitalItem {
@@ -163,8 +162,6 @@ export default function EditPinnedVitalsScreen({ navigation }: { navigation: any
           </View>
         ))}
       </ScrollView>
-
-      <BottomNavBar activeTab="home" navigation={navigation} />
     </View>
   );
 }

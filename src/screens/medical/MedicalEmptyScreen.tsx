@@ -10,7 +10,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Path, Circle } from 'react-native-svg';
-import BottomNavBar from '../../components/BottomNavBar';
 import ScreenHeader from '../../components/ScreenHeader';
 
 // Plus circle add icon
@@ -81,8 +80,6 @@ export default function MedicalEmptyScreen({ navigation, title, icon, buttonLabe
           {description}
         </Text>
       </View>
-
-      <BottomNavBar activeTab="home" navigation={navigation} />
     </View>
   );
 }

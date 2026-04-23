@@ -10,8 +10,6 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import BottomNavBar from '../../../components/BottomNavBar';
-
 export default function PrescriptionEditScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
   const [name, setName] = useState('');
@@ -147,8 +145,6 @@ export default function PrescriptionEditScreen({ navigation }: { navigation: any
           </View>
         </View>
       </ScrollView>
-
-      <BottomNavBar activeTab="card" navigation={navigation} />
     </View>
   );
 }
