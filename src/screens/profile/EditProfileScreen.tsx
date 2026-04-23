@@ -91,7 +91,10 @@ export default function EditProfileScreen({ navigation }: { navigation: any }) {
           </View>
 
           {/* View Address Details */}
-          <TouchableOpacity style={[styles.addressCard, { backgroundColor: cardBg, borderColor: cardBorder }]}>
+          <TouchableOpacity 
+            style={[styles.addressCard, { backgroundColor: cardBg, borderColor: cardBorder }]}
+            onPress={() => navigation.navigate('SelectAddress')}
+          >
             <View style={styles.addressLeft}>
               <View style={[styles.addressIcon, { backgroundColor: isDark ? 'rgba(34,197,94,0.1)' : 'rgba(57,166,87,0.1)' }]}>
                 <Ionicons name="location-outline" size={18} color={c.primary} />

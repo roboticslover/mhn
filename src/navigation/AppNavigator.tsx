@@ -75,6 +75,10 @@ import MedicationsScreen from '../screens/medical/MedicationsScreen';
 import AboutYouScreen from '../screens/profile/AboutYouScreen';
 import SettingsScreen from '../screens/profile/SettingsScreen';
 import EditProfileScreen from '../screens/profile/EditProfileScreen';
+import SelectAddressScreen from '../screens/profile/SelectAddressScreen';
+import AddAddressScreen from '../screens/profile/AddAddressScreen';
+import TermsAndConditionsScreen from '../screens/profile/TermsAndConditionsScreen';
+import PrivacyPolicyScreen from '../screens/profile/PrivacyPolicyScreen';
 
 // Ask AI
 import AskAIScreen from '../screens/ai/AskAIScreen';
@@ -152,6 +156,10 @@ export type RootStackParamList = {
   AboutYou: undefined;
   SettingsScreen: undefined;
   ProfileDetail: undefined;
+  SelectAddress: undefined;
+  AddAddress: undefined;
+  TermsAndConditions: undefined;
+  PrivacyPolicy: undefined;
   // Ask AI
   AskAI: undefined;
   AskAIChat: { initialMessage?: string } | undefined;
@@ -251,6 +259,10 @@ export default function AppNavigator() {
       <Stack.Screen name="AboutYou" component={AboutYouScreen} />
       <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
       <Stack.Screen name="ProfileDetail" component={EditProfileScreen} />
+      <Stack.Screen name="SelectAddress" component={SelectAddressScreen} />
+      <Stack.Screen name="AddAddress" component={AddAddressScreen} />
+      <Stack.Screen name="TermsAndConditions" component={TermsAndConditionsScreen} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
 
       {/* Ask AI */}
       <Stack.Screen name="AskAI" component={AskAIScreen} />

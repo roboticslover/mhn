@@ -97,7 +97,7 @@ export default function VerifyOTPScreen({ navigation, route }: Props) {
                     value={d}
                     onChangeText={(v) => handleChange(v, i)}
                     onKeyPress={(e) => handleKey(e, i)}
-                    keyboardType="number-pad"
+                    keyboardType="numeric"
                     maxLength={1}
                     style={[styles.otpInput, { color: colors.primary, fontFamily: 'Inter' }]}
                     selectionColor={colors.primary}

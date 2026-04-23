@@ -71,13 +71,15 @@ const lightTheme: Theme = {
     info: '#3B82F6',
     infoSoft: 'rgba(59, 130, 246, 0.1)',
 
-    // Bottom nav
-    navBackground: '#FFFFFF',
-    navBorder: 'rgba(0,0,0,0.08)',
-    navActive: '#161E14',
-    navInactive: 'rgba(22,30,20,0.35)',
-    navFabBg: '#FFFFFF',
-    navFabIcon: '#161E14',
+    // Bottom nav (Figma light: dark pill bar #141414, white active pill)
+    navBackground: '#141414',
+    navBorder: 'rgba(255, 255, 255, 0.08)',
+    navActive: '#AAAAAA',
+    navInactive: '#AAAAAA',
+    navFabBg: '#141414',
+    navFabIcon: '#FFFFFF',
+    navActivePill: '#FFFFFF',
+    navActiveText: '#141414',
 
     // Slider
     sliderTrack: '#E0E0E0',

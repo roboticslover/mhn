@@ -74,6 +74,8 @@ export interface ThemeColors {
   navInactive: string;
   navFabBg: string;
   navFabIcon: string;
+  navActivePill: string;
+  navActiveText: string;
 
   // Slider
   sliderTrack: string;

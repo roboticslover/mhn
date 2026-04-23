@@ -5,7 +5,6 @@ import {
   StyleSheet,
   StatusBar,
   TouchableOpacity,
-  Dimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -13,31 +12,29 @@ import Svg, { Path, Circle, Line } from 'react-native-svg';
 import BottomNavBar from '../../components/BottomNavBar';
 import ScreenHeader from '../../components/ScreenHeader';
 
-const { width: SCREEN_W } = Dimensions.get('window');
-
-// Crosshair/target location icon
-function TargetIcon({ color = '#6FFB85', size = 80 }: { color?: string; size?: number }) {
+/* ─── Icons ─────────────────────────────────────────────── */
+function MapTargetIcon({ color = '#6FFB85', size = 80 }: { color?: string; size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 80 80" fill="none">
-      <Circle cx={40} cy={40} r={20} stroke={color} strokeWidth={3} />
-      <Circle cx={40} cy={40} r={8} fill={color} />
-      <Line x1={40} y1={5} x2={40} y2={20} stroke={color} strokeWidth={2} />
-      <Line x1={40} y1={60} x2={40} y2={75} stroke={color} strokeWidth={2} />
-      <Line x1={5} y1={40} x2={20} y2={40} stroke={color} strokeWidth={2} />
-      <Line x1={60} y1={40} x2={75} y2={40} stroke={color} strokeWidth={2} />
+      <Circle cx={40} cy={40} r={22} stroke={color} strokeWidth={3} />
+      <Circle cx={40} cy={40} r={9} fill={color} />
+      <Line x1={40} y1={4}  x2={40} y2={18} stroke={color} strokeWidth={2.5} />
+      <Line x1={40} y1={62} x2={40} y2={76} stroke={color} strokeWidth={2.5} />
+      <Line x1={4}  y1={40} x2={18} y2={40} stroke={color} strokeWidth={2.5} />
+      <Line x1={62} y1={40} x2={76} y2={40} stroke={color} strokeWidth={2.5} />
     </Svg>
   );
 }
 
-// Chevron right icon
-function ChevronRight({ color = '#6FFB85', size = 12 }: { color?: string; size?: number }) {
+function ChevronRight({ color = '#6FFB85' }: { color?: string }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 8 12" fill="none">
+    <Svg width={8} height={12} viewBox="0 0 8 12" fill="none">
       <Path d="M1 1L6 6L1 11" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
     </Svg>
   );
 }
 
+/* ─── Component ──────────────────────────────────────────── */
 export default function EnableLocationScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
   const { theme, isDark } = useTheme();
@@ -45,80 +42,61 @@ export default function EnableLocationScreen({ navigation }: { navigation: any }
 
   return (
     <View style={[styles.container, { backgroundColor: c.background }]}>
-      <StatusBar
-        barStyle={isDark ? 'light-content' : 'dark-content'}
-        backgroundColor="transparent"
-        translucent
-      />
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       <View style={{ paddingTop: insets.top + 4 }}>
-        <ScreenHeader
-          title="Emergency Contacts"
-          onBack={() => navigation.goBack()}
-        />
+        <ScreenHeader title="Emergency Contacts" onBack={() => navigation.goBack()} />
       </View>
 
-      {/* Modal Dialog */}
-      <View
-        style={[
-          styles.modal,
-          {
-            backgroundColor: isDark ? 'rgba(23,23,23,0.4)' : c.card,
-            borderColor: isDark ? 'rgba(255,255,255,0.08)' : c.cardBorder,
-          },
-        ]}
-      >
-        {/* Map graphic area */}
-        <View style={[styles.mapPreview, { backgroundColor: isDark ? '#131313' : '#E8E8E8', borderColor: isDark ? 'rgba(255,255,255,0.05)' : c.cardBorder }]}>
-          {/* Grid lines for map effect */}
-          <View style={styles.mapGrid}>
-            {[...Array(6)].map((_, i) => (
-              <View key={`h${i}`} style={[styles.gridLineH, { top: `${(i + 1) * 14}%`, backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.05)' }]} />
-            ))}
-            {[...Array(6)].map((_, i) => (
-              <View key={`v${i}`} style={[styles.gridLineV, { left: `${(i + 1) * 14}%`, backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.05)' }]} />
-            ))}
-          </View>
-          <TargetIcon color={c.primary} size={80} />
-          {/* Small green dot */}
+      {/* ── Glass Modal ── */}
+      <View style={[styles.modal, {
+        backgroundColor: isDark ? 'rgba(23,23,23,0.4)' : c.card,
+        borderColor: isDark ? 'rgba(255,255,255,0.08)' : c.cardBorder,
+      }]}>
+
+        {/* Map preview area */}
+        <View style={[styles.mapBox, {
+          backgroundColor: isDark ? '#131313' : '#EAEAEA',
+          borderColor: isDark ? 'rgba(255,255,255,0.05)' : c.cardBorder,
+        }]}>
+          {/* Grid lines */}
+          {[15, 30, 45, 60, 75, 90].map(p => (
+            <View key={`gh${p}`} style={[styles.gridH, { top: `${p}%`, backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.06)' }]} />
+          ))}
+          {[15, 30, 45, 60, 75, 90].map(p => (
+            <View key={`gv${p}`} style={[styles.gridV, { left: `${p}%`, backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.06)' }]} />
+          ))}
+          <MapTargetIcon color={c.primary} size={80} />
+          {/* Green dot top-right */}
           <View style={[styles.greenDot, { backgroundColor: c.primary }]} />
         </View>
 
         {/* Title */}
-        <Text style={[styles.modalTitle, { color: c.text, fontFamily: 'Inter-Bold' }]}>
-          Enable Location
-        </Text>
+        <Text style={[styles.title, { color: isDark ? '#FFF' : c.text }]}>Enable Location</Text>
 
         {/* Description */}
-        <Text style={[styles.modalDesc, { color: c.textSecondary, fontFamily: 'Inter-Medium' }]}>
+        <Text style={[styles.desc, { color: c.textSecondary }]}>
           We'll only use your location when you send an SOS, so your loved ones know where you are and can be there for you when it matters most.
         </Text>
 
-        {/* Continue button */}
+        {/* Continue */}
         <TouchableOpacity
           style={[styles.continueBtn, { backgroundColor: c.primary }]}
           activeOpacity={0.8}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate('EmergencyContacts')}
         >
-          <Text style={[styles.continueBtnText, { color: c.textOnPrimary, fontFamily: 'Inter-Bold' }]}>
-            Continue
-          </Text>
+          <Text style={styles.continueBtnText}>Continue</Text>
         </TouchableOpacity>
 
         {/* Emergency Contacts link */}
-        <TouchableOpacity
-          style={styles.emergencyLink}
-          onPress={() => navigation.navigate('EmergencyContacts')}
-        >
-          <Text style={[styles.emergencyLinkText, { color: c.primary, fontFamily: 'Inter-Bold' }]}>
-            EMERGENCY CONTACTS
-          </Text>
+        <TouchableOpacity style={styles.linkRow} onPress={() => navigation.navigate('EmergencyContacts')}>
+          <Text style={[styles.linkText, { color: c.primary }]}>EMERGENCY CONTACTS</Text>
           <ChevronRight color={c.primary} />
         </TouchableOpacity>
 
         {/* Footer */}
         <View style={[styles.footer, { borderTopColor: isDark ? 'rgba(255,255,255,0.08)' : c.divider }]}>
-          <Text style={[styles.footerText, { color: c.textSecondary, fontFamily: 'Inter' }]}>
+          <Text style={[styles.footerText, { color: c.textSecondary }]}>
             Stay prepared for any emergency. Add your emergency contacts to make sure your SOS alert is sent to the right people when every second counts.
           </Text>
         </View>
@@ -129,103 +107,58 @@ export default function EnableLocationScreen({ navigation }: { navigation: any }
   );
 }
 
+/* ─── Styles ─────────────────────────────────────────────── */
 const styles = StyleSheet.create({
   container: { flex: 1 },
+
   modal: {
-    marginHorizontal: 18,
-    borderRadius: 33,
-    borderWidth: 1,
-    overflow: 'hidden',
-    flex: 1,
-    marginBottom: 100,
+    marginHorizontal: 18, borderRadius: 33, borderWidth: 1,
+    overflow: 'hidden', flex: 1, marginBottom: 100,
   },
-  mapPreview: {
-    marginHorizontal: 48,
-    marginTop: 35,
-    height: 200,
-    borderRadius: 32,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
+
+  mapBox: {
+    marginHorizontal: 48, marginTop: 19, height: 210,
+    borderRadius: 32, borderWidth: 1,
+    alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
   },
-  mapGrid: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  gridLineH: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 1,
-  },
-  gridLineV: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    width: 1,
-  },
+  gridH: { position: 'absolute', left: 0, right: 0, height: 1 },
+  gridV: { position: 'absolute', top: 0, bottom: 0, width: 1 },
   greenDot: {
-    position: 'absolute',
-    top: 40,
-    right: 60,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    position: 'absolute', top: 42, right: 62,
+    width: 10, height: 10, borderRadius: 5,
   },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginTop: 32,
-    letterSpacing: -0.6,
-    lineHeight: 32,
+
+  title: {
+    fontSize: 24, fontWeight: '700', textAlign: 'center',
+    marginTop: 32, letterSpacing: -0.6, lineHeight: 32, fontFamily: 'Inter-Bold',
   },
-  modalDesc: {
-    fontSize: 16,
-    fontWeight: '500',
-    textAlign: 'center',
-    marginTop: 16,
-    marginHorizontal: 48,
-    lineHeight: 24,
+  desc: {
+    fontSize: 16, fontWeight: '500', textAlign: 'center',
+    marginTop: 16, marginHorizontal: 32, lineHeight: 24, fontFamily: 'Inter-Medium',
   },
+
   continueBtn: {
-    marginHorizontal: 40,
-    marginTop: 32,
-    height: 56,
-    borderRadius: 33,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginHorizontal: 40, marginTop: 32, height: 58,
+    borderRadius: 33, alignItems: 'center', justifyContent: 'center',
   },
   continueBtnText: {
-    fontSize: 18,
-    fontWeight: '700',
-    lineHeight: 28,
+    fontSize: 18, fontWeight: '700', lineHeight: 28,
+    color: '#141414', fontFamily: 'Inter-Bold',
   },
-  emergencyLink: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    marginTop: 24,
+
+  linkRow: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 24,
   },
-  emergencyLinkText: {
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 0.6,
-    textTransform: 'uppercase',
-    lineHeight: 16,
+  linkText: {
+    fontSize: 12, fontWeight: '700', letterSpacing: 0.6,
+    textTransform: 'uppercase', lineHeight: 16, fontFamily: 'Inter-Bold',
   },
+
   footer: {
-    borderTopWidth: 1,
-    marginTop: 16,
-    marginHorizontal: 40,
-    paddingTop: 10,
-    paddingBottom: 40,
+    borderTopWidth: 1, marginTop: 16, marginHorizontal: 40,
+    paddingTop: 10, paddingBottom: 40,
   },
   footerText: {
-    fontSize: 12,
-    fontWeight: '400',
-    textAlign: 'center',
-    lineHeight: 16,
+    fontSize: 12, fontWeight: '400', textAlign: 'center', lineHeight: 16, fontFamily: 'Inter',
   },
 });

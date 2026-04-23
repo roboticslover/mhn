@@ -71,13 +71,15 @@ const darkTheme: Theme = {
     info: '#60A5FA',
     infoSoft: 'rgba(96, 165, 250, 0.1)',
 
-    // Bottom nav (Figma: white pill bar)
+    // Bottom nav (Figma dark: white pill bar, black active pill)
     navBackground: '#FFFFFF',
-    navBorder: 'rgba(255, 255, 255, 0.08)',
+    navBorder: 'rgba(188, 203, 183, 0.28)',
     navActive: '#000000',
-    navInactive: '#AAAAAA',
+    navInactive: '#757575',
     navFabBg: '#FFFFFF',
     navFabIcon: '#000000',
+    navActivePill: '#000000',
+    navActiveText: '#FFFFFF',
 
     // Slider
     sliderTrack: '#2A2A2A',

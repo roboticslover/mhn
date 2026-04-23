@@ -6,18 +6,16 @@ import {
   ScrollView,
   StatusBar,
   TouchableOpacity,
-  Dimensions,
+  Linking,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
-import Svg, { Path, Circle, Rect } from 'react-native-svg';
+import Svg, { Path, Circle, Rect, G, Defs, Stop, LinearGradient as SvgLG } from 'react-native-svg';
 import BottomNavBar from '../../components/BottomNavBar';
 import ScreenHeader from '../../components/ScreenHeader';
 
-const { width: SCREEN_W } = Dimensions.get('window');
-
-// Phone icon
-function PhoneIcon({ color = '#6FFB85', size = 20 }: { color?: string; size?: number }) {
+/* ─── Icons ─────────────────────────────────────────────── */
+function PhoneIcon({ color = '#6FFB85', size = 17 }: { color?: string; size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 20 20" fill="none">
       <Path
@@ -30,12 +28,54 @@ function PhoneIcon({ color = '#6FFB85', size = 20 }: { color?: string; size?: nu
   );
 }
 
-// Heart rate icon
-function HeartIcon({ color = '#FF6B6B', size = 19 }: { color?: string; size?: number }) {
+function HeartIcon() {
   return (
-    <Svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+    <Svg width={19} height={17} viewBox="0 0 20 20" fill="none">
       <Path
         d="M10.51 17.12C10.23 17.22 9.77 17.22 9.49 17.12C7.04 16.26 1.67 12.91 1.67 7.23C1.67 4.73 3.69 2.7 6.17 2.7C7.63 2.7 8.92 3.39 9.75 4.47C10.21 3.9 10.8 3.44 11.47 3.13C12.14 2.82 12.87 2.66 13.61 2.67C16.09 2.67 18.11 4.7 18.11 7.2C18.11 12.88 12.74 16.23 10.51 17.12Z"
+        stroke="#FF6B6B"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+}
+
+function MedicalDocIcon({ color = '#AAAAAA' }: { color?: string }) {
+  return (
+    <Svg width={19} height={19} viewBox="0 0 20 20" fill="none">
+      <Rect x={3} y={1} width={14} height={18} rx={2} stroke={color} strokeWidth={1.5} />
+      <Path d="M7 6H13" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
+      <Path d="M7 10H13" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
+      <Path d="M7 14H10" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+function ChevronRightSmall({ color = '#AAAAAA' }: { color?: string }) {
+  return (
+    <Svg width={7} height={12} viewBox="0 0 7 12" fill="none">
+      <Path d="M1 1L6 6L1 11" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+function MapCopyIcon({ color = '#E2E2E2' }: { color?: string }) {
+  return (
+    <Svg width={10} height={10} viewBox="0 0 10 10" fill="none">
+      <Rect x={0.5} y={0.5} width={6} height={6} rx={1} stroke={color} strokeWidth={0.8} />
+      <Rect x={3.5} y={3.5} width={6} height={6} rx={1} stroke={color} strokeWidth={0.8} />
+    </Svg>
+  );
+}
+
+/* ─── Shielded Age icon ──────────────────────────────────── */
+function ShieldAgeIcon({ color = '#BCCBB7' }: { color?: string }) {
+  return (
+    <Svg width={17} height={19} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M20.91 11.12C20.91 16.01 17.36 20.59 12.51 21.93C12.18 22.02 11.82 22.02 11.49 21.93C6.64 20.59 3.09 16.01 3.09 11.12V6.73C3.09 5.91 3.71 4.98 4.48 4.67L10.05 2.39C11.3 1.88 12.71 1.88 13.96 2.39L19.53 4.67C20.29 4.98 20.92 5.91 20.92 6.73L20.91 11.12Z"
         stroke={color}
         strokeWidth={1.5}
         strokeLinecap="round"
@@ -45,40 +85,85 @@ function HeartIcon({ color = '#FF6B6B', size = 19 }: { color?: string; size?: nu
   );
 }
 
-// Medical document icon
-function MedicalIcon({ color = '#AAAAAA', size = 19 }: { color?: string; size?: number }) {
+function GenderIcon({ color = '#BCCBB7' }: { color?: string }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 20 20" fill="none">
-      <Rect x={3} y={1} width={14} height={18} rx={2} stroke={color} strokeWidth={1.5} />
-      <Path d="M7 6H13" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
-      <Path d="M7 10H13" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
-      <Path d="M7 14H10" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
+    <Svg width={15} height={15} viewBox="0 0 24 24" fill="none">
+      <Path d="M12 16V21M10 19H14" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
+      <Circle cx={12} cy={10} r={6} stroke={color} strokeWidth={1.5} />
     </Svg>
   );
 }
 
-// Map pin icon
-function MapPinIcon({ size = 32 }: { size?: number }) {
+/* ─── Map Section ────────────────────────────────────────── */
+function MapSection({ isDark }: { isDark: boolean }) {
   return (
-    <Svg width={size} height={size * 1.25} viewBox="0 0 32 40" fill="none">
-      <Path
-        d="M16 0C7.163 0 0 7.163 0 16C0 28 16 40 16 40S32 28 32 16C32 7.163 24.837 0 16 0Z"
-        fill="#E42828"
-      />
-      <Circle cx={16} cy={16} r={6} fill="#FFF" />
-    </Svg>
+    <View style={mapStyles.container}>
+      {/* Map bg */}
+      <View style={[mapStyles.mapBg, { backgroundColor: isDark ? '#1C3220' : '#DCEADC' }]}>
+        {/* Grid for map feel */}
+        {[20, 35, 50, 65, 80].map(p => (
+          <View key={`mh${p}`} style={[mapStyles.lineH, { top: `${p}%`, backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' }]} />
+        ))}
+        {[15, 30, 45, 60, 75, 90].map(p => (
+          <View key={`mv${p}`} style={[mapStyles.lineV, { left: `${p}%`, backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' }]} />
+        ))}
+        {/* City labels */}
+        <Text style={[mapStyles.cityLabel, { color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)', top: '30%', left: '20%' }]}>Secunderabad</Text>
+        <Text style={[mapStyles.cityLabel, { color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)', top: '48%', left: '10%' }]}>Map Preview</Text>
+        {/* Location pin */}
+        <View style={mapStyles.pinContainer}>
+          <View style={mapStyles.pin} />
+          <View style={mapStyles.pinShadow} />
+        </View>
+        {/* City name near pin */}
+        <View style={mapStyles.cityRow}>
+          <Text style={[mapStyles.cityName, { color: isDark ? '#E2E2E2' : '#333' }]}>Hyderabad</Text>
+          <Text style={[mapStyles.cityNameTelugu, { color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)' }]}>హైదరాబాద్</Text>
+        </View>
+      </View>
+      {/* Gradient overlay at bottom */}
+      <View style={[mapStyles.gradient, { backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.85)' }]} />
+      {/* Open in Google Maps button */}
+      <TouchableOpacity
+        style={[mapStyles.mapsBtn, { backgroundColor: isDark ? 'rgba(53,53,53,0.8)' : 'rgba(200,200,200,0.8)', borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.1)' }]}
+        onPress={() => Linking.openURL('https://maps.google.com/?q=Hyderabad')}
+      >
+        <MapCopyIcon color={isDark ? '#E2E2E2' : '#333'} />
+        <Text style={[mapStyles.mapsBtnText, { color: isDark ? '#E2E2E2' : '#333' }]}>OPEN IN GOOGLE MAPS</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
-// Chevron right
-function ChevronRight({ color = '#AAAAAA', size = 16 }: { color?: string; size?: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 16 16" fill="none">
-      <Path d="M6 4L10 8L6 12" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
-    </Svg>
-  );
-}
+const mapStyles = StyleSheet.create({
+  container: { height: 432, overflow: 'hidden' },
+  mapBg: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  lineH: { position: 'absolute', left: 0, right: 0, height: 1 },
+  lineV: { position: 'absolute', top: 0, bottom: 0, width: 1 },
+  cityLabel: { position: 'absolute', fontSize: 11, fontFamily: 'Inter', letterSpacing: 0.3 },
+  pinContainer: { position: 'absolute', top: '38%', left: '40%', alignItems: 'center' },
+  pin: { width: 24, height: 24, borderRadius: 12, backgroundColor: '#E42828', zIndex: 2, shadowColor: '#E42828', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.9, shadowRadius: 10, elevation: 6 },
+  pinShadow: { width: 12, height: 4, borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.3)', marginTop: 2 },
+  cityRow: { position: 'absolute', top: '52%', left: '38%' },
+  cityName: { fontSize: 13, fontWeight: '600', fontFamily: 'Inter' },
+  cityNameTelugu: { fontSize: 10, fontFamily: 'Inter' },
+  gradient: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 140 },
+  mapsBtn: {
+    position: 'absolute',
+    bottom: 24,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    borderRadius: 999,
+    borderWidth: 1,
+    paddingHorizontal: 25,
+    paddingVertical: 13,
+  },
+  mapsBtnText: { fontSize: 12, fontWeight: '400', letterSpacing: 0.6, textTransform: 'uppercase', fontFamily: 'Inter' },
+});
 
+/* ─── Screen Component ───────────────────────────────────── */
 export default function SOSReceivedScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
   const { theme, isDark } = useTheme();
@@ -86,119 +171,101 @@ export default function SOSReceivedScreen({ navigation }: { navigation: any }) {
 
   return (
     <View style={[styles.container, { backgroundColor: c.background }]}>
-      <StatusBar
-        barStyle={isDark ? 'light-content' : 'dark-content'}
-        backgroundColor="transparent"
-        translucent
-      />
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       <ScrollView
         contentContainerStyle={{ paddingTop: insets.top + 4, paddingBottom: 110 }}
         showsVerticalScrollIndicator={false}
       >
-        <ScreenHeader
-          title="Emergency Contacts"
-          onBack={() => navigation.goBack()}
-        />
+        <ScreenHeader title="Emergency Contacts" onBack={() => navigation.goBack()} />
 
-        {/* Map Section */}
-        <View style={styles.mapSection}>
-          <View style={[styles.mapPlaceholder, { backgroundColor: isDark ? '#1A2E1A' : '#E0EDE0' }]}>
-            <MapPinIcon size={32} />
-            <Text style={[styles.mapLabel, { color: c.textSecondary, fontFamily: 'Inter' }]}>
-              Hyderabad
-            </Text>
-          </View>
-          {/* Open in Google Maps button */}
-          <TouchableOpacity style={[styles.mapCTA, { backgroundColor: isDark ? 'rgba(53,53,53,0.8)' : 'rgba(200,200,200,0.8)', borderColor: isDark ? 'rgba(255,255,255,0.05)' : c.cardBorder }]}>
-            <Text style={[styles.mapCTAText, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter' }]}>
-              OPEN IN GOOGLE MAPS
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {/* ── Map ── */}
+        <MapSection isDark={isDark} />
 
-        {/* Content Card */}
-        <View
-          style={[
-            styles.contentCard,
-            {
-              backgroundColor: isDark ? 'rgba(23,23,23,0.4)' : c.card,
-              borderColor: isDark ? 'rgba(255,255,255,0.08)' : c.cardBorder,
-            },
-          ]}
-        >
-          {/* Status Alert */}
-          <View style={styles.statusAlert}>
-            <View style={styles.statusDot} />
-            <Text style={[styles.statusText, { color: c.text, fontFamily: 'Inter-Medium' }]}>
-              Emergency signal was received{'\n'}from Praneeth Velpuri
+        {/* ── Content Card (glass morphism) ── */}
+        <View style={[styles.card, {
+          backgroundColor: isDark ? 'rgba(23,23,23,0.4)' : c.card,
+          borderColor: isDark ? 'rgba(255,255,255,0.08)' : c.cardBorder,
+        }]}>
+
+          {/* Status alert */}
+          <View style={styles.alertRow}>
+            <View style={styles.alertDot} />
+            <Text style={[styles.alertText, { color: isDark ? '#FFF' : c.text }]}>
+              {'Emergency signal was received \nfrom Praneeth Velpuri'}
             </Text>
           </View>
 
-          {/* Date & Name */}
+          {/* Date + Name */}
           <View style={styles.mainInfo}>
-            <Text style={[styles.dateText, { color: c.textSecondary, fontFamily: 'Inter' }]}>
-              6 Apr 2026 at 10:36 am
-            </Text>
-            <Text style={[styles.personName, { color: c.text, fontFamily: 'Inter-Bold' }]}>
+            <Text style={[styles.dateText, { color: '#AAAAAA' }]}>6 Apr 2026 at 10:36 am</Text>
+            <Text style={[styles.personName, { color: isDark ? '#FFF' : c.text }]}>
               Praneeth Velpuri
             </Text>
           </View>
 
-          {/* Phone number */}
-          <View style={[styles.infoRow, { backgroundColor: isDark ? 'rgba(23,23,23,0.4)' : c.inputBackground, borderColor: isDark ? 'rgba(255,255,255,0.08)' : c.cardBorder }]}>
-            <PhoneIcon color={c.primary} />
-            <Text style={[styles.infoRowText, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter' }]}>
-              +91 73860 34229
-            </Text>
-            <ChevronRight color={c.textSecondary} />
+          {/* Phone row */}
+          <View style={[styles.phoneRow, {
+            backgroundColor: isDark ? 'rgba(23,23,23,0.4)' : c.inputBackground,
+            borderColor: isDark ? 'rgba(255,255,255,0.08)' : c.cardBorder,
+          }]}>
+            <PhoneIcon color={c.primary} size={17} />
+            <Text style={[styles.phoneText, { color: isDark ? '#E2E2E2' : c.text }]}>+91 73860 34229</Text>
+            <ChevronRightSmall color={isDark ? '#AAAAAA' : c.textSecondary} />
           </View>
 
-          {/* Age & Gender */}
-          <View style={styles.detailsGrid}>
-            <View style={[styles.detailChip, { backgroundColor: isDark ? 'rgba(23,23,23,0.4)' : c.inputBackground, borderColor: isDark ? 'rgba(255,255,255,0.08)' : c.cardBorder }]}>
-              <Text style={[styles.detailLabel, { color: c.textSecondary, fontFamily: 'Inter' }]}>AGE</Text>
-              <Text style={[styles.detailValue, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-Medium' }]}>57 Yrs</Text>
+          {/* Age + Gender chips */}
+          <View style={styles.detailsRow}>
+            <View style={[styles.detailChip, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : c.inputBackground }]}>
+              <ShieldAgeIcon color={isDark ? '#BCCBB7' : c.textSecondary} />
+              <View>
+                <Text style={[styles.detailLabel, { color: isDark ? '#BCCBB7' : c.textSecondary }]}>AGE</Text>
+                <Text style={[styles.detailValue, { color: isDark ? '#E2E2E2' : c.text }]}>57 Yrs</Text>
+              </View>
             </View>
-            <View style={[styles.detailChip, { backgroundColor: isDark ? 'rgba(23,23,23,0.4)' : c.inputBackground, borderColor: isDark ? 'rgba(255,255,255,0.08)' : c.cardBorder }]}>
-              <Text style={[styles.detailLabel, { color: c.textSecondary, fontFamily: 'Inter' }]}>GENDER</Text>
-              <Text style={[styles.detailValue, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-Medium' }]}>Female</Text>
+            <View style={[styles.detailChip, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : c.inputBackground }]}>
+              <GenderIcon color={isDark ? '#BCCBB7' : c.textSecondary} />
+              <View>
+                <Text style={[styles.detailLabel, { color: isDark ? '#BCCBB7' : c.textSecondary }]}>GENDER</Text>
+                <Text style={[styles.detailGenderVal, { color: isDark ? '#E2E2E2' : c.text }]}>Female</Text>
+              </View>
             </View>
           </View>
 
           {/* Blood Group */}
-          <View style={styles.bloodGroupRow}>
-            <View style={[styles.bloodGroupLabel, { backgroundColor: isDark ? 'rgba(23,23,23,0.4)' : c.inputBackground, borderColor: isDark ? 'rgba(255,255,255,0.08)' : c.cardBorder }]}>
-              <Text style={[styles.bloodGroupText, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter' }]}>Blood Group</Text>
+          <View style={styles.bloodRow}>
+            <View style={[styles.bloodLabelPill, {
+              backgroundColor: isDark ? 'rgba(23,23,23,0.4)' : c.inputBackground,
+              borderColor: isDark ? 'rgba(255,255,255,0.08)' : c.cardBorder,
+            }]}>
+              <Text style={[styles.bloodLabelText, { color: isDark ? '#FFF' : c.text }]}>Blood Group</Text>
             </View>
-            <View style={[styles.bloodGroupValue, { backgroundColor: c.primary }]}>
-              <Text style={[styles.bloodGroupValueText, { color: c.textOnPrimary, fontFamily: 'Inter-Medium' }]}>O+</Text>
+            <View style={[styles.bloodValuePill, { backgroundColor: c.primary }]}>
+              <Text style={styles.bloodValueText}>O+</Text>
             </View>
           </View>
 
-          {/* Call Emergency Contact button */}
-          <TouchableOpacity style={[styles.callBtn, { backgroundColor: c.primary }]}>
-            <PhoneIcon color={c.textOnPrimary} />
-            <Text style={[styles.callBtnText, { color: c.textOnPrimary, fontFamily: 'Manrope-ExtraBold' }]}>
-              Call Emergency Contact
-            </Text>
+          {/* Call Emergency Contact */}
+          <TouchableOpacity style={[styles.callBtn, { backgroundColor: c.primary }]} activeOpacity={0.8}>
+            <PhoneIcon color="#141414" size={18} />
+            <Text style={styles.callBtnText}>Call Emergency Contact</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Secondary Health Data */}
-        <View style={styles.healthDataGrid}>
-          <View style={[styles.healthCard, { backgroundColor: isDark ? '#1B1B1B' : c.card, borderColor: isDark ? 'transparent' : c.cardBorder, borderWidth: isDark ? 0 : 1 }]}>
+        {/* ── Health Data Bento ── */}
+        <View style={styles.healthGrid}>
+          <View style={[styles.healthCard, { backgroundColor: isDark ? '#1B1B1B' : c.card }]}>
             <HeartIcon />
-            <Text style={[styles.healthLabel, { color: c.textSecondary, fontFamily: 'Inter' }]}>Last Heart Rate</Text>
-            <View style={styles.healthValueRow}>
-              <Text style={[styles.healthValue, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-Bold' }]}>112 </Text>
-              <Text style={[styles.healthUnit, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter-Medium' }]}>BPM</Text>
+            <Text style={[styles.healthLabel, { color: '#AAAAAA' }]}>Last Heart Rate</Text>
+            <View style={styles.healthValRow}>
+              <Text style={[styles.healthVal, { color: isDark ? '#E2E2E2' : c.text }]}>112 </Text>
+              <Text style={[styles.healthUnit, { color: isDark ? '#BCCBB7' : c.textSecondary }]}>BPM</Text>
             </View>
           </View>
-          <View style={[styles.healthCard, { backgroundColor: isDark ? '#1B1B1B' : c.card, borderColor: isDark ? 'transparent' : c.cardBorder, borderWidth: isDark ? 0 : 1 }]}>
-            <MedicalIcon color={c.textSecondary} />
-            <Text style={[styles.healthLabel, { color: c.textSecondary, fontFamily: 'Inter' }]}>Medical Information</Text>
-            <Text style={[styles.healthLink, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-Medium' }]}>View documents</Text>
+          <View style={[styles.healthCard, { backgroundColor: isDark ? '#1B1B1B' : c.card }]}>
+            <MedicalDocIcon color="#AAAAAA" />
+            <Text style={[styles.healthLabel, { color: '#AAAAAA' }]}>Medical Information</Text>
+            <Text style={[styles.healthLink, { color: isDark ? '#E2E2E2' : c.text }]}>View documents</Text>
           </View>
         </View>
       </ScrollView>
@@ -208,201 +275,64 @@ export default function SOSReceivedScreen({ navigation }: { navigation: any }) {
   );
 }
 
+/* ─── Styles ─────────────────────────────────────────────── */
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  mapSection: {
-    marginHorizontal: 0,
-    height: 430,
-    marginBottom: 0,
-  },
-  mapPlaceholder: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mapLabel: {
-    fontSize: 14,
-    marginTop: 8,
-  },
-  mapCTA: {
-    position: 'absolute',
-    bottom: 24,
-    alignSelf: 'center',
-    borderRadius: 999,
-    borderWidth: 1,
-    paddingHorizontal: 25,
-    paddingVertical: 13,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  mapCTAText: {
-    fontSize: 12,
-    fontWeight: '400',
-    letterSpacing: 0.6,
-    textTransform: 'uppercase',
-    lineHeight: 16,
-  },
-  contentCard: {
+
+  /* Content Card */
+  card: {
     marginHorizontal: 20,
     borderRadius: 40,
     borderWidth: 1,
     padding: 32,
     marginTop: -20,
   },
-  statusAlert: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-    marginBottom: 24,
+  alertRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, marginBottom: 16 },
+  alertDot: {
+    width: 12, height: 12, borderRadius: 6, backgroundColor: '#DB5034', marginTop: 6,
+    shadowColor: '#EF4444', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.6, shadowRadius: 12, elevation: 4,
   },
-  statusDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#DB5034',
-    marginTop: 6,
-    shadowColor: '#EF4444',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.6,
-    shadowRadius: 12,
-    elevation: 4,
+  alertText: { fontSize: 16, fontWeight: '500', lineHeight: 24, flex: 1, fontFamily: 'Inter-Medium' },
+
+  mainInfo: { gap: 4, marginBottom: 24 },
+  dateText: { fontSize: 12, fontWeight: '400', lineHeight: 16, fontFamily: 'Inter' },
+  personName: { fontSize: 34, fontWeight: '700', letterSpacing: -0.68, fontFamily: 'WorkSans-Bold' },
+
+  phoneRow: {
+    flexDirection: 'row', alignItems: 'center', height: 72, borderRadius: 33, borderWidth: 1,
+    paddingHorizontal: 20, gap: 16, marginBottom: 16,
   },
-  statusText: {
-    fontSize: 16,
-    fontWeight: '500',
-    lineHeight: 24,
-    flex: 1,
-  },
-  mainInfo: {
-    gap: 4,
-    marginBottom: 24,
-  },
-  dateText: {
-    fontSize: 12,
-    fontWeight: '400',
-    lineHeight: 16,
-  },
-  personName: {
-    fontSize: 34,
-    fontWeight: '700',
-    letterSpacing: -0.68,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 72,
-    borderRadius: 33,
-    borderWidth: 1,
-    paddingHorizontal: 20,
-    gap: 16,
-    marginBottom: 16,
-  },
-  infoRowText: {
-    fontSize: 16,
-    fontWeight: '500',
-    flex: 1,
-  },
-  detailsGrid: {
-    flexDirection: 'row',
-    gap: 16,
-    marginBottom: 16,
-  },
+  phoneText: { fontSize: 18, fontWeight: '700', flex: 1, fontFamily: 'Inter-Bold' },
+
+  detailsRow: { flexDirection: 'row', gap: 16, marginBottom: 16 },
   detailChip: {
-    flex: 1,
-    borderRadius: 20,
-    borderWidth: 1,
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    flex: 1, borderRadius: 33, padding: 20, flexDirection: 'row', alignItems: 'center', gap: 16, height: 77,
   },
-  detailLabel: {
-    fontSize: 10,
-    fontWeight: '800',
-    letterSpacing: 0.5,
-    textTransform: 'uppercase',
+  detailLabel: { fontSize: 10, fontWeight: '400', letterSpacing: 1, textTransform: 'uppercase', lineHeight: 15, fontFamily: 'Inter' },
+  detailValue: { fontSize: 14, fontWeight: '800', lineHeight: 20, fontFamily: 'Manrope-ExtraBold', textTransform: 'capitalize' },
+  detailGenderVal: { fontSize: 18, fontWeight: '700', lineHeight: 28, fontFamily: 'Inter-Bold' },
+
+  bloodRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 24 },
+  bloodLabelPill: {
+    flex: 1, borderRadius: 33, borderWidth: 1, height: 58, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12,
   },
-  detailValue: {
-    fontSize: 16,
-    fontWeight: '500',
+  bloodLabelText: { fontSize: 18, fontWeight: '700', fontFamily: 'Inter-Bold' },
+  bloodValuePill: {
+    width: 108, height: 58, borderRadius: 40, alignItems: 'center', justifyContent: 'center',
   },
-  bloodGroupRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    marginBottom: 24,
-  },
-  bloodGroupLabel: {
-    borderRadius: 20,
-    borderWidth: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  bloodGroupText: {
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  bloodGroupValue: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bloodGroupValueText: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
+  bloodValueText: { fontSize: 32, fontWeight: '500', color: '#141414', fontFamily: 'Inter-Medium', lineHeight: 36 },
+
   callBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    height: 58,
-    borderRadius: 33,
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, height: 58, borderRadius: 999,
   },
-  callBtnText: {
-    fontSize: 14,
-    fontWeight: '800',
-    lineHeight: 20,
-  },
-  healthDataGrid: {
-    flexDirection: 'row',
-    marginHorizontal: 20,
-    gap: 16,
-    marginTop: 24,
-  },
-  healthCard: {
-    flex: 1,
-    borderRadius: 24,
-    padding: 20,
-    gap: 4,
-  },
-  healthLabel: {
-    fontSize: 12,
-    fontWeight: '400',
-    lineHeight: 16,
-    marginTop: 4,
-  },
-  healthValueRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-  },
-  healthValue: {
-    fontSize: 24,
-    fontWeight: '700',
-    lineHeight: 32,
-    letterSpacing: -0.6,
-  },
-  healthUnit: {
-    fontSize: 16,
-    fontWeight: '500',
-    lineHeight: 24,
-  },
-  healthLink: {
-    fontSize: 16,
-    fontWeight: '500',
-    lineHeight: 24,
-  },
+  callBtnText: { fontSize: 18, fontWeight: '700', lineHeight: 28, color: '#141414', fontFamily: 'Inter-Bold' },
+
+  /* Health bento */
+  healthGrid: { flexDirection: 'row', marginHorizontal: 20, gap: 16, marginTop: 24 },
+  healthCard: { flex: 1, borderRadius: 24, padding: 20, gap: 4 },
+  healthLabel: { fontSize: 12, fontWeight: '400', lineHeight: 16, marginTop: 4, fontFamily: 'Inter' },
+  healthValRow: { flexDirection: 'row', alignItems: 'baseline', gap: 2 },
+  healthVal: { fontSize: 24, fontWeight: '700', lineHeight: 32, letterSpacing: -0.6, fontFamily: 'Inter-Bold' },
+  healthUnit: { fontSize: 16, fontWeight: '500', lineHeight: 24, fontFamily: 'Inter-Medium' },
+  healthLink: { fontSize: 16, fontWeight: '500', lineHeight: 24, fontFamily: 'Inter-Medium' },
 });

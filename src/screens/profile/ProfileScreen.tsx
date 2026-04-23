@@ -63,8 +63,8 @@ const GROUP2: SettingsLink[] = [
 ];
 
 const GROUP3: SettingsLink[] = [
-  { icon: 'document-text-outline', label: 'Terms and Conditions' },
-  { icon: 'shield-checkmark-outline', label: 'Privacy and Policy' },
+  { icon: 'document-text-outline', label: 'Terms and Conditions', route: 'TermsAndConditions' },
+  { icon: 'shield-checkmark-outline', label: 'Privacy and Policy', route: 'PrivacyPolicy' },
   { icon: 'settings-outline', label: 'Settings', route: 'SettingsScreen' },
 ];
 
@@ -106,7 +106,7 @@ function SettingsGroup({
                 },
               ]}
             >
-              <Ionicons name={item.icon as any} size={20} color={c.text} />
+              <Ionicons name={item.icon as any} size={20} color={c.primary} />
             </View>
             <Text style={[styles.linkLabel, { color: c.text, fontFamily: 'Inter-Bold' }]}>
               {item.label}
@@ -155,7 +155,7 @@ export default function ProfileScreen({ navigation }: { navigation: any }) {
 
           {/* Name */}
           <Text style={[styles.profileName, { color: c.text, fontFamily: 'Inter-Bold' }]}>
-            Raguararam
+            Praneeth Velpuri
           </Text>
           <Text style={[styles.profileMeta, { color: c.textSecondary, fontFamily: 'Inter-Medium' }]}>
             Male, 18 yr  •  164cm
