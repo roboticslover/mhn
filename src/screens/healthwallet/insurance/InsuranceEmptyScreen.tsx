@@ -11,52 +11,52 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 export default function InsuranceEmptyScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const c = theme.colors;
 
   return (
-    <View style={[styles.container, { backgroundColor: '#050505' }]}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+    <View style={[styles.container, { backgroundColor: c.background }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={20} color="#fff" />
+          <Ionicons name="chevron-back" size={20} color={c.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Insurance</Text>
+        <Text style={[styles.headerTitle, { color: c.text }]}>Insurance</Text>
         <View style={{ width: 20 }} />
       </View>
 
       {/* Central glassmorphic card */}
       <View style={styles.cardWrapper}>
-        <View style={styles.glassCard}>
+        <View style={[styles.glassCard, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}>
           {/* Shield icon box */}
           <View style={styles.iconWrap}>
-            <View style={styles.iconBox}>
-              <Ionicons name="shield-checkmark-outline" size={34} color="#34C759" />
+            <View style={[styles.iconBox, { backgroundColor: isDark ? 'rgba(0,0,0,0.4)' : c.cardElevated, borderColor: c.primary + '55' }]}>
+              <Ionicons name="shield-checkmark-outline" size={34} color={c.primary} />
             </View>
           </View>
 
           {/* Title */}
-          <Text style={styles.mainTitle}>{'Secure Your\nCoverage'}</Text>
+          <Text style={[styles.mainTitle, { color: c.text }]}>{'Secure Your\nCoverage'}</Text>
 
           {/* Subtitle */}
-          <Text style={styles.subtitle}>
+          <Text style={[styles.subtitle, { color: c.textSecondary }]}>
             {'Initialize your digital\ninsurance vault for\nautomated claims and\nsynchronized biometric\nvalidation.'}
           </Text>
 
           {/* ADD NEW POLICY button */}
           <TouchableOpacity
-            style={styles.addBtn}
+            style={[styles.addBtn, { backgroundColor: c.primary }]}
             activeOpacity={0.85}
             onPress={() => navigation.navigate('InsuranceAdd')}
           >
-            <Text style={styles.addBtnText}>ADD NEW POLICY</Text>
+            <Text style={[styles.addBtnText, { color: c.textOnPrimary }]}>ADD NEW POLICY</Text>
           </TouchableOpacity>
 
           {/* Import link */}
           <TouchableOpacity activeOpacity={0.7}>
-            <Text style={styles.importLink}>Import existing vault</Text>
+            <Text style={[styles.importLink, { color: c.textSecondary }]}>Import existing vault</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '600',
     fontFamily: 'Inter',
-    color: '#fff',
     lineHeight: 22,
   },
   cardWrapper: {
@@ -88,10 +87,8 @@ const styles = StyleSheet.create({
     paddingBottom: 90,
   },
   glassCard: {
-    backgroundColor: 'rgba(23,23,23,0.4)',
     borderRadius: 40,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
     alignItems: 'center',
     paddingTop: 48,
     paddingBottom: 40,
@@ -109,9 +106,7 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 12,
-    backgroundColor: 'rgba(0,0,0,0.4)',
     borderWidth: 1,
-    borderColor: 'rgba(52,199,89,0.2)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -119,7 +114,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '700',
     fontFamily: 'Inter',
-    color: '#fff',
     textAlign: 'center',
     lineHeight: 36,
     letterSpacing: -0.75,
@@ -129,13 +123,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '400',
     fontFamily: 'Inter',
-    color: '#C5C9AC',
     textAlign: 'center',
     lineHeight: 28,
     marginBottom: 40,
   },
   addBtn: {
-    backgroundColor: '#6FFB85',
     borderRadius: 40,
     height: 48,
     alignItems: 'center',
@@ -148,7 +140,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '800',
     fontFamily: 'Manrope',
-    color: '#141414',
     textTransform: 'uppercase',
     letterSpacing: 0,
   },
@@ -156,7 +147,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '400',
     fontFamily: 'Inter',
-    color: '#E5E5E5',
     lineHeight: 16,
   },
 });

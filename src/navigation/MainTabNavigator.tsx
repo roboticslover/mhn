@@ -47,9 +47,19 @@ import EnableLocationScreen from '../screens/sos/EnableLocationScreen';
 import AddContactFromFamilyScreen from '../screens/sos/AddContactFromFamilyScreen';
 import AddNewContactScreen from '../screens/sos/AddNewContactScreen';
 
-// Connect screens (sub-screens of Home)
-import DoctorConnectEmptyScreen from '../screens/connect/DoctorConnectEmptyScreen';
-import FamilyConnectEmptyScreen from '../screens/connect/FamilyConnectEmptyScreen';
+// Connect - Doctor screens
+import DoctorConnectEmptyScreen from '../screens/connect/doctor/DoctorConnectEmptyScreen';
+import DoctorListScreen from '../screens/connect/doctor/DoctorListScreen';
+import DoctorSearchScreen from '../screens/connect/doctor/DoctorSearchScreen';
+import DoctorAddScreen from '../screens/connect/doctor/DoctorAddScreen';
+import DoctorDetailScreen from '../screens/connect/doctor/DoctorDetailScreen';
+import DoctorDetailConnectedScreen from '../screens/connect/doctor/DoctorDetailConnectedScreen';
+// Connect - Family screens
+import FamilyConnectEmptyScreen from '../screens/connect/family/FamilyConnectEmptyScreen';
+import FamilyListScreen from '../screens/connect/family/FamilyListScreen';
+import FamilyAddScreen from '../screens/connect/family/FamilyAddScreen';
+import FamilyMemberDetailScreen from '../screens/connect/family/FamilyMemberDetailScreen';
+import FamilySharedReportsScreen from '../screens/connect/family/FamilySharedReportsScreen';
 
 // Medical screens (sub-screens of Home)
 import MedicalInformationScreen from '../screens/medical/MedicalInformationScreen';
@@ -74,8 +84,19 @@ function HomeStackNavigator() {
       <HomeStack.Screen name="Home" component={HomeScreen} />
       <HomeStack.Screen name="EditPinnedVitals" component={EditPinnedVitalsScreen} />
       <HomeStack.Screen name="EditPinnedBiomarkers" component={EditPinnedBiomarkersScreen} />
+      {/* Doctor Connect */}
       <HomeStack.Screen name="DoctorConnectEmpty" component={DoctorConnectEmptyScreen} />
+      <HomeStack.Screen name="DoctorListScreen" component={DoctorListScreen} />
+      <HomeStack.Screen name="DoctorSearchScreen" component={DoctorSearchScreen} />
+      <HomeStack.Screen name="DoctorAddScreen" component={DoctorAddScreen} />
+      <HomeStack.Screen name="DoctorDetailScreen" component={DoctorDetailScreen} />
+      <HomeStack.Screen name="DoctorDetailConnectedScreen" component={DoctorDetailConnectedScreen} />
+      {/* Family Connect */}
       <HomeStack.Screen name="FamilyConnectEmpty" component={FamilyConnectEmptyScreen} />
+      <HomeStack.Screen name="FamilyListScreen" component={FamilyListScreen} />
+      <HomeStack.Screen name="FamilyAddScreen" component={FamilyAddScreen} />
+      <HomeStack.Screen name="FamilyMemberDetailScreen" component={FamilyMemberDetailScreen} />
+      <HomeStack.Screen name="FamilySharedReportsScreen" component={FamilySharedReportsScreen} />
       <HomeStack.Screen name="MedicalInformation" component={MedicalInformationScreen} />
     </HomeStack.Navigator>
   );

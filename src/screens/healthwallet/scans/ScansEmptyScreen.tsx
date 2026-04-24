@@ -5,12 +5,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 export default function ScansEmptyScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const c = theme.colors;
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+    <View style={[styles.container, { backgroundColor: c.background }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
@@ -21,24 +21,24 @@ export default function ScansEmptyScreen({ navigation }: { navigation: any }) {
       </View>
 
       <View style={styles.centerWrapper}>
-        <View style={[styles.glassCard, { backgroundColor: 'rgba(23,23,23,0.4)', borderColor: 'rgba(255,255,255,0.08)' }]}>
+        <View style={[styles.glassCard, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}>
           {/* Decorative corner top-left */}
-          <View style={[styles.cornerTL, { borderColor: '#6FFB85' }]} />
+          <View style={[styles.cornerTL, { borderColor: c.primary }]} />
           {/* Decorative corner bottom-right */}
-          <View style={[styles.cornerBR, { borderColor: '#6FFB85' }]} />
+          <View style={[styles.cornerBR, { borderColor: c.primary }]} />
 
           {/* Icon section */}
           <View style={styles.iconSection}>
-            <View style={[styles.iconBloom, { backgroundColor: 'rgba(52,199,89,0.19)' }]} />
-            <View style={[styles.iconBox, { backgroundColor: 'rgba(0,0,0,0.4)', borderColor: 'rgba(52,199,89,0.33)' }]}>
-              <Ionicons name="scan-outline" size={56} color="#6FFB85" />
+            <View style={[styles.iconBloom, { backgroundColor: c.accentSoft }]} />
+            <View style={[styles.iconBox, { backgroundColor: isDark ? 'rgba(0,0,0,0.4)' : c.cardElevated, borderColor: c.primary + '55' }]}>
+              <Ionicons name="scan-outline" size={56} color={c.primary} />
             </View>
           </View>
 
           {/* Text */}
           <View style={styles.textSection}>
-            <Text style={styles.emptyTitle}>No Scans{'\n'}<Text style={{ color: '#34C759' }}>Detected</Text></Text>
-            <Text style={styles.emptySubtitle}>
+            <Text style={[styles.emptyTitle, { color: c.text }]}>No Scans{'\n'}<Text style={{ color: c.primary }}>Detected</Text></Text>
+            <Text style={[styles.emptySubtitle, { color: c.textSecondary }]}>
               Initialize your digital Scans{'\n'}library by uploading your first{'\n'}MRI, CT, or X-ray record.
             </Text>
           </View>
@@ -46,11 +46,11 @@ export default function ScansEmptyScreen({ navigation }: { navigation: any }) {
           {/* Button */}
           <View style={styles.actionsSection}>
             <TouchableOpacity
-              style={styles.uploadButton}
+              style={[styles.uploadButton, { backgroundColor: c.primary }]}
               activeOpacity={0.85}
               onPress={() => navigation.navigate('ScanUpload')}
             >
-              <Text style={styles.uploadButtonText}>UPLOAD NEW SCAN</Text>
+              <Text style={[styles.uploadButtonText, { color: c.textOnPrimary }]}>UPLOAD NEW SCAN</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -60,7 +60,7 @@ export default function ScansEmptyScreen({ navigation }: { navigation: any }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#050505' },
+  container: { flex: 1 },
   header: {
     flexDirection: 'row',
     alignItems: 'center',

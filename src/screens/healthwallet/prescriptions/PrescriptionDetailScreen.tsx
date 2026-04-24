@@ -9,14 +9,17 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from '../../../theme/ThemeProvider';
 
 export default function PrescriptionDetailScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
+  const { theme, isDark } = useTheme();
+  const c = theme.colors;
   const [isPrivate, setIsPrivate] = useState(false);
 
   return (
-    <View style={[styles.container, { backgroundColor: '#050505' }]}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+    <View style={[styles.container, { backgroundColor: c.background }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       <ScrollView
         contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 28, paddingBottom: 130 }]}
@@ -25,15 +28,15 @@ export default function PrescriptionDetailScreen({ navigation }: { navigation: a
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={22} color="#FFFFFF" />
+            <Ionicons name="chevron-back" size={22} color={c.text} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Prescription</Text>
+          <Text style={[styles.headerTitle, { color: c.text }]}>Prescription</Text>
           <View style={styles.headerRight}>
             <TouchableOpacity onPress={() => navigation.navigate('PrescriptionEdit')} style={styles.headerIconBtn}>
-              <Ionicons name="create-outline" size={21} color="rgba(255,255,255,0.74)" />
+              <Ionicons name="create-outline" size={21} color={c.textMuted} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('PrescriptionShare')} style={styles.headerIconBtn}>
-              <Ionicons name="share-outline" size={21} color="#6FFB85" />
+              <Ionicons name="share-outline" size={21} color={c.primary} />
             </TouchableOpacity>
           </View>
         </View>
@@ -42,43 +45,43 @@ export default function PrescriptionDetailScreen({ navigation }: { navigation: a
         <View style={styles.reportHeader}>
           {/* Tags */}
           <View style={styles.tagsRow}>
-            <View style={styles.publicTag}>
-              <Text style={styles.publicTagText}>PUBLIC</Text>
+            <View style={[styles.publicTag, { backgroundColor: c.successSoft }]}>
+              <Text style={[styles.publicTagText, { color: c.primary }]}>PUBLIC</Text>
             </View>
-            <View style={styles.typeTag}>
-              <Text style={styles.typeTagText}>PRESCRIPTION</Text>
+            <View style={[styles.typeTag, { backgroundColor: c.card }]}>
+              <Text style={[styles.typeTagText, { color: c.textSecondary }]}>PRESCRIPTION</Text>
             </View>
           </View>
 
           {/* Title */}
-          <Text style={styles.prescriptionTitle}>Prescription Name</Text>
+          <Text style={[styles.prescriptionTitle, { color: c.text }]}>Prescription Name</Text>
 
           {/* Meta - right aligned */}
           <View style={styles.metaBlock}>
-            <Text style={styles.metaSmallLabel}>Time Line</Text>
-            <Text style={styles.metaValue}>3 Months</Text>
-            <Text style={styles.dateOfAnalysisLabel}>DATE OF ANALYSIS</Text>
-            <Text style={styles.metaValue}>April 02, 2026</Text>
+            <Text style={[styles.metaSmallLabel, { color: c.textSecondary }]}>Time Line</Text>
+            <Text style={[styles.metaValue, { color: c.text }]}>3 Months</Text>
+            <Text style={[styles.dateOfAnalysisLabel, { color: c.primary }]}>DATE OF ANALYSIS</Text>
+            <Text style={[styles.metaValue, { color: c.text }]}>April 02, 2026</Text>
           </View>
         </View>
 
         {/* Prescription image placeholder */}
         <View style={styles.reportImageContainer}>
-          <View style={styles.reportImagePlaceholder}>
-            <Ionicons name="document-text-outline" size={60} color="rgba(255,255,255,0.3)" />
-            <Text style={styles.reportImageText}>Prescription Document</Text>
-            <Text style={styles.reportImageSub}>Tap to view full document</Text>
+          <View style={[styles.reportImagePlaceholder, { backgroundColor: isDark ? '#1A1A1A' : '#F0F0F0' }]}>
+            <Ionicons name="document-text-outline" size={60} color={c.textMuted} />
+            <Text style={[styles.reportImageText, { color: c.textSecondary }]}>Prescription Document</Text>
+            <Text style={[styles.reportImageSub, { color: c.textTertiary }]}>Tap to view full document</Text>
           </View>
         </View>
 
         {/* Privacy toggle */}
-        <View style={styles.privacyCard}>
+        <View style={[styles.privacyCard, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}>
           <View style={styles.privacyLeft}>
-            <Ionicons name="git-network-outline" size={18} color="#AAAAAA" />
-            <Text style={styles.privacyText}>keep this report private</Text>
+            <Ionicons name="git-network-outline" size={18} color={c.textSecondary} />
+            <Text style={[styles.privacyText, { color: c.text }]}>keep this report private</Text>
           </View>
           <TouchableOpacity
-            style={[styles.toggleTrack, { backgroundColor: isPrivate ? '#DB5034' : '#DB5034' }]}
+            style={[styles.toggleTrack, { backgroundColor: c.error }]}
             onPress={() => setIsPrivate(!isPrivate)}
             activeOpacity={0.8}
           >
@@ -89,8 +92,8 @@ export default function PrescriptionDetailScreen({ navigation }: { navigation: a
 
       {/* Download Button */}
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom + 16 }]}>
-        <TouchableOpacity style={styles.downloadButton} activeOpacity={0.8}>
-          <Text style={styles.downloadButtonText}>Download</Text>
+        <TouchableOpacity style={[styles.downloadButton, { backgroundColor: c.primary }]} activeOpacity={0.8}>
+          <Text style={[styles.downloadButtonText, { color: c.textOnPrimary }]}>Download</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -108,155 +111,42 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   backBtn: { width: 22, alignItems: 'center' },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: '600',
-    fontFamily: 'Inter',
-    color: '#FFFFFF',
-  },
+  headerTitle: { fontSize: 28, fontWeight: '600', fontFamily: 'Inter' },
   headerRight: { flexDirection: 'row', gap: 16 },
   headerIconBtn: { padding: 2 },
-  reportHeader: {
-    paddingHorizontal: 31,
-    marginBottom: 16,
-  },
+  reportHeader: { paddingHorizontal: 31, marginBottom: 16 },
   tagsRow: { flexDirection: 'row', gap: 8, marginBottom: 16 },
-  publicTag: {
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    backgroundColor: 'rgba(52,199,89,0.16)',
-  },
-  publicTagText: {
-    fontSize: 10,
-    fontWeight: '800',
-    fontFamily: 'Manrope',
-    color: '#6FFB85',
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-  },
-  typeTag: {
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    backgroundColor: '#1F1F1F',
-  },
-  typeTagText: {
-    fontSize: 10,
-    fontWeight: '800',
-    fontFamily: 'Manrope',
-    color: '#C5C9AC',
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-  },
-  prescriptionTitle: {
-    fontSize: 34,
-    fontWeight: '700',
-    fontFamily: 'Inter',
-    color: '#FFFFFF',
-    letterSpacing: -0.68,
-    marginBottom: 12,
-  },
-  metaBlock: {
-    alignItems: 'flex-end',
-    gap: 2,
-  },
-  metaSmallLabel: {
-    fontSize: 12,
-    fontFamily: 'Inter',
-    color: '#AAAAAA',
-    textAlign: 'right',
-  },
-  metaValue: {
-    fontSize: 18,
-    fontFamily: 'Inter',
-    fontWeight: '400',
-    color: '#FFFFFF',
-    textAlign: 'right',
-    lineHeight: 28,
-  },
-  dateOfAnalysisLabel: {
-    fontSize: 12,
-    fontFamily: 'Inter',
-    color: '#6FFB85',
-    textAlign: 'right',
-    marginTop: 8,
-    textTransform: 'uppercase',
-  },
-  reportImageContainer: {
-    marginHorizontal: 36,
-    height: 286,
-    borderRadius: 24,
-    overflow: 'hidden',
-    marginBottom: 20,
-  },
-  reportImagePlaceholder: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  reportImageText: {
-    fontSize: 14,
-    fontFamily: 'Inter',
-    color: '#555',
-    fontWeight: '500',
-  },
-  reportImageSub: {
-    fontSize: 12,
-    fontFamily: 'Inter',
-    color: '#888',
-  },
+  publicTag: { borderRadius: 12, paddingHorizontal: 12, paddingVertical: 4 },
+  publicTagText: { fontSize: 10, fontWeight: '800', fontFamily: 'Manrope', letterSpacing: 1, textTransform: 'uppercase' },
+  typeTag: { borderRadius: 12, paddingHorizontal: 12, paddingVertical: 4 },
+  typeTagText: { fontSize: 10, fontWeight: '800', fontFamily: 'Manrope', letterSpacing: 1, textTransform: 'uppercase' },
+  prescriptionTitle: { fontSize: 34, fontWeight: '700', fontFamily: 'Inter', letterSpacing: -0.68, marginBottom: 12 },
+  metaBlock: { alignItems: 'flex-end', gap: 2 },
+  metaSmallLabel: { fontSize: 12, fontFamily: 'Inter', textAlign: 'right' },
+  metaValue: { fontSize: 18, fontFamily: 'Inter', fontWeight: '400', textAlign: 'right', lineHeight: 28 },
+  dateOfAnalysisLabel: { fontSize: 12, fontFamily: 'Inter', textAlign: 'right', marginTop: 8, textTransform: 'uppercase' },
+  reportImageContainer: { marginHorizontal: 36, height: 286, borderRadius: 24, overflow: 'hidden', marginBottom: 20 },
+  reportImagePlaceholder: { flex: 1, borderRadius: 24, alignItems: 'center', justifyContent: 'center', gap: 8 },
+  reportImageText: { fontSize: 14, fontFamily: 'Inter', fontWeight: '500' },
+  reportImageSub: { fontSize: 12, fontFamily: 'Inter' },
   privacyCard: {
     marginHorizontal: 24,
     borderRadius: 33,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-    backgroundColor: 'rgba(23,23,23,0.4)',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 33,
     paddingVertical: 18,
   },
-  privacyLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  privacyText: {
-    fontSize: 16,
-    fontWeight: '500',
-    fontFamily: 'Inter',
-    color: '#E2E2E2',
-  },
-  toggleTrack: {
-    width: 48,
-    height: 24,
-    borderRadius: 12,
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  toggleThumb: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: '#000000',
-    position: 'absolute',
-  },
-  bottomBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 25,
-  },
+  privacyLeft: { flexDirection: 'row', alignItems: 'center', gap: 16 },
+  privacyText: { fontSize: 16, fontWeight: '500', fontFamily: 'Inter' },
+  toggleTrack: { width: 48, height: 24, borderRadius: 12, justifyContent: 'center', position: 'relative' },
+  toggleThumb: { width: 16, height: 16, borderRadius: 8, backgroundColor: '#FFFFFF', position: 'absolute' },
+  bottomBar: { position: 'absolute', bottom: 0, left: 0, right: 0, paddingHorizontal: 25 },
   downloadButton: {
     height: 58,
     borderRadius: 33,
-    backgroundColor: '#6FFB85',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: 'rgba(0,110,40,0.3)',
@@ -265,10 +155,5 @@ const styles = StyleSheet.create({
     shadowRadius: 50,
     elevation: 10,
   },
-  downloadButtonText: {
-    fontSize: 18,
-    fontWeight: '700',
-    fontFamily: 'Inter',
-    color: '#141414',
-  },
+  downloadButtonText: { fontSize: 18, fontWeight: '700', fontFamily: 'Inter' },
 });

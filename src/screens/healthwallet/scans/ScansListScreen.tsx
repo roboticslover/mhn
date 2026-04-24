@@ -74,7 +74,7 @@ function ScanCard({ item, onPress, onEdit, colors }: { item: ScanItem; onPress: 
 
 export default function ScansListScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const c = theme.colors;
   const [searchText, setSearchText] = useState('');
 
@@ -83,8 +83,8 @@ export default function ScansListScreen({ navigation }: { navigation: any }) {
   );
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+    <View style={[styles.container, { backgroundColor: c.background }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
       <ScrollView
         contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 16, paddingBottom: 120 }]}
         showsVerticalScrollIndicator={false}
@@ -100,26 +100,26 @@ export default function ScansListScreen({ navigation }: { navigation: any }) {
 
         {/* Search + filters */}
         <View style={styles.searchSection}>
-          <View style={styles.searchBar}>
-            <Ionicons name="search" size={20} color="rgba(170,170,170,0.8)" style={{ marginRight: 4 }} />
+          <View style={[styles.searchBar, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}>
+            <Ionicons name="search" size={20} color={c.textSecondary} style={{ marginRight: 4 }} />
             <TextInput
-              style={styles.searchInput}
+              style={[styles.searchInput, { color: c.textSecondary }]}
               placeholder="SEARCH 128 PARAMETERS..."
-              placeholderTextColor="rgba(170,170,170,0.5)"
+              placeholderTextColor={c.inputPlaceholder}
               value={searchText}
               onChangeText={setSearchText}
             />
           </View>
           <View style={styles.filterRow}>
-            <TouchableOpacity style={styles.filterBtn}>
-              <Ionicons name="options-outline" size={10} color="rgba(255,255,255,0.6)" />
-              <Text style={styles.filterBtnText}>FILTERS</Text>
+            <TouchableOpacity style={[styles.filterBtn, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}>
+              <Ionicons name="options-outline" size={10} color={c.textSecondary} />
+              <Text style={[styles.filterBtnText, { color: c.textSecondary }]}>FILTERS</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.addBtn}
+              style={[styles.addBtn, { backgroundColor: c.primary }]}
               onPress={() => navigation.navigate('ScanUpload')}
             >
-              <Text style={styles.addBtnText}>ADD</Text>
+              <Text style={[styles.addBtnText, { color: c.textOnPrimary }]}>ADD</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -138,9 +138,9 @@ export default function ScansListScreen({ navigation }: { navigation: any }) {
         </View>
 
         {/* Load previous records */}
-        <TouchableOpacity style={styles.loadMoreBtn} activeOpacity={0.6}>
-          <Ionicons name="time-outline" size={20} color="rgba(229,229,229,0.5)" />
-          <Text style={styles.loadMoreText}>LOAD PREVIOUS RECORDS</Text>
+        <TouchableOpacity style={[styles.loadMoreBtn, { borderColor: c.cardGlassBorder, backgroundColor: c.card }]} activeOpacity={0.6}>
+          <Ionicons name="time-outline" size={20} color={c.textMuted} />
+          <Text style={[styles.loadMoreText, { color: c.textSecondary }]}>LOAD PREVIOUS RECORDS</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -148,7 +148,7 @@ export default function ScansListScreen({ navigation }: { navigation: any }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#050505' },
+  container: { flex: 1 },
   scrollContent: { paddingHorizontal: 0 },
   header: {
     flexDirection: 'row',

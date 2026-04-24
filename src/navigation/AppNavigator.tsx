@@ -49,10 +49,19 @@ import InsuranceShareScreen from '../screens/healthwallet/insurance/InsuranceSha
 // Health Reports
 import HealthReportsEmptyScreen from '../screens/healthwallet/healthreports/HealthReportsEmptyScreen';
 import HealthReportUploadScreen from '../screens/healthwallet/healthreports/HealthReportUploadScreen';
+import AllHealthReportsScreen from '../screens/healthwallet/healthreports/AllHealthReportsScreen';
+import HealthReportDetailScreen from '../screens/healthwallet/healthreports/HealthReportDetailScreen';
+import HealthReportEditScreen from '../screens/healthwallet/healthreports/HealthReportEditScreen';
+import HealthReportShareScreen from '../screens/healthwallet/healthreports/HealthReportShareScreen';
 
 // Vaccines
 import VaccinesEmptyScreen from '../screens/healthwallet/vaccines/VaccinesEmptyScreen';
 import VaccineUploadScreen from '../screens/healthwallet/vaccines/VaccineUploadScreen';
+import AllVaccinesScreen from '../screens/healthwallet/vaccines/AllVaccinesScreen';
+import VaccineAddScreen from '../screens/healthwallet/vaccines/VaccineAddScreen';
+import VaccineEditScreen from '../screens/healthwallet/vaccines/VaccineEditScreen';
+import VaccineDetailScreen from '../screens/healthwallet/vaccines/VaccineDetailScreen';
+import VaccineShareScreen from '../screens/healthwallet/vaccines/VaccineShareScreen';
 
 // Notifications
 import NotificationsEmptyScreen from '../screens/notifications/NotificationsEmptyScreen';
@@ -61,16 +70,46 @@ import NotificationsListScreen from '../screens/notifications/NotificationsListS
 // Profile
 import ProfileScreen from '../screens/profile/ProfileScreen';
 
-// Connect
-import DoctorConnectEmptyScreen from '../screens/connect/DoctorConnectEmptyScreen';
-import FamilyConnectEmptyScreen from '../screens/connect/FamilyConnectEmptyScreen';
+// Connect - Doctor
+import DoctorConnectEmptyScreen from '../screens/connect/doctor/DoctorConnectEmptyScreen';
+import DoctorListScreen from '../screens/connect/doctor/DoctorListScreen';
+import DoctorSearchScreen from '../screens/connect/doctor/DoctorSearchScreen';
+import DoctorAddScreen from '../screens/connect/doctor/DoctorAddScreen';
+import DoctorDetailScreen from '../screens/connect/doctor/DoctorDetailScreen';
+import DoctorDetailConnectedScreen from '../screens/connect/doctor/DoctorDetailConnectedScreen';
+// Connect - Family
+import FamilyConnectEmptyScreen from '../screens/connect/family/FamilyConnectEmptyScreen';
+import FamilyListScreen from '../screens/connect/family/FamilyListScreen';
+import FamilyAddScreen from '../screens/connect/family/FamilyAddScreen';
+import FamilyMemberDetailScreen from '../screens/connect/family/FamilyMemberDetailScreen';
+import FamilySharedReportsScreen from '../screens/connect/family/FamilySharedReportsScreen';
 
 // Medical Information
 import MedicalInformationScreen from '../screens/medical/MedicalInformationScreen';
-import SurgicalHistoryScreen from '../screens/medical/SurgicalHistoryScreen';
-import AllergiesScreen from '../screens/medical/AllergiesScreen';
-import MedicalConditionsScreen from '../screens/medical/MedicalConditionsScreen';
-import MedicationsScreen from '../screens/medical/MedicationsScreen';
+
+// Surgical History
+import SurgicalHistoryEmptyScreen from '../screens/medical/surgical-history/SurgicalHistoryEmptyScreen';
+import SurgicalHistoryListScreen from '../screens/medical/surgical-history/SurgicalHistoryListScreen';
+import SurgicalHistoryDetailScreen from '../screens/medical/surgical-history/SurgicalHistoryDetailScreen';
+import SurgicalHistoryAddEditScreen from '../screens/medical/surgical-history/SurgicalHistoryAddEditScreen';
+
+// Allergies
+import AllergiesEmptyScreen from '../screens/medical/allergies/AllergiesEmptyScreen';
+import AllergiesListScreen from '../screens/medical/allergies/AllergiesListScreen';
+import AllergiesDetailScreen from '../screens/medical/allergies/AllergiesDetailScreen';
+import AllergiesAddEditScreen from '../screens/medical/allergies/AllergiesAddEditScreen';
+
+// Medical Conditions
+import MedicalConditionsEmptyScreen from '../screens/medical/medical-conditions/MedicalConditionsEmptyScreen';
+import MedicalConditionsListScreen from '../screens/medical/medical-conditions/MedicalConditionsListScreen';
+import MedicalConditionsDetailScreen from '../screens/medical/medical-conditions/MedicalConditionsDetailScreen';
+import MedicalConditionsAddEditScreen from '../screens/medical/medical-conditions/MedicalConditionsAddEditScreen';
+
+// Medication
+import MedicationEmptyScreen from '../screens/medical/medication/MedicationEmptyScreen';
+import MedicationListScreen from '../screens/medical/medication/MedicationListScreen';
+import MedicationDetailScreen from '../screens/medical/medication/MedicationDetailScreen';
+import MedicationAddEditScreen from '../screens/medical/medication/MedicationAddEditScreen';
 
 // Profile Sub-screens
 import AboutYouScreen from '../screens/profile/AboutYouScreen';
@@ -137,23 +176,60 @@ export type RootStackParamList = {
   // Health Reports
   HealthReportsEmpty: undefined;
   HealthReportUpload: undefined;
+  AllHealthReports: undefined;
+  HealthReportDetail: undefined;
+  HealthReportEdit: undefined;
+  HealthReportShare: undefined;
   // Vaccines
   VaccinesEmpty: undefined;
   VaccineUpload: undefined;
+  AllVaccines: undefined;
+  VaccineAdd: undefined;
+  VaccineEdit: undefined;
+  VaccineDetail: { vaccineId?: string } | undefined;
+  VaccineShare: undefined;
   // Notifications
   NotificationsEmpty: undefined;
   NotificationsList: undefined;
   // Profile
   Profile: undefined;
-  // Connect
+  // Connect - Doctor
   DoctorConnectEmpty: undefined;
+  DoctorListScreen: undefined;
+  DoctorSearchScreen: undefined;
+  DoctorAddScreen: undefined;
+  DoctorDetailScreen: { doctor?: any } | undefined;
+  DoctorDetailConnectedScreen: { doctor?: any } | undefined;
+  // Connect - Family
   FamilyConnectEmpty: undefined;
+  FamilyListScreen: undefined;
+  FamilyAddScreen: undefined;
+  FamilyMemberDetailScreen: { member?: any } | undefined;
+  FamilySharedReportsScreen: { member?: any } | undefined;
   // Medical Information
   MedicalInformation: undefined;
-  SurgicalHistory: undefined;
-  Allergies: undefined;
-  MedicalConditions: undefined;
-  Medications: undefined;
+  // Surgical History
+  SurgicalHistoryEmpty: undefined;
+  SurgicalHistoryList: undefined;
+  SurgicalHistoryDetail: { record?: any } | undefined;
+  SurgicalHistoryAdd: { record?: any } | undefined;
+  SurgicalHistoryEdit: { record?: any } | undefined;
+  AllergiesEmpty: undefined;
+  // Allergies
+  AllergiesList: undefined;
+  AllergiesDetail: { allergy?: any } | undefined;
+  AllergiesAdd: { allergy?: any } | undefined;
+  // Medical Conditions
+  MedicalConditionsEmpty: undefined;
+  MedicalConditionsList: undefined;
+  MedicalConditionsDetail: { condition?: any } | undefined;
+  MedicalConditionsAdd: { condition?: any } | undefined;
+  // Medication
+  MedicationEmpty: undefined;
+  MedicationList: undefined;
+  MedicationDetail: { medication?: any } | undefined;
+  MedicationAdd: { medication?: any } | undefined;
+  MedicationEdit: { medication?: any } | undefined;
   // Profile Sub-screens
   AboutYou: undefined;
   SettingsScreen: undefined;
@@ -180,7 +256,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function AppNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName="MainTabs"
       screenOptions={{
         headerShown: false,
         animation: 'slide_from_right',
@@ -235,10 +311,19 @@ export default function AppNavigator() {
       {/* Health Reports */}
       <Stack.Screen name="HealthReportsEmpty" component={HealthReportsEmptyScreen} />
       <Stack.Screen name="HealthReportUpload" component={HealthReportUploadScreen} />
+      <Stack.Screen name="AllHealthReports" component={AllHealthReportsScreen} />
+      <Stack.Screen name="HealthReportDetail" component={HealthReportDetailScreen} />
+      <Stack.Screen name="HealthReportEdit" component={HealthReportEditScreen} />
+      <Stack.Screen name="HealthReportShare" component={HealthReportShareScreen} />
 
       {/* Vaccines */}
       <Stack.Screen name="VaccinesEmpty" component={VaccinesEmptyScreen} />
       <Stack.Screen name="VaccineUpload" component={VaccineUploadScreen} />
+      <Stack.Screen name="AllVaccines" component={AllVaccinesScreen} />
+      <Stack.Screen name="VaccineAdd" component={VaccineAddScreen} />
+      <Stack.Screen name="VaccineEdit" component={VaccineEditScreen} />
+      <Stack.Screen name="VaccineDetail" component={VaccineDetailScreen} />
+      <Stack.Screen name="VaccineShare" component={VaccineShareScreen} />
 
       {/* Notifications */}
       <Stack.Screen name="NotificationsEmpty" component={NotificationsEmptyScreen} />
@@ -247,16 +332,44 @@ export default function AppNavigator() {
       {/* Profile */}
       <Stack.Screen name="Profile" component={ProfileScreen} />
 
-      {/* Connect */}
+      {/* Connect - Doctor */}
       <Stack.Screen name="DoctorConnectEmpty" component={DoctorConnectEmptyScreen} />
+      <Stack.Screen name="DoctorListScreen" component={DoctorListScreen} />
+      <Stack.Screen name="DoctorSearchScreen" component={DoctorSearchScreen} />
+      <Stack.Screen name="DoctorAddScreen" component={DoctorAddScreen} />
+      <Stack.Screen name="DoctorDetailScreen" component={DoctorDetailScreen} />
+      <Stack.Screen name="DoctorDetailConnectedScreen" component={DoctorDetailConnectedScreen} />
+      {/* Connect - Family */}
       <Stack.Screen name="FamilyConnectEmpty" component={FamilyConnectEmptyScreen} />
+      <Stack.Screen name="FamilyListScreen" component={FamilyListScreen} />
+      <Stack.Screen name="FamilyAddScreen" component={FamilyAddScreen} />
+      <Stack.Screen name="FamilyMemberDetailScreen" component={FamilyMemberDetailScreen} />
+      <Stack.Screen name="FamilySharedReportsScreen" component={FamilySharedReportsScreen} />
 
       {/* Medical Information */}
       <Stack.Screen name="MedicalInformation" component={MedicalInformationScreen} />
-      <Stack.Screen name="SurgicalHistory" component={SurgicalHistoryScreen} />
-      <Stack.Screen name="Allergies" component={AllergiesScreen} />
-      <Stack.Screen name="MedicalConditions" component={MedicalConditionsScreen} />
-      <Stack.Screen name="Medications" component={MedicationsScreen} />
+      {/* Surgical History */}
+      <Stack.Screen name="SurgicalHistoryEmpty" component={SurgicalHistoryEmptyScreen} />
+      <Stack.Screen name="SurgicalHistoryList" component={SurgicalHistoryListScreen} />
+      <Stack.Screen name="SurgicalHistoryDetail" component={SurgicalHistoryDetailScreen} />
+      <Stack.Screen name="SurgicalHistoryAdd" component={SurgicalHistoryAddEditScreen} />
+      <Stack.Screen name="SurgicalHistoryEdit" component={SurgicalHistoryAddEditScreen} />
+      {/* Allergies */}
+      <Stack.Screen name="AllergiesEmpty" component={AllergiesEmptyScreen} />
+      <Stack.Screen name="AllergiesList" component={AllergiesListScreen} />
+      <Stack.Screen name="AllergiesDetail" component={AllergiesDetailScreen} />
+      <Stack.Screen name="AllergiesAdd" component={AllergiesAddEditScreen} />
+      {/* Medical Conditions */}
+      <Stack.Screen name="MedicalConditionsEmpty" component={MedicalConditionsEmptyScreen} />
+      <Stack.Screen name="MedicalConditionsList" component={MedicalConditionsListScreen} />
+      <Stack.Screen name="MedicalConditionsDetail" component={MedicalConditionsDetailScreen} />
+      <Stack.Screen name="MedicalConditionsAdd" component={MedicalConditionsAddEditScreen} />
+      {/* Medication */}
+      <Stack.Screen name="MedicationEmpty" component={MedicationEmptyScreen} />
+      <Stack.Screen name="MedicationList" component={MedicationListScreen} />
+      <Stack.Screen name="MedicationDetail" component={MedicationDetailScreen} />
+      <Stack.Screen name="MedicationAdd" component={MedicationAddEditScreen} />
+      <Stack.Screen name="MedicationEdit" component={MedicationAddEditScreen} />
 
       {/* Profile Sub-screens */}
       <Stack.Screen name="AboutYou" component={AboutYouScreen} />

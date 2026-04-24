@@ -8,46 +8,50 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from '../../../theme/ThemeProvider';
+
 export default function PrescriptionsEmptyScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
+  const { theme, isDark } = useTheme();
+  const c = theme.colors;
 
   return (
-    <View style={[styles.container, { backgroundColor: '#050505' }]}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+    <View style={[styles.container, { backgroundColor: c.background }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 28 }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={22} color="#FFFFFF" />
+          <Ionicons name="chevron-back" size={22} color={c.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Prescription</Text>
+        <Text style={[styles.headerTitle, { color: c.text }]}>Prescription</Text>
         <View style={{ width: 22 }} />
       </View>
 
       {/* Main glass card */}
-      <View style={styles.glassCard}>
+      <View style={[styles.glassCard, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}>
         {/* Upload illustration */}
         <View style={styles.illustrationWrap}>
-          <View style={styles.illustrationGlow} />
-          <View style={styles.uploadIconCircle}>
-            <Ionicons name="folder-open-outline" size={38} color="#6FFB85" />
+          <View style={[styles.illustrationGlow, { backgroundColor: c.accentSoft }]} />
+          <View style={[styles.uploadIconCircle, { backgroundColor: c.accentSoft, borderColor: c.primary + '33' }]}>
+            <Ionicons name="folder-open-outline" size={38} color={c.primary} />
           </View>
         </View>
 
         {/* Text */}
-        <Text style={styles.tagline}>SYSTEM PROTOCOL</Text>
-        <Text style={styles.emptyTitle}>No{'\n'}Prescriptions{'\n'}Found</Text>
-        <Text style={styles.emptySubtitle}>
+        <Text style={[styles.tagline, { color: c.primary }]}>SYSTEM PROTOCOL</Text>
+        <Text style={[styles.emptyTitle, { color: c.text }]}>No{'\n'}Prescriptions{'\n'}Found</Text>
+        <Text style={[styles.emptySubtitle, { color: c.textSecondary }]}>
           Your digital archive is ready. Add{'\n'}your first prescription to start tracking
         </Text>
 
         {/* Add button */}
         <TouchableOpacity
-          style={styles.addButton}
+          style={[styles.addButton, { backgroundColor: c.primary }]}
           activeOpacity={0.8}
           onPress={() => navigation.navigate('PrescriptionUpload')}
         >
-          <Text style={styles.addButtonText}>+ ADD TO HEALTH REPORTS</Text>
+          <Text style={[styles.addButtonText, { color: c.textOnPrimary }]}>+ ADD TO HEALTH REPORTS</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -68,7 +72,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '600',
     fontFamily: 'Inter',
-    color: '#FFFFFF',
     letterSpacing: 0,
   },
   glassCard: {
@@ -77,8 +80,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderRadius: 33,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-    backgroundColor: 'rgba(23,23,23,0.4)',
     alignItems: 'center',
     paddingHorizontal: 33,
     paddingTop: 50,
@@ -97,22 +98,18 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: 'rgba(48,219,91,0.10)',
   },
   uploadIconCircle: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: 'rgba(111,251,133,0.08)',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(111,251,133,0.2)',
   },
   tagline: {
     fontSize: 12,
     fontFamily: 'Inter',
-    color: '#6FFB85',
     fontWeight: '400',
     letterSpacing: 0,
     marginBottom: 18,
@@ -121,7 +118,6 @@ const styles = StyleSheet.create({
     fontSize: 34,
     fontWeight: '700',
     fontFamily: 'Inter',
-    color: '#FFFFFF',
     textAlign: 'center',
     lineHeight: 40,
     letterSpacing: -0.68,
@@ -131,7 +127,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     fontFamily: 'Inter',
-    color: '#AAAAAA',
     textAlign: 'center',
     lineHeight: 24,
     marginBottom: 40,
@@ -140,7 +135,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 58,
     borderRadius: 33,
-    backgroundColor: '#6FFB85',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: 'rgba(0,110,40,0.3)',
@@ -153,7 +147,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     fontFamily: 'Inter',
-    color: '#141414',
     textAlign: 'center',
   },
 });

@@ -37,28 +37,28 @@ const CATEGORIES: MedicalCategory[] = [
     title: 'Surgical History',
     description: 'Record past surgeries and medical procedures easily.',
     icon: 'medkit-outline',
-    route: 'SurgicalHistory',
+    route: 'SurgicalHistoryEmpty',
   },
   {
     id: '2',
     title: 'Medical Conditions',
     description: 'Add diseases, disorders, or chronic health issues.',
     icon: 'heart-outline',
-    route: 'MedicalConditions',
+    route: 'MedicalConditionsEmpty',
   },
   {
     id: '3',
     title: 'Allergies',
     description: 'List allergies and related reactions clearly.',
     icon: 'alert-circle-outline',
-    route: 'Allergies',
+    route: 'AllergiesEmpty',
   },
   {
     id: '4',
     title: 'Drug Usage',
     description: 'Add medicines you take regularly or occasionally.',
-    icon: 'flask-outline',
-    route: 'Medications',
+    icon: 'medical-outline',
+    route: 'MedicationEmpty',
   },
 ];
 
