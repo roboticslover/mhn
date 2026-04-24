@@ -72,7 +72,7 @@ export default function PrescriptionShareScreen({ navigation }: { navigation: an
       </View>
 
       {/* Share bottom sheet */}
-      <View style={[styles.shareSheet, { paddingBottom: insets.bottom + 16 }]}>
+      <View style={[styles.shareSheet, { paddingBottom: insets.bottom + 100 }]}>
         {/* Modal header */}
         <View style={styles.sheetHeader}>
           <View style={styles.sheetIconWrap}>

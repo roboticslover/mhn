@@ -6,7 +6,6 @@ import {
   ScrollView,
   StatusBar,
   TouchableOpacity,
-  Switch,
   Modal,
   Image,
 } from 'react-native';
@@ -15,6 +14,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import ScreenHeader from '../../components/ScreenHeader';
 import ThemeToggle from '../../components/ThemeToggle';
+import CustomSwitch from '../../components/CustomSwitch';
 
 interface SettingRow {
   icon: string;
@@ -86,13 +86,11 @@ export default function SettingsScreen({ navigation }: { navigation: any }) {
                   </View>
                 </View>
                 {item.toggleKey === 'mode' ? (
-                  <ThemeToggle size={34} />
+                  <ThemeToggle />
                 ) : (
-                  <Switch
+                  <CustomSwitch
                     value={toggles[item.toggleKey as keyof typeof toggles]}
                     onValueChange={() => handleToggle(item.toggleKey!)}
-                    trackColor={{ false: isDark ? '#3F3F46' : '#D1D5DB', true: c.primary }}
-                    thumbColor={toggles[item.toggleKey as keyof typeof toggles] ? c.textOnPrimary : '#FFF'}
                   />
                 )}
               </View>
@@ -138,7 +136,7 @@ export default function SettingsScreen({ navigation }: { navigation: any }) {
             </View>
             <Text style={[styles.modalTitle, { color: c.text }]}>Are you sure you want to log out?</Text>
             <Text style={[styles.modalSubtitle, { color: c.textSecondary }]}>You can sign in anytime.</Text>
-            
+
             <View style={styles.modalActions}>
               <TouchableOpacity style={[styles.modalBtnPrimary, { backgroundColor: c.primary }]} onPress={() => {
                 setLogoutVisible(false);
@@ -165,7 +163,7 @@ export default function SettingsScreen({ navigation }: { navigation: any }) {
             <Text style={[styles.modalSubtitle, { color: c.textSecondary }]}>
               Deleting your account will permanently remove your data and can't be undone. Are you sure you want to continue?
             </Text>
-            
+
             <View style={[styles.warningBox, { backgroundColor: 'rgba(239,68,68,0.1)', borderColor: 'rgba(239,68,68,0.2)' }]}>
               <Ionicons name="warning-outline" size={24} color={c.error} />
               <Text style={[styles.warningText, { color: c.error }]}>

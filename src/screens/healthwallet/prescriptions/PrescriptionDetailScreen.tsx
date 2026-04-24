@@ -6,6 +6,7 @@ import {
   ScrollView,
   StatusBar,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,6 +17,25 @@ export default function PrescriptionDetailScreen({ navigation }: { navigation: a
   const { theme, isDark } = useTheme();
   const c = theme.colors;
   const [isPrivate, setIsPrivate] = useState(false);
+  const [isShareSheetVisible, setIsShareSheetVisible] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<string[]>(['1']);
+  const [selectAll, setSelectAll] = useState(false);
+
+  const files = [
+    { id: '1', name: '818786755-CBC-REPORT.PDF' },
+  ];
+
+  const toggleFile = (id: string) => {
+    setSelectedFiles(prev =>
+      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    const newSelectAll = !selectAll;
+    setSelectAll(newSelectAll);
+    setSelectedFiles(newSelectAll ? files.map(f => f.id) : []);
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: c.background }]}>
@@ -33,10 +53,10 @@ export default function PrescriptionDetailScreen({ navigation }: { navigation: a
           <Text style={[styles.headerTitle, { color: c.text }]}>Prescription</Text>
           <View style={styles.headerRight}>
             <TouchableOpacity onPress={() => navigation.navigate('PrescriptionEdit')} style={styles.headerIconBtn}>
-              <Ionicons name="create-outline" size={21} color={c.textMuted} />
+              <Ionicons name="create-outline" size={22} color={c.textSecondary} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('PrescriptionShare')} style={styles.headerIconBtn}>
-              <Ionicons name="share-outline" size={21} color={c.primary} />
+            <TouchableOpacity onPress={() => setIsShareSheetVisible(true)} style={styles.headerIconBtn}>
+              <Ionicons name="share-outline" size={22} color={c.primary} />
             </TouchableOpacity>
           </View>
         </View>
@@ -91,11 +111,74 @@ export default function PrescriptionDetailScreen({ navigation }: { navigation: a
       </ScrollView>
 
       {/* Download Button */}
-      <View style={[styles.bottomBar, { paddingBottom: insets.bottom + 16 }]}>
+      <View style={[styles.bottomBar, { bottom: insets.bottom + 85 }]}>
         <TouchableOpacity style={[styles.downloadButton, { backgroundColor: c.primary }]} activeOpacity={0.8}>
           <Text style={[styles.downloadButtonText, { color: c.textOnPrimary }]}>Download</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Share Bottom Sheet */}
+      <Modal
+        visible={isShareSheetVisible}
+        onRequestClose={() => setIsShareSheetVisible(false)}
+        animationType="slide"
+        transparent={true}
+        statusBarTranslucent
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1} 
+          onPress={() => setIsShareSheetVisible(false)}
+        />
+        <View style={[styles.shareSheet, { paddingBottom: insets.bottom + 100, backgroundColor: isDark ? '#171717' : '#FFFFFF' }]}>
+          <View style={styles.sheetHandle} />
+          
+          <View style={styles.sheetHeader}>
+            <View style={[styles.sheetIconWrap, { backgroundColor: c.successSoft }]}>
+              <Ionicons name="share-outline" size={20} color={c.primary} />
+            </View>
+            <Text style={[styles.sheetTitle, { color: c.text }]}>Select files to share</Text>
+          </View>
+
+          <View style={styles.selectAllRow}>
+            <TouchableOpacity
+              style={[styles.checkbox, selectAll && { backgroundColor: c.primary, borderColor: c.primary }]}
+              onPress={toggleSelectAll}
+              activeOpacity={0.7}
+            >
+              {selectAll && <Ionicons name="checkmark" size={12} color={c.textInverse} />}
+            </TouchableOpacity>
+            <Text style={[styles.selectAllText, { color: c.text }]}>Select All</Text>
+            <Text style={[styles.fileCountText, { color: c.textSecondary }]}>{selectedFiles.length} Files Selected</Text>
+          </View>
+
+          <View style={[styles.divider, { backgroundColor: c.divider }]} />
+
+          {files.map(file => (
+            <View key={file.id} style={styles.fileRow}>
+              <TouchableOpacity
+                style={[styles.checkbox, selectedFiles.includes(file.id) && { backgroundColor: c.primary, borderColor: c.primary }]}
+                onPress={() => toggleFile(file.id)}
+                activeOpacity={0.7}
+              >
+                {selectedFiles.includes(file.id) && <Ionicons name="checkmark" size={12} color={c.textInverse} />}
+              </TouchableOpacity>
+              <View style={[styles.pdfIconWrap, { backgroundColor: isDark ? 'rgba(219,80,52,0.1)' : '#FFF0EE' }]}>
+                <Ionicons name="document-text" size={18} color="#DB5034" />
+              </View>
+              <Text style={[styles.fileNameText, { color: c.text }]}>{file.name}</Text>
+            </View>
+          ))}
+
+          <TouchableOpacity
+            style={[styles.shareBtn, { backgroundColor: c.primary }]}
+            activeOpacity={0.8}
+            onPress={() => setIsShareSheetVisible(false)}
+          >
+            <Text style={[styles.shareBtnText, { color: c.textOnPrimary }]}>Share</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -143,17 +226,120 @@ const styles = StyleSheet.create({
   privacyText: { fontSize: 16, fontWeight: '500', fontFamily: 'Inter' },
   toggleTrack: { width: 48, height: 24, borderRadius: 12, justifyContent: 'center', position: 'relative' },
   toggleThumb: { width: 16, height: 16, borderRadius: 8, backgroundColor: '#FFFFFF', position: 'absolute' },
-  bottomBar: { position: 'absolute', bottom: 0, left: 0, right: 0, paddingHorizontal: 25 },
+  bottomBar: { position: 'absolute', left: 0, right: 0, paddingHorizontal: 25 },
   downloadButton: {
     height: 58,
     borderRadius: 33,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: 'rgba(0,110,40,0.3)',
-    shadowOffset: { width: 0, height: 20 },
-    shadowOpacity: 1,
-    shadowRadius: 50,
-    elevation: 10,
+    shadowColor: 'rgba(111, 251, 133, 0.3)',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    elevation: 8,
   },
   downloadButtonText: { fontSize: 18, fontWeight: '700', fontFamily: 'Inter' },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' },
+  shareSheet: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderTopLeftRadius: 33,
+    borderTopRightRadius: 33,
+    paddingHorizontal: 36,
+    paddingTop: 12,
+  },
+  sheetHandle: {
+    width: 40,
+    height: 4,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 2,
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  sheetHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    marginBottom: 24,
+  },
+  sheetIconWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sheetTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+  },
+  selectAllRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    paddingVertical: 8,
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderRadius: 6,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectAllText: {
+    fontSize: 16,
+    fontWeight: '600',
+    fontFamily: 'Inter',
+    flex: 1,
+  },
+  fileCountText: {
+    fontSize: 14,
+    fontFamily: 'Inter',
+  },
+  divider: {
+    height: 1,
+    marginVertical: 16,
+  },
+  fileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    paddingVertical: 12,
+    marginBottom: 8,
+  },
+  pdfIconWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fileNameText: {
+    fontSize: 14,
+    fontFamily: 'Inter',
+    fontWeight: '500',
+    flex: 1,
+  },
+  shareBtn: {
+    height: 58,
+    borderRadius: 33,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 24,
+    shadowColor: 'rgba(111, 251, 133, 0.3)',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    elevation: 8,
+  },
+  shareBtnText: {
+    fontSize: 18,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+  },
 });

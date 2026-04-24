@@ -249,7 +249,7 @@ export default function HealthWalletScreen({ navigation }: { navigation: any }) 
         <TouchableOpacity
           style={[styles.insightsBanner, { backgroundColor: cardBg, borderColor: cardBorder }]}
           activeOpacity={0.7}
-          onPress={() => navigation.navigate('AnalyticsEmpty')}
+          onPress={() => navigation.navigate('AnalyticsList')}
         >
           <Text style={[styles.insightsBannerText, { color: isDark ? '#FFFFFF' : '#141414' }]}>
             Check Insights and Analytics
@@ -357,7 +357,7 @@ export default function HealthWalletScreen({ navigation }: { navigation: any }) 
             iconName="receipt-outline"
             label="Prescriptions"
             count="12 Files Found"
-            onPress={() => navigation.navigate('PrescriptionsEmpty')}
+            onPress={() => navigation.navigate('AllPrescriptions')}
           />
           <CategoryCard
             iconType={Ionicons}
@@ -380,7 +380,7 @@ export default function HealthWalletScreen({ navigation }: { navigation: any }) 
           iconName="document-text-outline"
           label="Health Insurance"
           subtitle="4 Activa"
-          onPress={() => navigation.navigate('InsuranceEmpty')}
+          onPress={() => navigation.navigate('InsuranceList')}
         />
         <WideRow
           iconName="information-circle-outline"
