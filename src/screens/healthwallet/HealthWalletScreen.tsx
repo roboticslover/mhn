@@ -249,7 +249,7 @@ export default function HealthWalletScreen({ navigation }: { navigation: any }) 
         <TouchableOpacity
           style={[styles.insightsBanner, { backgroundColor: cardBg, borderColor: cardBorder }]}
           activeOpacity={0.7}
-          onPress={() => navigation.navigate('AnalyticsList')}
+          onPress={() => navigation.navigate('DemoSelector', { title: 'Analytics & Insights', withDataRoute: 'AnalyticsList', emptyRoute: 'AnalyticsEmpty' })}
         >
           <Text style={[styles.insightsBannerText, { color: isDark ? '#FFFFFF' : '#141414' }]}>
             Check Insights and Analytics
@@ -350,28 +350,28 @@ export default function HealthWalletScreen({ navigation }: { navigation: any }) 
             iconName="flask-outline"
             label="Lab/Health Reports"
             count="12 Files Found"
-            onPress={() => navigation.navigate('AllHealthReports')}
+            onPress={() => navigation.navigate('DemoSelector', { title: 'Lab/Health Reports', withDataRoute: 'AllHealthReports', emptyRoute: 'HealthReportsEmpty' })}
           />
           <CategoryCard
             iconType={Ionicons}
             iconName="receipt-outline"
             label="Prescriptions"
             count="12 Files Found"
-            onPress={() => navigation.navigate('AllPrescriptions')}
+            onPress={() => navigation.navigate('DemoSelector', { title: 'Prescriptions', withDataRoute: 'AllPrescriptions', emptyRoute: 'PrescriptionsEmpty' })}
           />
           <CategoryCard
             iconType={Ionicons}
             iconName="scan-outline"
             label="Scans"
             count="12 Files Found"
-            onPress={() => navigation.navigate('ScansList')}
+            onPress={() => navigation.navigate('DemoSelector', { title: 'Scans', withDataRoute: 'ScansList', emptyRoute: 'ScansEmpty' })}
           />
           <CategoryCard
             iconType={MaterialCommunityIcons}
             iconName="needle"
             label="Vaccinations"
             count="12 Files Found"
-            onPress={() => navigation.navigate('AllVaccines')}
+            onPress={() => navigation.navigate('DemoSelector', { title: 'Vaccinations', withDataRoute: 'AllVaccines', emptyRoute: 'VaccinesEmpty' })}
           />
         </View>
 
@@ -380,7 +380,7 @@ export default function HealthWalletScreen({ navigation }: { navigation: any }) 
           iconName="document-text-outline"
           label="Health Insurance"
           subtitle="4 Activa"
-          onPress={() => navigation.navigate('InsuranceList')}
+          onPress={() => navigation.navigate('DemoSelector', { title: 'Health Insurance', withDataRoute: 'InsuranceList', emptyRoute: 'InsuranceEmpty' })}
         />
         <WideRow
           iconName="information-circle-outline"

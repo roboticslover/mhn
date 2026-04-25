@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, StatusBar,
-  TouchableOpacity, Switch,
+  TouchableOpacity, Switch, Modal, Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -51,11 +51,56 @@ const CORRELATION_CARDS: CorrelationCard[] = [
   },
 ];
 
+interface ShareFile {
+  id: string;
+  name: string;
+  icon: 'document-text-outline' | 'document-outline';
+  iconColor: string;
+}
+
+const SHARE_FILES: ShareFile[] = [
+  { id: '1', name: '818786755-CBC-REPORT.PDF', icon: 'document-text-outline', iconColor: '#DB5034' },
+  { id: '2', name: 'SCAN_RESONAN01.DICOM', icon: 'document-outline', iconColor: '#6FFB85' },
+];
+
 export default function ScanDetailScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const c = theme.colors;
   const [visibleToFamily, setVisibleToFamily] = useState(true);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
+  const [selectedAll, setSelectedAll] = useState(false);
+
+  const toggleSelectAll = () => {
+    if (selectedAll) {
+      setSelectedFiles(new Set());
+      setSelectedAll(false);
+    } else {
+      setSelectedFiles(new Set(SHARE_FILES.map(f => f.id)));
+      setSelectedAll(true);
+    }
+  };
+
+  const toggleFile = (id: string) => {
+    const next = new Set(selectedFiles);
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
+    }
+    setSelectedFiles(next);
+    setSelectedAll(next.size === SHARE_FILES.length);
+  };
+
+  const handleShare = () => {
+    if (selectedFiles.size === 0) {
+      Alert.alert('Select Files', 'Please select at least one file to share.');
+      return;
+    }
+    Alert.alert('Sharing', `Sharing ${selectedFiles.size} file(s)...`);
+    setShowShareModal(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -74,7 +119,7 @@ export default function ScanDetailScreen({ navigation }: { navigation: any }) {
             <TouchableOpacity onPress={() => navigation.navigate('ScanEdit')}>
               <Ionicons name="create-outline" size={21} color="rgba(255,255,255,0.74)" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ScanShare')}>
+            <TouchableOpacity onPress={() => setShowShareModal(true)}>
               <Ionicons name="share-outline" size={21} color={c.primary} />
             </TouchableOpacity>
           </View>
@@ -169,6 +214,61 @@ export default function ScanDetailScreen({ navigation }: { navigation: any }) {
           </View>
         </View>
       </ScrollView>
+
+      {/* Share Modal */}
+      <Modal
+        visible={showShareModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowShareModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity
+            style={styles.modalBackdrop}
+            activeOpacity={1}
+            onPress={() => setShowShareModal(false)}
+          />
+          <View style={styles.shareSheet}>
+            <View style={styles.sheetIndicator} />
+            
+            <View style={styles.sheetTitleRow}>
+              <Ionicons name="share-outline" size={20} color="#6FFB85" />
+              <Text style={styles.sheetTitle}>Select files to share</Text>
+            </View>
+
+            <View style={styles.sheetDivider} />
+
+            <TouchableOpacity style={styles.selectAllRow} onPress={toggleSelectAll}>
+              <View style={[styles.checkbox, selectedAll && styles.checkboxChecked]}>
+                {selectedAll && <Ionicons name="checkmark" size={12} color="#000" />}
+              </View>
+              <Text style={styles.selectAllText}>Select All</Text>
+              <Text style={styles.selectedCountText}>{selectedFiles.size} Files Selected</Text>
+            </TouchableOpacity>
+
+            <View style={styles.fileList}>
+              {SHARE_FILES.map((file) => (
+                <View key={file.id}>
+                  <View style={styles.sheetLineDivider} />
+                  <TouchableOpacity style={styles.fileRow} onPress={() => toggleFile(file.id)}>
+                    <View style={[styles.checkbox, selectedFiles.has(file.id) && styles.checkboxChecked]}>
+                      {selectedFiles.has(file.id) && <Ionicons name="checkmark" size={12} color="#000" />}
+                    </View>
+                    <View style={styles.fileIconWrap}>
+                      <Ionicons name={file.icon} size={16} color={file.iconColor} />
+                    </View>
+                    <Text style={styles.fileName}>{file.name}</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+
+            <TouchableOpacity style={styles.shareBtn} activeOpacity={0.85} onPress={handleShare}>
+              <Text style={styles.shareBtnText}>Share</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -402,5 +502,123 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     color: '#AAAAAA',
     lineHeight: 16,
+  },
+
+  /* Share Modal Styles */
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  modalBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+  },
+  shareSheet: {
+    backgroundColor: '#121212',
+    borderTopLeftRadius: 33,
+    borderTopRightRadius: 33,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+    paddingHorizontal: 24,
+    paddingTop: 12,
+    paddingBottom: 40,
+  },
+  sheetIndicator: {
+    width: 38,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  sheetTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 16,
+  },
+  sheetTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    color: '#FFFFFF',
+    lineHeight: 28,
+  },
+  sheetDivider: {
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    marginBottom: 16,
+  },
+  selectAllRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 8,
+  },
+  checkbox: {
+    width: 18,
+    height: 18,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: '#6FFB85',
+    borderColor: '#6FFB85',
+  },
+  selectAllText: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '700',
+    fontFamily: 'Manrope',
+    color: '#FFFFFF',
+  },
+  selectedCountText: {
+    fontSize: 14,
+    fontWeight: '700',
+    fontFamily: 'Manrope',
+    color: 'rgba(255,255,255,0.5)',
+  },
+  fileList: { marginBottom: 24 },
+  sheetLineDivider: {
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    marginVertical: 4,
+  },
+  fileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 12,
+  },
+  fileIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fileName: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '400',
+    fontFamily: 'Manrope',
+    color: '#FFFFFF',
+  },
+  shareBtn: {
+    backgroundColor: '#6FFB85',
+    borderRadius: 33,
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  shareBtnText: {
+    fontSize: 18,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    color: '#141414',
   },
 });

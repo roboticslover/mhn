@@ -13,49 +13,63 @@ import { useTheme } from '../../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import BottomNavBar from '../../../components/BottomNavBar';
 
-const IMG_PROFILE = "https://images.unsplash.com/photo-1584308666744-24d5e4b6c310?q=80&w=896&auto=format&fit=crop";
+const IMG_HEADER = "https://images.unsplash.com/photo-1584308666744-24d5e4b6c310?q=80&w=896&auto=format&fit=crop";
 
-export default function AllergiesEmptyScreen({ navigation }: { navigation: any }) {
+export default function MedicalConditionsEmptyScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
   const { theme, isDark } = useTheme();
   const c = theme.colors;
 
   return (
-    <View style={[styles.container, { backgroundColor: '#000000' }]}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+    <View style={[styles.container, { backgroundColor: c.background }]}>
+      <StatusBar
+        barStyle={isDark ? 'light-content' : 'dark-content'}
+        backgroundColor="transparent"
+        translucent
+      />
 
       <ScrollView
         contentContainerStyle={{ paddingBottom: 110 }}
         showsVerticalScrollIndicator={false}
         bounces={false}
       >
-        {/* Top Header */}
-        <View style={[styles.header, { marginTop: insets.top + 20 }]}>
+        {/* Header Section */}
+        <View style={[styles.headerSection, { marginTop: insets.top + 20 }]}>
           <TouchableOpacity 
             style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
+            <Ionicons name="chevron-back" size={24} color={isDark ? '#FFFFFF' : '#000000'} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Allergies</Text>
-          <Image source={{ uri: IMG_PROFILE }} style={styles.profileImage} />
+          
+          <View style={styles.headerImageContainer}>
+            <Image source={{ uri: IMG_HEADER }} style={styles.headerImage} />
+            <Text style={[styles.headerTitle, { color: isDark ? '#FFFFFF' : '#000000' }]}>
+              Conditions
+            </Text>
+            <View style={styles.headerIcon}>
+              <Ionicons name="alert" size={12} color={isDark ? '#FFFFFF' : '#000000'} />
+            </View>
+          </View>
         </View>
 
         {/* Content Section */}
         <View style={styles.contentSection}>
           <View style={styles.illustrationContainer}>
-            <Ionicons name="alert-circle-outline" size={100} color="rgba(255,255,255,0.05)" />
+            <Ionicons name="medical-outline" size={100} color={isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'} />
           </View>
 
-          <Text style={styles.title}>No Records Found</Text>
-          <Text style={styles.subtitle}>
-            Start tracking your allergies and triggers to better manage your health and well-being.
+          <Text style={[styles.title, { color: isDark ? '#E2E2E2' : c.text }]}>
+            No Conditions Found
+          </Text>
+          <Text style={[styles.subtitle, { color: isDark ? '#BCCBB7' : c.textSecondary }]}>
+            Keep track of any medical conditions or illnesses to help doctors better understand your health profile.
           </Text>
 
           <TouchableOpacity 
-            style={styles.addButton}
+            style={[styles.addButton, { backgroundColor: c.primary }]}
             activeOpacity={0.8}
-            onPress={() => navigation.navigate('AllergiesAdd')}
+            onPress={() => navigation.navigate('MedicalConditionsAdd')}
           >
             <Text style={styles.addButtonText}>ADD NEW RECORD</Text>
           </TouchableOpacity>
@@ -71,28 +85,40 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    flexDirection: 'row',
+  headerSection: {
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 24,
-    marginBottom: 35,
+    marginBottom: 40,
+    position: 'relative',
   },
   backButton: {
-    padding: 4,
-    marginLeft: -4,
+    position: 'absolute',
+    left: 24,
+    top: 12,
+    zIndex: 10,
+    padding: 8,
+  },
+  headerImageContainer: {
+    alignItems: 'center',
+    position: 'relative',
+    marginTop: 20,
+  },
+  headerImage: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    marginLeft: 150,
   },
   headerTitle: {
     fontFamily: 'Manrope-Bold',
     fontSize: 28,
-    color: '#FFFFFF',
-    position: 'absolute',
-    left: 64,
+    textAlign: 'center',
+    marginTop: 13,
   },
-  profileImage: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+  headerIcon: {
+    position: 'absolute',
+    left: -20,
+    top: 60,
+    transform: [{ rotate: '180deg' }],
   },
   contentSection: {
     flex: 1,
@@ -109,26 +135,23 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Inter-Bold',
     fontSize: 24,
-    color: '#E2E2E2',
     marginBottom: 12,
     textAlign: 'center',
   },
   subtitle: {
     fontFamily: 'Inter-Regular',
     fontSize: 16,
-    color: '#BCCBB7',
     textAlign: 'center',
     lineHeight: 24,
     marginBottom: 40,
   },
   addButton: {
-    backgroundColor: '#30D158',
     paddingHorizontal: 32,
     paddingVertical: 18,
     borderRadius: 33,
     width: '100%',
     alignItems: 'center',
-    shadowColor: 'rgba(48,209,88,0.3)',
+    shadowColor: 'rgba(0,110,40,0.3)',
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 1,
     shadowRadius: 24,
@@ -137,7 +160,7 @@ const styles = StyleSheet.create({
   addButtonText: {
     fontFamily: 'Manrope-ExtraBold',
     fontSize: 16,
-    color: '#00541B',
+    color: '#000000',
     textTransform: 'uppercase',
     letterSpacing: 1,
   },

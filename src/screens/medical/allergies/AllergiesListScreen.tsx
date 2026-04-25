@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,344 +6,480 @@ import {
   ScrollView,
   StatusBar,
   TouchableOpacity,
+  Image,
+  TextInput,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import ScreenHeader from '../../../components/ScreenHeader';
+import BottomNavBar from '../../../components/BottomNavBar';
 
-interface Allergy {
+const IMG_PROFILE = "https://images.unsplash.com/photo-1584308666744-24d5e4b6c310?q=80&w=896&auto=format&fit=crop";
+
+interface AllergyRecord {
   id: string;
   name: string;
-  type: string;
-  severity: 'Mild' | 'Moderate' | 'Severe';
-  reaction: string;
-  triggers: string[];
+  description: string;
+  severity: 'Severe' | 'Moderate' | 'Mild';
+  risk?: string;
+  icon?: string;
+  iconBg?: string;
 }
 
-const SAMPLE_ALLERGIES: Allergy[] = [
+const FOOD_ALLERGIES: AllergyRecord[] = [
   {
     id: '1',
-    name: 'Peanut Allergy',
-    type: 'Food',
+    name: 'Seeds',
+    description: 'Common reactions: Hives,\nswelling',
     severity: 'Severe',
-    reaction: 'Anaphylaxis, hives, swelling',
-    triggers: ['Peanuts', 'Tree nuts', 'Peanut oil'],
+    risk: 'Anaphylaxis Risk',
   },
   {
     id: '2',
-    name: 'Penicillin',
-    type: 'Drug',
+    name: 'Sea Food',
+    description: 'Shellfish and crustaceans.\nReaction: Digestive distress',
     severity: 'Moderate',
-    reaction: 'Rash, itching, shortness of breath',
-    triggers: ['Penicillin', 'Amoxicillin'],
-  },
-  {
-    id: '3',
-    name: 'Dust Mites',
-    type: 'Environmental',
-    severity: 'Mild',
-    reaction: 'Sneezing, runny nose, itchy eyes',
-    triggers: ['Dust mites', 'Pet dander', 'Pollen'],
-  },
-  {
-    id: '4',
-    name: 'Latex',
-    type: 'Contact',
-    severity: 'Moderate',
-    reaction: 'Contact dermatitis, hives',
-    triggers: ['Latex gloves', 'Rubber products'],
+    risk: 'Avoid cross-contamination',
   },
 ];
 
-function SeverityBadge({ severity, isDark }: { severity: Allergy['severity']; isDark: boolean }) {
-  const configs = {
-    Mild: {
-      bg: isDark ? 'rgba(96,165,250,0.1)' : 'rgba(59,130,246,0.1)',
-      border: isDark ? 'rgba(96,165,250,0.2)' : 'rgba(59,130,246,0.2)',
-      text: isDark ? '#60A5FA' : '#3B82F6',
-    },
-    Moderate: {
-      bg: isDark ? 'rgba(255,146,0,0.1)' : 'rgba(255,146,0,0.1)',
-      border: isDark ? 'rgba(255,146,0,0.25)' : 'rgba(255,146,0,0.25)',
-      text: '#FF9200',
-    },
-    Severe: {
-      bg: isDark ? 'rgba(219,80,52,0.1)' : 'rgba(219,80,52,0.1)',
-      border: isDark ? 'rgba(219,80,52,0.25)' : 'rgba(219,80,52,0.25)',
-      text: '#DB5034',
-    },
-  };
-  const cfg = configs[severity];
-  return (
-    <View style={[styles.badge, { backgroundColor: cfg.bg, borderColor: cfg.border }]}>
-      <Text style={[styles.badgeText, { color: cfg.text }]}>{severity.toUpperCase()}</Text>
-    </View>
-  );
-}
-
-const TYPE_ICONS: Record<string, string> = {
-  Food: 'fast-food-outline',
-  Drug: 'medical-outline',
-  Environmental: 'leaf-outline',
-  Contact: 'hand-left-outline',
-};
+const ENVIRONMENTAL_ALLERGIES: AllergyRecord[] = [
+  {
+    id: '3',
+    name: 'Pollen (Spring)',
+    description: 'Seasonal rhinitis',
+    severity: 'Mild',
+    icon: 'leaf',
+    iconBg: 'rgba(14,85,31,0.2)',
+  },
+];
 
 export default function AllergiesListScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
   const { theme, isDark } = useTheme();
   const c = theme.colors;
 
+  const [activeFilter, setActiveFilter] = useState('All Procedures');
+
+  const getSeverityStyle = (severity: string) => {
+    switch (severity) {
+      case 'Severe':
+        return {
+          text: '#FFB4AB',
+          bg: 'rgba(147,0,10,0.2)',
+          border: 'rgba(255,180,171,0.2)',
+        };
+      case 'Moderate':
+        return {
+          text: '#FFC4BA',
+          bg: 'rgba(255,156,140,0.1)',
+          border: 'rgba(255,196,186,0.2)',
+        };
+      case 'Mild':
+        return {
+          text: '#BCCBB7',
+          bg: '#353535',
+          border: 'transparent',
+        };
+      default:
+        return {
+          text: '#BCCBB7',
+          bg: '#353535',
+          border: 'transparent',
+        };
+    }
+  };
+
+  const renderCard = (allergy: AllergyRecord) => {
+    const sevStyle = getSeverityStyle(allergy.severity);
+    
+    if (allergy.icon) {
+      // Small card style (Environmental)
+      return (
+        <TouchableOpacity 
+          key={allergy.id} 
+          style={[styles.smallCard, { backgroundColor: '#1F1F1F' }]}
+          onPress={() => navigation.navigate('AllergiesDetail', { allergy })}
+        >
+          <View style={styles.smallCardLeft}>
+            <View style={[styles.iconOverlay, { backgroundColor: allergy.iconBg }]}>
+              <Ionicons name={allergy.icon as any} size={17} color="#55EE71" />
+            </View>
+            <View>
+              <Text style={styles.smallCardTitle}>{allergy.name}</Text>
+              <Text style={styles.smallCardSub}>{allergy.description}</Text>
+            </View>
+          </View>
+          <View style={[styles.smallSeverityBadge, { backgroundColor: sevStyle.bg }]}>
+            <Text style={[styles.smallSeverityText, { color: sevStyle.text }]}>{allergy.severity}</Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }
+
+    return (
+      <TouchableOpacity 
+        key={allergy.id} 
+        style={[styles.allergyCard, { backgroundColor: '#1F1F1F' }]}
+        onPress={() => {
+          if (allergy.name !== 'Seeds' && allergy.name !== 'Sea Food') {
+            navigation.navigate('AllergiesDetail', { allergy });
+          }
+        }}
+      >
+        <View style={styles.cardHeader}>
+          <View style={styles.cardTitleContainer}>
+            <Text style={styles.cardTitle}>{allergy.name}</Text>
+            <Text style={styles.cardDescription}>{allergy.description}</Text>
+          </View>
+          <View 
+            style={[
+              styles.severityBadge, 
+              { 
+                backgroundColor: sevStyle.bg,
+                borderColor: sevStyle.border,
+                borderWidth: sevStyle.border !== 'transparent' ? 1 : 0
+              }
+            ]}
+          >
+            <Text style={[styles.severityText, { color: sevStyle.text }]}>
+              {allergy.severity}
+            </Text>
+          </View>
+        </View>
+        {allergy.risk && (
+          <View style={styles.riskContainer}>
+            <Ionicons 
+              name={allergy.severity === 'Severe' ? "shield-checkmark" : "warning-outline"} 
+              size={12} 
+              color={allergy.severity === 'Severe' ? "#55EE71" : "#BCCBB7"} 
+            />
+            <Text style={[styles.riskText, { color: allergy.severity === 'Severe' ? "#55EE71" : "#BCCBB7" }]}>
+              {allergy.risk}
+            </Text>
+          </View>
+        )}
+      </TouchableOpacity>
+    );
+  };
+
   return (
-    <View style={[styles.container, { backgroundColor: c.background }]}>
-      <StatusBar
-        barStyle={isDark ? 'light-content' : 'dark-content'}
-        backgroundColor="transparent"
-        translucent
-      />
+    <View style={[styles.container, { backgroundColor: '#000000' }]}>
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
 
       <ScrollView
-        contentContainerStyle={{ paddingTop: insets.top + 4, paddingBottom: 110 }}
+        contentContainerStyle={{ paddingBottom: 150 }}
         showsVerticalScrollIndicator={false}
+        bounces={false}
       >
-        <ScreenHeader
-          title="Allergies & Triggers"
-          onBack={() => navigation.goBack()}
-          rightElement={
-            <TouchableOpacity
-              style={[styles.addIconBtn, { backgroundColor: isDark ? 'rgba(111,251,133,0.1)' : 'rgba(57,166,87,0.1)' }]}
-              onPress={() => navigation.navigate('AllergiesAdd')}
-            >
-              <Ionicons name="add" size={20} color={c.primary} />
-            </TouchableOpacity>
-          }
-        />
+        {/* Top Header */}
+        <View style={[styles.header, { marginTop: insets.top + 20 }]}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Allergies</Text>
+          <Image source={{ uri: IMG_PROFILE }} style={styles.profileImage} />
+        </View>
 
-        {/* Editorial Header */}
-        <View style={styles.editorialHeader}>
-          <View style={[styles.liveTag, { backgroundColor: isDark ? '#353535' : '#E8E8E8' }]}>
-            <Text style={[styles.liveTagText, { color: c.primary }]}>LIVE STATUS</Text>
+        {/* Search Bar */}
+        <View style={styles.searchContainer}>
+          <View style={styles.searchWrapper}>
+            <Ionicons name="search" size={20} color="rgba(255,255,255,0.2)" style={styles.searchIcon} />
+            <TextInput
+              placeholder="SEARCH 128 PARAMETERS..."
+              placeholderTextColor="rgba(255,255,255,0.2)"
+              style={styles.searchInput}
+            />
           </View>
-          <Text style={[styles.heroTitle, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-Bold' }]}>
-            Allergies & Triggers
-          </Text>
-          <Text style={[styles.heroSubtitle, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter' }]}>
-            A complete profile of your allergic reactions and environmental triggers.
-          </Text>
         </View>
 
-        {/* Section label */}
-        <View style={styles.sectionRow}>
-          <Text style={[styles.sectionLabel, { color: isDark ? 'rgba(188,203,183,0.5)' : c.textTertiary, fontFamily: 'Inter-Black' }]}>
-            ACTIVE PROFILES
-          </Text>
+        {/* Action Buttons */}
+        <View style={styles.topActionContainer}>
+          <TouchableOpacity style={styles.topFilterButton}>
+            <Ionicons name="options-outline" size={16} color="#E2E2E2" />
+            <Text style={styles.topFilterText}>FILTERS</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.topAddButton}
+            onPress={() => navigation.navigate('AllergiesAdd')}
+          >
+            <Text style={styles.topAddText}>ADD</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Cards */}
-        <View style={styles.cardsContainer}>
-          {SAMPLE_ALLERGIES.map((allergy) => (
-            <TouchableOpacity
-              key={allergy.id}
-              style={[
-                styles.card,
-                {
-                  backgroundColor: isDark ? '#1F1F1F' : c.card,
-                  borderColor: isDark ? 'rgba(255,255,255,0.06)' : c.cardBorder,
-                },
-              ]}
-              activeOpacity={0.75}
-              onPress={() => navigation.navigate('AllergiesDetail', { allergy })}
-            >
-              <View style={styles.cardHeader}>
-                <View style={styles.cardTitleRow}>
-                  <View style={[styles.typeIconBox, { backgroundColor: isDark ? '#2A2A2A' : '#F0F0F0' }]}>
-                    <Ionicons name={(TYPE_ICONS[allergy.type] ?? 'alert-circle-outline') as any} size={16} color={c.primary} />
-                  </View>
-                  <View style={styles.titleCol}>
-                    <Text style={[styles.allergyType, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter' }]}>
-                      {allergy.type}
-                    </Text>
-                    <Text style={[styles.cardTitle, { color: c.text, fontFamily: 'Inter-Bold' }]}>
-                      {allergy.name}
-                    </Text>
-                  </View>
-                </View>
-                <SeverityBadge severity={allergy.severity} isDark={isDark} />
-              </View>
-
-              <View style={[styles.divider, { backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : c.divider }]} />
-
-              <Text style={[styles.reactionText, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter' }]}>
-                {allergy.reaction}
-              </Text>
-
-              <View style={styles.triggersRow}>
-                {allergy.triggers.slice(0, 3).map((trigger, i) => (
-                  <View key={i} style={[styles.triggerChip, { backgroundColor: isDark ? '#2A2A2A' : '#F0F0F0', borderColor: isDark ? 'rgba(255,255,255,0.06)' : c.cardBorder }]}>
-                    <Text style={[styles.triggerText, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter' }]}>
-                      {trigger}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            </TouchableOpacity>
-          ))}
+        {/* Filters Chips */}
+        <View style={styles.filtersWrapper}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filtersContainer}>
+            {['All Procedures', 'SEVERE', 'MODERATE', 'MILD'].map((filter) => (
+              <TouchableOpacity
+                key={filter}
+                style={[
+                  styles.filterBadge,
+                  { backgroundColor: activeFilter === filter ? '#55EE71' : '#353535' }
+                ]}
+                onPress={() => setActiveFilter(filter)}
+              >
+                <Text style={[
+                  styles.filterText,
+                  { color: activeFilter === filter ? '#003910' : '#BCCBB7' }
+                ]}>
+                  {filter}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+        
+        {/* Food Sensitivity Section */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={[styles.sectionTitle, { color: '#55EE71' }]}>FOOD SENSITIVITY</Text>
+            <Text style={styles.sectionCount}>2 Records</Text>
+          </View>
+          <View style={styles.cardsGrid}>
+            {FOOD_ALLERGIES.map(renderCard)}
+          </View>
         </View>
 
-        {/* Add button */}
-        <TouchableOpacity
-          style={[styles.addBtn, { backgroundColor: c.primary }]}
-          activeOpacity={0.8}
-          onPress={() => navigation.navigate('AllergiesAdd')}
-        >
-          <Ionicons name="add" size={20} color="#000" />
-          <Text style={[styles.addBtnText, { fontFamily: 'Manrope-ExtraBold' }]}>
-            ADD ALLERGY
-          </Text>
-        </TouchableOpacity>
+        {/* Environmental Section */}
+        <View style={[styles.section, { marginTop: 40 }]}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>ENVIRONMENTAL</Text>
+            <Text style={styles.sectionCount}>1 Record</Text>
+          </View>
+          <View style={styles.cardsGrid}>
+            {ENVIRONMENTAL_ALLERGIES.map(renderCard)}
+          </View>
+        </View>
       </ScrollView>
+
+      <BottomNavBar activeTab="home" navigation={navigation} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  addIconBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  container: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    marginBottom: 35,
+  },
+  backButton: {
+    padding: 4,
+    marginLeft: -4,
+  },
+  headerTitle: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 28,
+    color: '#FFFFFF',
+    position: 'absolute',
+    left: 64,
+  },
+  profileImage: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+  },
+  searchContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 16,
+  },
+  searchWrapper: {
+    height: 56,
+    backgroundColor: 'rgba(31,31,31,0.4)',
+    borderRadius: 48,
+    borderWidth: 1,
+    borderColor: 'rgba(143,147,120,0.15)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  searchIcon: {
+    marginRight: 12,
+  },
+  searchInput: {
+    flex: 1,
+    fontFamily: 'Manrope-ExtraBold',
+    fontSize: 14,
+    color: '#FFFFFF',
+    letterSpacing: 1.4,
+  },
+  topActionContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    gap: 12,
+    marginBottom: 24,
+  },
+  topFilterButton: {
+    flex: 1,
+    height: 56,
+    backgroundColor: 'rgba(31,31,31,0.4)',
+    borderRadius: 48,
+    borderWidth: 1,
+    borderColor: 'rgba(143,147,120,0.15)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  topFilterText: {
+    fontFamily: 'Manrope-ExtraBold',
+    fontSize: 10,
+    color: '#E2E2E2',
+    letterSpacing: 1,
+  },
+  topAddButton: {
+    flex: 1,
+    height: 56,
+    backgroundColor: '#34C759',
+    borderRadius: 48,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  editorialHeader: {
-    paddingHorizontal: 24,
-    paddingBottom: 24,
-    gap: 8,
-  },
-  liveTag: {
-    alignSelf: 'flex-start',
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    marginBottom: 4,
-  },
-  liveTagText: {
-    fontSize: 10,
-    fontWeight: '700',
+  topAddText: {
+    fontFamily: 'Manrope-ExtraBold',
+    fontSize: 18,
+    color: '#000000',
     letterSpacing: 1,
-    textTransform: 'uppercase',
   },
-  heroTitle: {
-    fontSize: 28,
-    fontWeight: '700',
-    lineHeight: 36,
-    letterSpacing: -0.5,
+  filtersWrapper: {
+    marginBottom: 40,
   },
-  heroSubtitle: {
-    fontSize: 16,
-    fontWeight: '400',
-    lineHeight: 24,
-    maxWidth: 280,
+  filtersContainer: {
+    paddingHorizontal: 21,
+    gap: 11,
   },
-  sectionRow: {
-    paddingHorizontal: 24,
-    marginBottom: 12,
+  filterBadge: {
+    height: 28,
+    paddingHorizontal: 16,
+    borderRadius: 9999,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  sectionLabel: {
+  filterText: {
+    fontFamily: 'Inter-SemiBold',
     fontSize: 12,
-    fontWeight: '900',
-    letterSpacing: 2.4,
     textTransform: 'uppercase',
   },
-  cardsContainer: {
+  section: {
     paddingHorizontal: 24,
-    gap: 12,
   },
-  card: {
-    borderRadius: 33,
-    borderWidth: 1,
-    padding: 20,
-    gap: 12,
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(61,74,59,0.1)',
+    paddingBottom: 9,
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontFamily: 'Inter-Bold',
+    fontSize: 12,
+    color: '#BCCBB7',
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
+  },
+  sectionCount: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 12,
+    color: '#BCCBB7',
+  },
+  cardsGrid: {
+    gap: 16,
+  },
+  allergyCard: {
+    borderRadius: 12,
+    padding: 24,
   },
   cardHeader: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 16,
   },
-  cardTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+  cardTitleContainer: {
     flex: 1,
-    marginRight: 10,
-  },
-  typeIconBox: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  titleCol: { flex: 1, gap: 2 },
-  allergyType: {
-    fontSize: 11,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
   },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    lineHeight: 24,
-    letterSpacing: -0.3,
+    fontFamily: 'Inter-Bold',
+    fontSize: 24,
+    color: '#E2E2E2',
+    marginBottom: 4,
   },
-  badge: {
-    borderRadius: 999,
-    borderWidth: 1,
-    paddingHorizontal: 12,
+  cardDescription: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 14,
+    color: '#BCCBB7',
+    lineHeight: 20,
+  },
+  severityBadge: {
+    paddingHorizontal: 13,
     paddingVertical: 5,
+    borderRadius: 9999,
   },
-  badgeText: {
+  severityText: {
+    fontFamily: 'Inter-Bold',
     fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
   },
-  divider: {
-    height: 1,
-  },
-  reactionText: {
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  triggersRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-  },
-  triggerChip: {
-    borderRadius: 999,
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-  },
-  triggerText: {
-    fontSize: 11,
-    lineHeight: 16,
-  },
-  addBtn: {
+  riskContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    height: 56,
-    borderRadius: 999,
-    marginHorizontal: 24,
-    marginTop: 24,
+    gap: 8,
   },
-  addBtnText: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#000',
-    letterSpacing: 1.4,
+  riskText: {
+    fontFamily: 'Inter-Bold',
+    fontSize: 10,
+    textTransform: 'uppercase',
+  },
+  smallCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 24,
+    borderRadius: 12,
+  },
+  smallCardLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  iconOverlay: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  smallCardTitle: {
+    fontFamily: 'Inter-Bold',
+    fontSize: 16,
+    color: '#E2E2E2',
+  },
+  smallCardSub: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 12,
+    color: '#BCCBB7',
+  },
+  smallSeverityBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  smallSeverityText: {
+    fontFamily: 'Inter-Bold',
+    fontSize: 10,
     textTransform: 'uppercase',
   },
 });

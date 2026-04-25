@@ -83,9 +83,14 @@ export default function HealthReportDetailScreen({ navigation }: { navigation: a
             <Ionicons name="chevron-back" size={22} color={c.text} />
           </TouchableOpacity>
           <Text style={[styles.headerTitle, { color: c.text }]}>Report Analytics</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('HealthReportEdit')} style={styles.editBtn}>
-            <Ionicons name="create-outline" size={20} color={c.textMuted} />
-          </TouchableOpacity>
+          <View style={styles.headerActions}>
+            <TouchableOpacity onPress={() => navigation.navigate('HealthReportEdit')} style={styles.headerIconBtn}>
+              <Ionicons name="create-outline" size={20} color={c.textMuted} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('HealthReportShare')} style={styles.headerIconBtn}>
+              <Ionicons name="share-social-outline" size={20} color={c.primary} />
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Report header section */}
@@ -305,15 +310,6 @@ export default function HealthReportDetailScreen({ navigation }: { navigation: a
           )}
         </View>
 
-        {/* Share Button */}
-        <TouchableOpacity
-          style={[styles.shareBtn, { backgroundColor: c.primary }]}
-          activeOpacity={0.85}
-          onPress={() => navigation.navigate('HealthReportShare')}
-        >
-          <Ionicons name="share-outline" size={20} color={c.textOnPrimary} />
-          <Text style={[styles.shareBtnText, { color: c.textOnPrimary }]}>Share</Text>
-        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -335,7 +331,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Inter',
   },
-  editBtn: { width: 22, alignItems: 'center' },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  headerIconBtn: { width: 22, alignItems: 'center' },
   reportHeaderSection: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -652,25 +653,5 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontFamily: 'Inter',
     lineHeight: 24,
-  },
-  shareBtn: {
-    marginHorizontal: 24,
-    marginTop: 8,
-    height: 58,
-    borderRadius: 33,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    shadowColor: 'rgba(0,110,40,0.3)',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 1,
-    shadowRadius: 24,
-    elevation: 6,
-  },
-  shareBtnText: {
-    fontSize: 18,
-    fontWeight: '700',
-    fontFamily: 'Inter',
   },
 });

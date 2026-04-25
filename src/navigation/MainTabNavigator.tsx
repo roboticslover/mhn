@@ -1,71 +1,72 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Home screens
-import HomeScreen from '../screens/home/HomeScreen';
-import EditPinnedVitalsScreen from '../screens/home/EditPinnedVitalsScreen';
-import EditPinnedBiomarkersScreen from '../screens/home/EditPinnedBiomarkersScreen';
+import HomeScreen from "../screens/home/HomeScreen";
+import EditPinnedVitalsScreen from "../screens/home/EditPinnedVitalsScreen";
+import EditPinnedBiomarkersScreen from "../screens/home/EditPinnedBiomarkersScreen";
 
 // Health Wallet screens
-import HealthWalletScreen from '../screens/healthwallet/HealthWalletScreen';
-import PrescriptionsEmptyScreen from '../screens/healthwallet/prescriptions/PrescriptionsEmptyScreen';
-import AllPrescriptionsScreen from '../screens/healthwallet/prescriptions/AllPrescriptionsScreen';
-import PrescriptionDetailScreen from '../screens/healthwallet/prescriptions/PrescriptionDetailScreen';
-import PrescriptionEditScreen from '../screens/healthwallet/prescriptions/PrescriptionEditScreen';
-import PrescriptionUploadScreen from '../screens/healthwallet/prescriptions/PrescriptionUploadScreen';
-import PrescriptionShareScreen from '../screens/healthwallet/prescriptions/PrescriptionShareScreen';
-import AnalyticsEmptyScreen from '../screens/healthwallet/analytics/AnalyticsEmptyScreen';
-import AnalyticsListScreen from '../screens/healthwallet/analytics/AnalyticsListScreen';
-import AnalyticsDetailScreen from '../screens/healthwallet/analytics/AnalyticsDetailScreen';
-import ScansEmptyScreen from '../screens/healthwallet/scans/ScansEmptyScreen';
-import ScansListScreen from '../screens/healthwallet/scans/ScansListScreen';
-import ScanDetailScreen from '../screens/healthwallet/scans/ScanDetailScreen';
-import ScanUploadScreen from '../screens/healthwallet/scans/ScanUploadScreen';
-import ScanEditScreen from '../screens/healthwallet/scans/ScanEditScreen';
-import ScanShareScreen from '../screens/healthwallet/scans/ScanShareScreen';
-import InsuranceEmptyScreen from '../screens/healthwallet/insurance/InsuranceEmptyScreen';
-import InsuranceListScreen from '../screens/healthwallet/insurance/InsuranceListScreen';
-import InsuranceDetailScreen from '../screens/healthwallet/insurance/InsuranceDetailScreen';
-import InsuranceAddScreen from '../screens/healthwallet/insurance/InsuranceAddScreen';
-import InsuranceAddWithFilesScreen from '../screens/healthwallet/insurance/InsuranceAddWithFilesScreen';
-import InsuranceShareScreen from '../screens/healthwallet/insurance/InsuranceShareScreen';
-import HealthReportsEmptyScreen from '../screens/healthwallet/healthreports/HealthReportsEmptyScreen';
-import HealthReportUploadScreen from '../screens/healthwallet/healthreports/HealthReportUploadScreen';
-import VaccinesEmptyScreen from '../screens/healthwallet/vaccines/VaccinesEmptyScreen';
-import VaccineUploadScreen from '../screens/healthwallet/vaccines/VaccineUploadScreen';
+import HealthWalletScreen from "../screens/healthwallet/HealthWalletScreen";
+import PrescriptionsEmptyScreen from "../screens/healthwallet/prescriptions/PrescriptionsEmptyScreen";
+import AllPrescriptionsScreen from "../screens/healthwallet/prescriptions/AllPrescriptionsScreen";
+import PrescriptionDetailScreen from "../screens/healthwallet/prescriptions/PrescriptionDetailScreen";
+import PrescriptionEditScreen from "../screens/healthwallet/prescriptions/PrescriptionEditScreen";
+import PrescriptionAddScreen from "../screens/healthwallet/prescriptions/PrescriptionAddScreen";
+import PrescriptionUploadScreen from "../screens/healthwallet/prescriptions/PrescriptionUploadScreen";
+import PrescriptionShareScreen from "../screens/healthwallet/prescriptions/PrescriptionShareScreen";
+import AnalyticsEmptyScreen from "../screens/healthwallet/analytics/AnalyticsEmptyScreen";
+import AnalyticsListScreen from "../screens/healthwallet/analytics/AnalyticsListScreen";
+import AnalyticsDetailScreen from "../screens/healthwallet/analytics/AnalyticsDetailScreen";
+import ScansEmptyScreen from "../screens/healthwallet/scans/ScansEmptyScreen";
+import ScansListScreen from "../screens/healthwallet/scans/ScansListScreen";
+import ScanDetailScreen from "../screens/healthwallet/scans/ScanDetailScreen";
+import ScanUploadScreen from "../screens/healthwallet/scans/ScanUploadScreen";
+import ScanEditScreen from "../screens/healthwallet/scans/ScanEditScreen";
+import ScanShareScreen from "../screens/healthwallet/scans/ScanShareScreen";
+import InsuranceEmptyScreen from "../screens/healthwallet/insurance/InsuranceEmptyScreen";
+import InsuranceListScreen from "../screens/healthwallet/insurance/InsuranceListScreen";
+import InsuranceDetailScreen from "../screens/healthwallet/insurance/InsuranceDetailScreen";
+import InsuranceAddScreen from "../screens/healthwallet/insurance/InsuranceAddScreen";
+import InsuranceEditScreen from "../screens/healthwallet/insurance/InsuranceEditScreen";
+import InsuranceShareScreen from "../screens/healthwallet/insurance/InsuranceShareScreen";
+import HealthReportsEmptyScreen from "../screens/healthwallet/healthreports/HealthReportsEmptyScreen";
+import HealthReportUploadScreen from "../screens/healthwallet/healthreports/HealthReportUploadScreen";
+import VaccinesEmptyScreen from "../screens/healthwallet/vaccines/VaccinesEmptyScreen";
+import VaccineUploadScreen from "../screens/healthwallet/vaccines/VaccineUploadScreen";
 
 // AI screens
-import AskAIScreen from '../screens/ai/AskAIScreen';
-import AskAIChatScreen from '../screens/ai/AskAIChatScreen';
+import AskAIScreen from "../screens/ai/AskAIScreen";
+import AskAIChatScreen from "../screens/ai/AskAIChatScreen";
 
 // SOS screens
-import EmergencyContactsScreen from '../screens/sos/EmergencyContactsScreen';
-import SOSMainScreen from '../screens/sos/SOSMainScreen';
-import SOSReceivedScreen from '../screens/sos/SOSReceivedScreen';
-import EnableLocationScreen from '../screens/sos/EnableLocationScreen';
-import AddContactFromFamilyScreen from '../screens/sos/AddContactFromFamilyScreen';
-import AddNewContactScreen from '../screens/sos/AddNewContactScreen';
+import EmergencyContactsScreen from "../screens/sos/EmergencyContactsScreen";
+import SOSMainScreen from "../screens/sos/SOSMainScreen";
+import SOSReceivedScreen from "../screens/sos/SOSReceivedScreen";
+import EnableLocationScreen from "../screens/sos/EnableLocationScreen";
+import AddContactFromFamilyScreen from "../screens/sos/AddContactFromFamilyScreen";
+import AddNewContactScreen from "../screens/sos/AddNewContactScreen";
 
 // Connect - Doctor screens
-import DoctorConnectEmptyScreen from '../screens/connect/doctor/DoctorConnectEmptyScreen';
-import DoctorListScreen from '../screens/connect/doctor/DoctorListScreen';
-import DoctorSearchScreen from '../screens/connect/doctor/DoctorSearchScreen';
-import DoctorAddScreen from '../screens/connect/doctor/DoctorAddScreen';
-import DoctorDetailScreen from '../screens/connect/doctor/DoctorDetailScreen';
-import DoctorDetailConnectedScreen from '../screens/connect/doctor/DoctorDetailConnectedScreen';
+import DoctorConnectEmptyScreen from "../screens/connect/doctor/DoctorConnectEmptyScreen";
+import DoctorListScreen from "../screens/connect/doctor/DoctorListScreen";
+import DoctorSearchScreen from "../screens/connect/doctor/DoctorSearchScreen";
+import DoctorAddScreen from "../screens/connect/doctor/DoctorAddScreen";
+import DoctorDetailScreen from "../screens/connect/doctor/DoctorDetailScreen";
+import DoctorDetailConnectedScreen from "../screens/connect/doctor/DoctorDetailConnectedScreen";
 // Connect - Family screens
-import FamilyConnectEmptyScreen from '../screens/connect/family/FamilyConnectEmptyScreen';
-import FamilyListScreen from '../screens/connect/family/FamilyListScreen';
-import FamilyAddScreen from '../screens/connect/family/FamilyAddScreen';
-import FamilyMemberDetailScreen from '../screens/connect/family/FamilyMemberDetailScreen';
-import FamilySharedReportsScreen from '../screens/connect/family/FamilySharedReportsScreen';
+import FamilyConnectEmptyScreen from "../screens/connect/family/FamilyConnectEmptyScreen";
+import FamilyListScreen from "../screens/connect/family/FamilyListScreen";
+import FamilyAddScreen from "../screens/connect/family/FamilyAddScreen";
+import FamilyMemberDetailScreen from "../screens/connect/family/FamilyMemberDetailScreen";
+import FamilySharedReportsScreen from "../screens/connect/family/FamilySharedReportsScreen";
 
 // Medical screens (sub-screens of Home)
-import MedicalInformationScreen from '../screens/medical/MedicalInformationScreen';
+import MedicalInformationScreen from "../screens/medical/MedicalInformationScreen";
 
-import BottomNavBar from '../components/BottomNavBar';
-import type { NavTab } from '../components/BottomNavBar';
+import BottomNavBar from "../components/BottomNavBar";
+import type { NavTab } from "../components/BottomNavBar";
 
 export type MainTabParamList = {
   HomeTab: undefined;
@@ -80,24 +81,56 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 const HomeStack = createNativeStackNavigator();
 function HomeStackNavigator() {
   return (
-    <HomeStack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+    <HomeStack.Navigator
+      screenOptions={{ headerShown: false, animation: "slide_from_right" }}
+    >
       <HomeStack.Screen name="Home" component={HomeScreen} />
-      <HomeStack.Screen name="EditPinnedVitals" component={EditPinnedVitalsScreen} />
-      <HomeStack.Screen name="EditPinnedBiomarkers" component={EditPinnedBiomarkersScreen} />
+      <HomeStack.Screen
+        name="EditPinnedVitals"
+        component={EditPinnedVitalsScreen}
+      />
+      <HomeStack.Screen
+        name="EditPinnedBiomarkers"
+        component={EditPinnedBiomarkersScreen}
+      />
       {/* Doctor Connect */}
-      <HomeStack.Screen name="DoctorConnectEmpty" component={DoctorConnectEmptyScreen} />
+      <HomeStack.Screen
+        name="DoctorConnectEmpty"
+        component={DoctorConnectEmptyScreen}
+      />
       <HomeStack.Screen name="DoctorListScreen" component={DoctorListScreen} />
-      <HomeStack.Screen name="DoctorSearchScreen" component={DoctorSearchScreen} />
+      <HomeStack.Screen
+        name="DoctorSearchScreen"
+        component={DoctorSearchScreen}
+      />
       <HomeStack.Screen name="DoctorAddScreen" component={DoctorAddScreen} />
-      <HomeStack.Screen name="DoctorDetailScreen" component={DoctorDetailScreen} />
-      <HomeStack.Screen name="DoctorDetailConnectedScreen" component={DoctorDetailConnectedScreen} />
+      <HomeStack.Screen
+        name="DoctorDetailScreen"
+        component={DoctorDetailScreen}
+      />
+      <HomeStack.Screen
+        name="DoctorDetailConnectedScreen"
+        component={DoctorDetailConnectedScreen}
+      />
       {/* Family Connect */}
-      <HomeStack.Screen name="FamilyConnectEmpty" component={FamilyConnectEmptyScreen} />
+      <HomeStack.Screen
+        name="FamilyConnectEmpty"
+        component={FamilyConnectEmptyScreen}
+      />
       <HomeStack.Screen name="FamilyListScreen" component={FamilyListScreen} />
       <HomeStack.Screen name="FamilyAddScreen" component={FamilyAddScreen} />
-      <HomeStack.Screen name="FamilyMemberDetailScreen" component={FamilyMemberDetailScreen} />
-      <HomeStack.Screen name="FamilySharedReportsScreen" component={FamilySharedReportsScreen} />
-      <HomeStack.Screen name="MedicalInformation" component={MedicalInformationScreen} />
+      <HomeStack.Screen
+        name="FamilyMemberDetailScreen"
+        component={FamilyMemberDetailScreen}
+      />
+      <HomeStack.Screen
+        name="FamilySharedReportsScreen"
+        component={FamilySharedReportsScreen}
+      />
+      <HomeStack.Screen
+        name="MedicalInformation"
+        component={MedicalInformationScreen}
+      />
     </HomeStack.Navigator>
   );
 }
@@ -106,19 +139,49 @@ function HomeStackNavigator() {
 const CardStack = createNativeStackNavigator();
 function CardStackNavigator() {
   return (
-    <CardStack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+    <CardStack.Navigator
+      screenOptions={{ headerShown: false, animation: "slide_from_right" }}
+    >
       <CardStack.Screen name="HealthWallet" component={HealthWalletScreen} />
       {/* Prescriptions */}
-      <CardStack.Screen name="PrescriptionsEmpty" component={PrescriptionsEmptyScreen} />
-      <CardStack.Screen name="AllPrescriptions" component={AllPrescriptionsScreen} />
-      <CardStack.Screen name="PrescriptionDetail" component={PrescriptionDetailScreen} />
-      <CardStack.Screen name="PrescriptionEdit" component={PrescriptionEditScreen} />
-      <CardStack.Screen name="PrescriptionUpload" component={PrescriptionUploadScreen} />
-      <CardStack.Screen name="PrescriptionShare" component={PrescriptionShareScreen} />
+      <CardStack.Screen
+        name="PrescriptionsEmpty"
+        component={PrescriptionsEmptyScreen}
+      />
+      <CardStack.Screen
+        name="AllPrescriptions"
+        component={AllPrescriptionsScreen}
+      />
+      <CardStack.Screen
+        name="PrescriptionDetail"
+        component={PrescriptionDetailScreen}
+      />
+      <CardStack.Screen
+        name="PrescriptionEdit"
+        component={PrescriptionEditScreen}
+      />
+      <CardStack.Screen
+        name="PrescriptionAdd"
+        component={PrescriptionAddScreen}
+      />
+      <CardStack.Screen
+        name="PrescriptionUpload"
+        component={PrescriptionUploadScreen}
+      />
+      <CardStack.Screen
+        name="PrescriptionShare"
+        component={PrescriptionShareScreen}
+      />
       {/* Analytics */}
-      <CardStack.Screen name="AnalyticsEmpty" component={AnalyticsEmptyScreen} />
+      <CardStack.Screen
+        name="AnalyticsEmpty"
+        component={AnalyticsEmptyScreen}
+      />
       <CardStack.Screen name="AnalyticsList" component={AnalyticsListScreen} />
-      <CardStack.Screen name="AnalyticsDetail" component={AnalyticsDetailScreen} />
+      <CardStack.Screen
+        name="AnalyticsDetail"
+        component={AnalyticsDetailScreen}
+      />
       {/* Scans */}
       <CardStack.Screen name="ScansEmpty" component={ScansEmptyScreen} />
       <CardStack.Screen name="ScansList" component={ScansListScreen} />
@@ -127,15 +190,33 @@ function CardStackNavigator() {
       <CardStack.Screen name="ScanEdit" component={ScanEditScreen} />
       <CardStack.Screen name="ScanShare" component={ScanShareScreen} />
       {/* Insurance */}
-      <CardStack.Screen name="InsuranceEmpty" component={InsuranceEmptyScreen} />
+      <CardStack.Screen
+        name="InsuranceEmpty"
+        component={InsuranceEmptyScreen}
+      />
       <CardStack.Screen name="InsuranceList" component={InsuranceListScreen} />
-      <CardStack.Screen name="InsuranceDetail" component={InsuranceDetailScreen} />
+      <CardStack.Screen
+        name="InsuranceDetail"
+        component={InsuranceDetailScreen}
+      />
       <CardStack.Screen name="InsuranceAdd" component={InsuranceAddScreen} />
-      <CardStack.Screen name="InsuranceAddWithFiles" component={InsuranceAddWithFilesScreen} />
-      <CardStack.Screen name="InsuranceShare" component={InsuranceShareScreen} />
+      <CardStack.Screen
+        name="InsuranceEdit"
+        component={InsuranceEditScreen}
+      />
+      <CardStack.Screen
+        name="InsuranceShare"
+        component={InsuranceShareScreen}
+      />
       {/* Health Reports */}
-      <CardStack.Screen name="HealthReportsEmpty" component={HealthReportsEmptyScreen} />
-      <CardStack.Screen name="HealthReportUpload" component={HealthReportUploadScreen} />
+      <CardStack.Screen
+        name="HealthReportsEmpty"
+        component={HealthReportsEmptyScreen}
+      />
+      <CardStack.Screen
+        name="HealthReportUpload"
+        component={HealthReportUploadScreen}
+      />
       {/* Vaccines */}
       <CardStack.Screen name="VaccinesEmpty" component={VaccinesEmptyScreen} />
       <CardStack.Screen name="VaccineUpload" component={VaccineUploadScreen} />
@@ -147,7 +228,9 @@ function CardStackNavigator() {
 const AIStack = createNativeStackNavigator();
 function AIStackNavigator() {
   return (
-    <AIStack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+    <AIStack.Navigator
+      screenOptions={{ headerShown: false, animation: "slide_from_right" }}
+    >
       <AIStack.Screen name="AskAI" component={AskAIScreen} />
       <AIStack.Screen name="AskAIChat" component={AskAIChatScreen} />
     </AIStack.Navigator>
@@ -158,12 +241,20 @@ function AIStackNavigator() {
 const SOSStack = createNativeStackNavigator();
 function SOSStackNavigator() {
   return (
-    <SOSStack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-      <SOSStack.Screen name="EmergencyContacts" component={EmergencyContactsScreen} />
+    <SOSStack.Navigator
+      screenOptions={{ headerShown: false, animation: "slide_from_right" }}
+    >
+      <SOSStack.Screen
+        name="EmergencyContacts"
+        component={EmergencyContactsScreen}
+      />
       <SOSStack.Screen name="SOSMain" component={SOSMainScreen} />
       <SOSStack.Screen name="SOSReceived" component={SOSReceivedScreen} />
       <SOSStack.Screen name="EnableLocation" component={EnableLocationScreen} />
-      <SOSStack.Screen name="AddContactFromFamily" component={AddContactFromFamilyScreen} />
+      <SOSStack.Screen
+        name="AddContactFromFamily"
+        component={AddContactFromFamilyScreen}
+      />
       <SOSStack.Screen name="AddNewContact" component={AddNewContactScreen} />
     </SOSStack.Navigator>
   );
@@ -171,10 +262,10 @@ function SOSStackNavigator() {
 
 /* ─── Tab → NavTab key mapping ─── */
 const ROUTE_TO_TAB: Record<string, NavTab> = {
-  HomeTab: 'home',
-  CardTab: 'card',
-  AITab: 'ai',
-  SOSTab: 'sos',
+  HomeTab: "home",
+  CardTab: "card",
+  AITab: "ai",
+  SOSTab: "sos",
 };
 
 export default function MainTabNavigator() {
@@ -183,13 +274,8 @@ export default function MainTabNavigator() {
       screenOptions={{ headerShown: false }}
       tabBar={({ state, navigation }) => {
         const currentRoute = state.routes[state.index].name;
-        const activeTab = ROUTE_TO_TAB[currentRoute] ?? 'home';
-        return (
-          <BottomNavBar
-            activeTab={activeTab}
-            navigation={navigation}
-          />
-        );
+        const activeTab = ROUTE_TO_TAB[currentRoute] ?? "home";
+        return <BottomNavBar activeTab={activeTab} navigation={navigation} />;
       }}
     >
       <Tab.Screen name="HomeTab" component={HomeStackNavigator} />

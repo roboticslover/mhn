@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,324 +6,390 @@ import {
   ScrollView,
   StatusBar,
   TouchableOpacity,
+  Image,
   TextInput,
-  KeyboardAvoidingView,
   Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import ScreenHeader from '../../../components/ScreenHeader';
+import BottomNavBar from '../../../components/BottomNavBar';
+import { LinearGradient } from 'expo-linear-gradient';
 
-const ALLERGY_TYPES = ['Food', 'Drug', 'Environmental', 'Contact', 'Other'];
-const SEVERITY_LEVELS = ['Mild', 'Moderate', 'Severe'];
+const IMG_PROFILE = "https://images.unsplash.com/photo-1584308666744-24d5e4b6c310?q=80&w=896&auto=format&fit=crop";
 
 export default function AllergiesAddEditScreen({ navigation, route }: { navigation: any; route: any }) {
   const insets = useSafeAreaInsets();
   const { theme, isDark } = useTheme();
-  const c = theme.colors;
-
+  
   const existingAllergy = route?.params?.allergy;
   const isEdit = !!existingAllergy;
 
-  const [name, setName] = useState(existingAllergy?.name ?? '');
-  const [selectedType, setSelectedType] = useState(existingAllergy?.type ?? '');
-  const [selectedSeverity, setSelectedSeverity] = useState(existingAllergy?.severity ?? '');
-  const [reaction, setReaction] = useState(existingAllergy?.reaction ?? '');
-  const [triggersInput, setTriggersInput] = useState((existingAllergy?.triggers ?? []).join(', '));
-  const [diagnosedDate, setDiagnosedDate] = useState(existingAllergy?.diagnosedDate ?? '');
-  const [treatment, setTreatment] = useState(existingAllergy?.treatment ?? '');
-  const [notes, setNotes] = useState(existingAllergy?.notes ?? '');
+  const [selectedFactor, setSelectedFactor] = useState<string | null>(existingAllergy?.type?.toLowerCase() || 'respiratory');
+  const [trigger, setTrigger] = useState(existingAllergy?.name || '');
+  const [reaction, setReaction] = useState(existingAllergy?.description || '');
+  const [selectedSensitivity, setSelectedSensitivity] = useState<string>(existingAllergy?.severity || 'Moderate');
 
-  const inputStyle = [
-    styles.input,
-    {
-      backgroundColor: isDark ? 'rgba(0,0,0,0.4)' : c.inputBackground,
-      borderColor: isDark ? 'rgba(255,255,255,0.1)' : c.inputBorder,
-      color: isDark ? '#E2E2E2' : c.inputText,
-    },
+  const factors = [
+    { id: 'food', label: 'Food', icon: 'restaurant-outline' },
+    { id: 'respiratory', label: 'Respiratory', icon: 'cloud-outline' },
+    { id: 'medicine', label: 'Medicine', icon: 'medical-outline' },
+    { id: 'environment', label: 'Environment', icon: 'leaf-outline' },
+    { id: 'eyes', label: 'Eyes', icon: 'eye-outline' },
+    { id: 'skin', label: 'Skin', icon: 'hand-left-outline' },
   ];
 
-  const labelStyle = [styles.label, { color: isDark ? 'rgba(255,255,255,0.6)' : c.textSecondary, fontFamily: 'Manrope-ExtraBold' }];
-
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <View style={[styles.container, { backgroundColor: c.background }]}>
-        <StatusBar
-          barStyle={isDark ? 'light-content' : 'dark-content'}
-          backgroundColor="transparent"
-          translucent
-        />
+    <KeyboardAvoidingView 
+      style={[styles.container, { backgroundColor: '#000000' }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
 
-        <ScrollView
-          contentContainerStyle={{ paddingTop: insets.top + 4, paddingBottom: 120 }}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-        >
-          <ScreenHeader
-            title="Allergies & Triggers"
-            onBack={() => navigation.goBack()}
-          />
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 150 }}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+      >
+        {/* Top Header */}
+        <View style={[styles.header, { marginTop: insets.top + 20 }]}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Allergies</Text>
+          <Image source={{ uri: IMG_PROFILE }} style={styles.profileImage} />
+        </View>
 
-          <View style={[styles.modalCard, { backgroundColor: isDark ? 'rgba(23,23,23,0.4)' : c.card, borderColor: isDark ? 'rgba(255,255,255,0.08)' : c.cardBorder }]}>
-            {/* Header */}
-            <View style={styles.modalHeader}>
-              <Text style={[styles.modalSubtitle, { color: c.primary, fontFamily: 'Manrope' }]}>
-                ALLERGY PROFILE
-              </Text>
-              <Text style={[styles.modalTitle, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Manrope' }]}>
-                {isEdit ? 'Edit\nAllergy' : 'New\nAllergy'}
-              </Text>
+        <View style={styles.content}>
+          {/* Affecting Factors */}
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>AFFECTING FACTORS</Text>
+            <View style={styles.factorsGrid}>
+              {factors.map((factor) => {
+                const isActive = selectedFactor === factor.id;
+                return (
+                  <TouchableOpacity
+                    key={factor.id}
+                    style={[
+                      styles.factorButton,
+                      { backgroundColor: isActive ? 'rgba(85,238,113,0.1)' : '#1F1F1F' },
+                      { borderColor: isActive ? 'rgba(85,238,113,0.2)' : 'transparent', borderWidth: 1 }
+                    ]}
+                    onPress={() => {
+                      setSelectedFactor(factor.id);
+                      navigation.navigate('AllergiesDetail', { 
+                        allergy: { 
+                          id: factor.id, 
+                          name: factor.label, 
+                          impact: 'Moderate Impact',
+                          triggers: factor.id === 'food' ? ['Seeds', 'Shellfish', 'Latex'] : ['Pollen', 'Dust'],
+                          reactions: [
+                            { title: 'Urticaria', sub: 'Localized skin inflammation' },
+                            { title: 'Dyspnea', sub: 'Mild respiratory shortness' },
+                          ]
+                        } 
+                      });
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <View style={[
+                      styles.factorIconContainer,
+                      { backgroundColor: isActive ? '#55EE71' : 'rgba(85,238,113,0.1)' },
+                      isActive && { shadowColor: '#30D158', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.3, shadowRadius: 15 }
+                    ]}>
+                      <Ionicons 
+                        name={factor.icon as any} 
+                        size={20} 
+                        color={isActive ? '#003910' : '#55EE71'} 
+                      />
+                    </View>
+                    <Text style={[
+                      styles.factorLabel,
+                      { color: isActive ? '#55EE71' : '#E2E2E2' }
+                    ]}>
+                      {factor.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+
+          {/* Minimalist Text Fields */}
+          <View style={styles.inputSection}>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.inputLabel}>What triggers it?</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="e.g. Peanuts, Pollen, Ibuprofen"
+                placeholderTextColor="#353535"
+                value={trigger}
+                onChangeText={setTrigger}
+              />
             </View>
 
-            <View style={styles.fields}>
-              {/* Allergy Name */}
-              <View>
-                <Text style={labelStyle}>ALLERGY NAME</Text>
-                <TextInput
-                  style={inputStyle}
-                  placeholder="e.g. Peanut Allergy"
-                  placeholderTextColor={isDark ? '#6E7681' : c.inputPlaceholder}
-                  value={name}
-                  onChangeText={setName}
-                />
-              </View>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.inputLabel}>What reaction do you experience?</Text>
+              <TextInput
+                style={[styles.input, { height: 60 }]}
+                placeholder="Describe the physical symptoms..."
+                placeholderTextColor="#353535"
+                multiline
+                value={reaction}
+                onChangeText={setReaction}
+              />
+            </View>
+          </View>
 
-              {/* Type Chips */}
-              <View>
-                <Text style={labelStyle}>TYPE</Text>
-                <View style={styles.chipsRow}>
-                  {ALLERGY_TYPES.map((t) => (
-                    <TouchableOpacity
-                      key={t}
-                      style={[
-                        styles.chip,
-                        {
-                          backgroundColor: selectedType === t
-                            ? (isDark ? '#6FFB85' : c.primary)
-                            : (isDark ? 'rgba(23,23,23,0.6)' : c.chipBackground),
-                          borderColor: selectedType === t ? 'transparent' : (isDark ? 'rgba(255,255,255,0.08)' : c.chipBorder),
-                        },
-                      ]}
-                      onPress={() => setSelectedType(t)}
-                    >
-                      <Text style={[styles.chipText, { color: selectedType === t ? '#000' : (isDark ? '#AAAAAA' : c.chipText), fontFamily: 'Inter-SemiBold' }]}>
-                        {t}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
-
-              {/* Severity Chips */}
-              <View>
-                <Text style={labelStyle}>SEVERITY</Text>
-                <View style={styles.chipsRow}>
-                  {SEVERITY_LEVELS.map((s) => {
-                    const severityColors: Record<string, string> = { Mild: '#60A5FA', Moderate: '#FF9200', Severe: '#DB5034' };
-                    const isSelected = selectedSeverity === s;
-                    return (
-                      <TouchableOpacity
-                        key={s}
-                        style={[
-                          styles.chip,
-                          {
-                            backgroundColor: isSelected ? `${severityColors[s]}22` : (isDark ? 'rgba(23,23,23,0.6)' : c.chipBackground),
-                            borderColor: isSelected ? severityColors[s] : (isDark ? 'rgba(255,255,255,0.08)' : c.chipBorder),
-                          },
-                        ]}
-                        onPress={() => setSelectedSeverity(s)}
-                      >
-                        <Text style={[styles.chipText, { color: isSelected ? severityColors[s] : (isDark ? '#AAAAAA' : c.chipText), fontFamily: 'Inter-SemiBold' }]}>
-                          {s}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </View>
-
-              {/* Reaction */}
-              <View>
-                <Text style={labelStyle}>SYMPTOMS / REACTIONS</Text>
-                <TextInput
-                  style={[inputStyle, styles.textArea]}
-                  placeholder="Describe symptoms..."
-                  placeholderTextColor={isDark ? '#6E7681' : c.inputPlaceholder}
-                  value={reaction}
-                  onChangeText={setReaction}
-                  multiline
-                  numberOfLines={3}
-                  textAlignVertical="top"
-                />
-              </View>
-
-              {/* Triggers */}
-              <View>
-                <Text style={labelStyle}>KNOWN TRIGGERS (comma-separated)</Text>
-                <TextInput
-                  style={inputStyle}
-                  placeholder="e.g. Peanuts, Tree nuts"
-                  placeholderTextColor={isDark ? '#6E7681' : c.inputPlaceholder}
-                  value={triggersInput}
-                  onChangeText={setTriggersInput}
-                />
-              </View>
-
-              {/* Diagnosed Date */}
-              <View>
-                <Text style={labelStyle}>DIAGNOSED DATE</Text>
-                <TextInput
-                  style={inputStyle}
-                  placeholder="e.g. 2018"
-                  placeholderTextColor={isDark ? '#6E7681' : c.inputPlaceholder}
-                  value={diagnosedDate}
-                  onChangeText={setDiagnosedDate}
-                />
-              </View>
-
-              {/* Treatment */}
-              <View>
-                <Text style={labelStyle}>TREATMENT / MEDICATION</Text>
-                <TextInput
-                  style={inputStyle}
-                  placeholder="e.g. EpiPen, Antihistamines"
-                  placeholderTextColor={isDark ? '#6E7681' : c.inputPlaceholder}
-                  value={treatment}
-                  onChangeText={setTreatment}
-                />
-              </View>
-
-              {/* Notes (Optional) */}
-              <View>
-                <Text style={labelStyle}>NOTES (OPTIONAL)</Text>
-                <TextInput
-                  style={[inputStyle, styles.textArea]}
-                  placeholder="Additional notes..."
-                  placeholderTextColor={isDark ? '#6E7681' : c.inputPlaceholder}
-                  value={notes}
-                  onChangeText={setNotes}
-                  multiline
-                  numberOfLines={3}
-                  textAlignVertical="top"
-                />
-              </View>
+          {/* Severity Level */}
+          <View style={styles.severitySection}>
+            <View style={styles.severityHeader}>
+              <Text style={styles.severityLabel}>SENSITIVITY LEVEL</Text>
+              <Text style={styles.severityValue}>{selectedSensitivity}</Text>
             </View>
 
-            {/* Save */}
-            <TouchableOpacity
-              style={styles.saveBtn}
-              activeOpacity={0.85}
+            <View style={styles.sliderContainer}>
+              <View style={styles.sliderTrack}>
+                <LinearGradient
+                  colors={['#FF977C', '#EC6644']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.sliderFill}
+                />
+              </View>
+              <View style={styles.sliderThumb} />
+            </View>
+
+            <View style={styles.sliderLabelRow}>
+              <Text style={styles.sliderPointLabel}>LOW</Text>
+              <Text style={styles.sliderPointLabel}>HIGH</Text>
+            </View>
+          </View>
+
+          {/* Action Buttons */}
+          <View style={styles.actionSection}>
+            <TouchableOpacity 
+              style={styles.saveButton}
               onPress={() => navigation.goBack()}
             >
-              <Text style={[styles.saveBtnText, { fontFamily: 'Manrope-ExtraBold' }]}>
-                {isEdit ? 'UPDATE ALLERGY' : 'SAVE'}
-              </Text>
+              <Text style={styles.saveButtonText}>{isEdit ? 'UPDATE CHANGES' : 'SAVE CHANGES'}</Text>
             </TouchableOpacity>
 
-            {isEdit && (
-              <TouchableOpacity
-                style={[styles.deleteBtn, { borderColor: 'rgba(247,4,4,0.62)', backgroundColor: '#2C1A1A' }]}
-                activeOpacity={0.85}
-                onPress={() => navigation.goBack()}
-              >
-                <Text style={[styles.deleteBtnText, { fontFamily: 'Manrope-ExtraBold' }]}>DELETE</Text>
-              </TouchableOpacity>
-            )}
+            <Text style={styles.lastUpdated}>Last updated: October 24, 2023</Text>
+
+            <TouchableOpacity style={styles.deleteButton} onPress={() => navigation.goBack()}>
+              <Text style={styles.deleteButtonText}>DELETE RECORD</Text>
+              <Ionicons name="trash-outline" size={16} color="#FF4D4D" />
+            </TouchableOpacity>
           </View>
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
+
+      <BottomNavBar activeTab="home" navigation={navigation} />
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  modalCard: {
-    marginHorizontal: 18,
-    borderRadius: 33,
-    borderWidth: 1,
-    overflow: 'hidden',
-    padding: 32,
-    gap: 24,
+  container: {
+    flex: 1,
   },
-  modalHeader: { gap: 8 },
-  modalSubtitle: {
-    fontSize: 10,
-    fontWeight: '400',
-    letterSpacing: 3,
-    textTransform: 'uppercase',
-  },
-  modalTitle: {
-    fontSize: 36,
-    fontWeight: '400',
-    lineHeight: 40,
-    letterSpacing: -0.9,
-  },
-  fields: { gap: 20 },
-  label: {
-    fontSize: 10,
-    fontWeight: '800',
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-    marginBottom: 6,
-    marginLeft: 4,
-  },
-  input: {
-    height: 56,
-    borderRadius: 33,
-    borderWidth: 1,
-    paddingHorizontal: 20,
-    fontSize: 16,
-    fontFamily: 'Inter',
-  },
-  textArea: {
-    height: 90,
-    paddingTop: 16,
-    borderRadius: 20,
-  },
-  chipsRow: {
+  header: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  chip: {
-    borderRadius: 999,
-    borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  chipText: {
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  saveBtn: {
-    height: 64,
-    borderRadius: 40,
-    backgroundColor: '#34C759',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 8,
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    marginBottom: 35,
   },
-  saveBtnText: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#000',
-    letterSpacing: 2.4,
-    textTransform: 'uppercase',
+  backButton: {
+    padding: 4,
+    marginLeft: -4,
   },
-  deleteBtn: {
-    height: 56,
-    borderRadius: 34,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  headerTitle: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 28,
+    color: '#FFFFFF',
+    position: 'absolute',
+    left: 64,
   },
-  deleteBtnText: {
+  profileImage: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+  },
+  content: {
+    paddingHorizontal: 30,
+  },
+  section: {
+    marginBottom: 40,
+  },
+  sectionLabel: {
+    fontFamily: 'Inter-SemiBold',
     fontSize: 12,
-    fontWeight: '800',
-    color: '#EC6644',
+    color: '#BCCBB7',
     letterSpacing: 1.2,
     textTransform: 'uppercase',
+    marginBottom: 24,
+  },
+  factorsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  factorButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 33,
+    gap: 12,
+    width: '48%',
+  },
+  factorIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  factorLabel: {
+    fontFamily: 'Inter-Medium',
+    fontSize: 14,
+  },
+  inputSection: {
+    gap: 32,
+    marginBottom: 48,
+  },
+  inputWrapper: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#3D4A3B',
+    paddingBottom: 8,
+  },
+  inputLabel: {
+    fontFamily: 'Inter-SemiBold',
+    fontSize: 12,
+    color: '#BCCBB7',
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
+    marginBottom: 8,
+  },
+  input: {
+    fontFamily: 'Inter-Medium',
+    fontSize: 20,
+    color: '#E2E2E2',
+    paddingVertical: 8,
+  },
+  severitySection: {
+    marginBottom: 60,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(61,74,59,0.1)',
+    paddingTop: 33,
+  },
+  severityHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    marginBottom: 12,
+  },
+  severityLabel: {
+    fontFamily: 'Inter-SemiBold',
+    fontSize: 12,
+    color: '#BCCBB7',
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
+  },
+  severityValue: {
+    fontFamily: 'Inter-Bold',
+    fontSize: 20,
+    color: '#EC6644',
+  },
+  sliderContainer: {
+    height: 8,
+    position: 'relative',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  sliderTrack: {
+    height: 8,
+    backgroundColor: '#0E0E0E',
+    borderRadius: 9999,
+    overflow: 'hidden',
+  },
+  sliderFill: {
+    width: '60%',
+    height: '100%',
+  },
+  sliderThumb: {
+    position: 'absolute',
+    left: '58%',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#EC6644',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+    zIndex: 10,
+  },
+  sliderLabelRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  sliderPointLabel: {
+    fontFamily: 'Inter-Bold',
+    fontSize: 10,
+    color: '#353535',
+    letterSpacing: -0.5,
+    textTransform: 'uppercase',
+  },
+  actionSection: {
+    paddingTop: 32,
+    gap: 24,
+  },
+  saveButton: {
+    backgroundColor: '#30D158',
+    height: 56,
+    borderRadius: 9999,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#30D158',
+    shadowOffset: { width: 0, height: 16 },
+    shadowOpacity: 0.15,
+    shadowRadius: 40,
+    elevation: 8,
+  },
+  saveButtonText: {
+    fontFamily: 'Inter-ExtraBold',
+    fontSize: 14,
+    color: '#00541B',
+    letterSpacing: 2.8,
+  },
+  lastUpdated: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 10,
+    color: 'rgba(188,203,183,0.4)',
+    textAlign: 'center',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    marginTop: -8,
+  },
+  deleteButton: {
+    height: 59,
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.05)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  deleteButtonText: {
+    fontFamily: 'Manrope-ExtraBold',
+    fontSize: 12,
+    color: '#FF4D4D',
+    letterSpacing: 1.2,
   },
 });

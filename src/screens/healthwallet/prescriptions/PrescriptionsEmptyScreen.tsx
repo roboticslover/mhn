@@ -49,7 +49,7 @@ export default function PrescriptionsEmptyScreen({ navigation }: { navigation: a
         <TouchableOpacity
           style={[styles.addButton, { backgroundColor: c.primary }]}
           activeOpacity={0.8}
-          onPress={() => navigation.navigate('PrescriptionUpload')}
+          onPress={() => navigation.navigate('PrescriptionAdd')}
         >
           <Text style={[styles.addButtonText, { color: c.textOnPrimary }]}>+ ADD TO HEALTH REPORTS</Text>
         </TouchableOpacity>

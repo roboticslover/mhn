@@ -28,7 +28,9 @@ interface MedicalCategory {
   title: string;
   description: string;
   icon: string;
-  route: string;
+  demoTitle: string;
+  withDataRoute: string;
+  emptyRoute: string;
 }
 
 const CATEGORIES: MedicalCategory[] = [
@@ -37,28 +39,36 @@ const CATEGORIES: MedicalCategory[] = [
     title: 'Surgical History',
     description: 'Record past surgeries and medical procedures easily.',
     icon: 'medkit-outline',
-    route: 'SurgicalHistoryEmpty',
+    demoTitle: 'Surgical History',
+    withDataRoute: 'SurgicalHistoryList',
+    emptyRoute: 'SurgicalHistoryEmpty',
   },
   {
     id: '2',
     title: 'Medical Conditions',
     description: 'Add diseases, disorders, or chronic health issues.',
     icon: 'heart-outline',
-    route: 'MedicalConditionsEmpty',
+    demoTitle: 'Medical Conditions',
+    withDataRoute: 'MedicalConditionsList',
+    emptyRoute: 'MedicalConditionsEmpty',
   },
   {
     id: '3',
     title: 'Allergies',
     description: 'List allergies and related reactions clearly.',
     icon: 'alert-circle-outline',
-    route: 'AllergiesEmpty',
+    demoTitle: 'Allergies',
+    withDataRoute: 'AllergiesList',
+    emptyRoute: 'AllergiesEmpty',
   },
   {
     id: '4',
     title: 'Drug Usage',
     description: 'Add medicines you take regularly or occasionally.',
     icon: 'medical-outline',
-    route: 'MedicationEmpty',
+    demoTitle: 'Drug Usage',
+    withDataRoute: 'MedicationList',
+    emptyRoute: 'MedicationEmpty',
   },
 ];
 
@@ -102,7 +112,7 @@ export default function MedicalInformationScreen({ navigation }: { navigation: a
                 },
               ]}
               activeOpacity={0.7}
-              onPress={() => navigation.navigate(cat.route)}
+              onPress={() => navigation.navigate('DemoSelector', { title: cat.demoTitle, withDataRoute: cat.withDataRoute, emptyRoute: cat.emptyRoute })}
             >
               {/* Icon */}
               <View style={styles.cardHeader}>

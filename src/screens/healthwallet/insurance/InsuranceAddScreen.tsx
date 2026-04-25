@@ -7,23 +7,25 @@ import {
   StatusBar,
   TouchableOpacity,
   TextInput,
-  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from '../../../theme/ThemeProvider';
+
 export default function InsuranceAddScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
-  const [insuranceName, setInsuranceName] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+  const { isDark } = useTheme();
+
+  const [insuranceName, setInsuranceName] = useState('Rama');
+  const [startDate, setStartDate] = useState('01 Apr 2026');
+  const [endDate, setEndDate] = useState('04 Apr 2028');
 
   const handleSave = () => {
-    navigation.navigate('InsuranceList');
+    navigation.goBack();
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: '#050505' }]}>
+    <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <ScrollView
         contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 20, paddingBottom: 140 }]}
@@ -33,13 +35,13 @@ export default function InsuranceAddScreen({ navigation }: { navigation: any }) 
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={20} color="#fff" />
+            <Ionicons name="chevron-back" size={24} color="#FFF" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Insurance</Text>
-          <View style={{ width: 20 }} />
+          <View style={{ width: 24 }} />
         </View>
 
-        {/* Input Fields */}
+        {/* Input Fields Group */}
         <View style={styles.fieldsSection}>
           {/* Name of Insurance */}
           <View style={styles.fieldGroup}>
@@ -49,7 +51,7 @@ export default function InsuranceAddScreen({ navigation }: { navigation: any }) 
                 style={styles.textInput}
                 value={insuranceName}
                 onChangeText={setInsuranceName}
-                placeholder="e.g. Astra Prime Health"
+                placeholder="Name"
                 placeholderTextColor="rgba(255,255,255,0.2)"
               />
             </View>
@@ -59,15 +61,13 @@ export default function InsuranceAddScreen({ navigation }: { navigation: any }) 
           <View style={styles.fieldGroup}>
             <Text style={styles.fieldLabel}>When does this apply from?</Text>
             <TouchableOpacity style={styles.dateInputWrap} activeOpacity={0.8}>
-              <View style={styles.dateInputInner}>
-                <TextInput
-                  style={[styles.textInput, { flex: 1 }]}
-                  value={startDate}
-                  onChangeText={setStartDate}
-                  placeholder="DD MMM YYYY"
-                  placeholderTextColor="rgba(255,255,255,0.2)"
-                />
-              </View>
+              <TextInput
+                style={[styles.textInput, { flex: 1 }]}
+                value={startDate}
+                editable={false}
+                placeholder="DD MMM YYYY"
+                placeholderTextColor="rgba(255,255,255,0.2)"
+              />
               <Ionicons name="calendar-outline" size={20} color="#6FFB85" />
             </TouchableOpacity>
           </View>
@@ -75,64 +75,46 @@ export default function InsuranceAddScreen({ navigation }: { navigation: any }) 
           {/* End Date */}
           <View style={styles.fieldGroup}>
             <Text style={styles.fieldLabel}>When does this end?</Text>
-            <TouchableOpacity style={[styles.dateInputWrap, styles.dateInputWrapAlt]} activeOpacity={0.8}>
-              <View style={styles.dateInputInner}>
-                <TextInput
-                  style={[styles.textInput, { flex: 1 }]}
-                  value={endDate}
-                  onChangeText={setEndDate}
-                  placeholder="DD MMM YYYY"
-                  placeholderTextColor="rgba(255,255,255,0.2)"
-                />
-              </View>
-              <Ionicons name="calendar-clear-outline" size={20} color="#6FFB85" />
+            <TouchableOpacity style={[styles.dateInputWrap, { backgroundColor: 'rgba(19,19,19,0.6)' }]} activeOpacity={0.8}>
+              <TextInput
+                style={[styles.textInput, { flex: 1 }]}
+                value={endDate}
+                editable={false}
+                placeholder="DD MMM YYYY"
+                placeholderTextColor="rgba(255,255,255,0.2)"
+              />
+              <Ionicons name="calendar-outline" size={20} color="#6FFB85" />
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* File Management section */}
+        {/* File Management Section */}
         <View style={styles.fileSection}>
           <View style={styles.fileSectionHeader}>
             <Text style={styles.fileSectionTitle}>File Management</Text>
             <TouchableOpacity style={styles.addFileBtn} activeOpacity={0.7}>
-              <Ionicons name="add" size={9} color="#6FFB85" />
+              <Ionicons name="add" size={14} color="#6FFB85" />
               <Text style={styles.addFileBtnText}>ADD NEW FILE</Text>
             </TouchableOpacity>
           </View>
 
-          {/* Upload Drop Zone */}
-          <TouchableOpacity style={styles.uploadZone} activeOpacity={0.8}>
+          {/* Upload Documents Box */}
+          <TouchableOpacity style={styles.uploadBox} activeOpacity={0.7}>
             <View style={styles.uploadIconCircle}>
-              <Ionicons name="cloud-upload-outline" size={28} color="#6FFB85" />
+              <Ionicons name="cloud-upload-outline" size={24} color="#6FFB85" />
             </View>
-            <View style={styles.uploadTextBlock}>
+            <View style={styles.uploadTextContainer}>
               <Text style={styles.uploadTitle}>Upload Documents</Text>
               <Text style={styles.uploadSubtitle}>
-                {'Upload up to 20 files (max 10MB each). \nSupported formats: JPG, JPEG, PNG, and PDF.'}
+                {`Upload up to 20 files (max 10MB each).\nSupported formats: JPG, JPEG, PNG, and PDF.`}
               </Text>
             </View>
           </TouchableOpacity>
-
-          {/* Uploaded files list */}
-          {uploadedFiles.map((file, i) => (
-            <View key={i} style={styles.fileRow}>
-              <View style={styles.fileRowLeft}>
-                <Ionicons name="document-outline" size={18} color="rgba(255,255,255,0.6)" />
-                <Text style={styles.fileName}>{file}</Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => setUploadedFiles(uploadedFiles.filter((_, idx) => idx !== i))}
-                style={{ opacity: 0.4 }}
-              >
-                <Ionicons name="trash-outline" size={16} color="#DB5034" />
-              </TouchableOpacity>
-            </View>
-          ))}
         </View>
       </ScrollView>
 
       {/* Save Button */}
-      <View style={[styles.bottomBar, { paddingBottom: insets.bottom + 16 }]}>
+      <View style={[styles.bottomBar, { paddingBottom: insets.bottom + 32 }]}>
         <TouchableOpacity style={styles.saveBtn} activeOpacity={0.85} onPress={handleSave}>
           <Text style={styles.saveBtnText}>Save</Text>
         </TouchableOpacity>
@@ -142,28 +124,29 @@ export default function InsuranceAddScreen({ navigation }: { navigation: any }) 
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, backgroundColor: '#050505' },
   scrollContent: { paddingHorizontal: 0 },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 29,
-    paddingBottom: 16,
+    paddingBottom: 40,
   },
   backBtn: { width: 20, alignItems: 'center' },
   headerTitle: {
     fontSize: 28,
     fontWeight: '600',
     fontFamily: 'Inter',
-    color: '#fff',
+    color: '#FFF',
+    textAlign: 'center',
   },
 
   // Fields
   fieldsSection: {
     paddingHorizontal: 24,
     gap: 24,
-    marginBottom: 32,
+    marginBottom: 40,
   },
   fieldGroup: {
     gap: 8,
@@ -173,15 +156,14 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontFamily: 'Inter',
     color: '#AAAAAA',
-    lineHeight: 16,
     marginLeft: 4,
   },
   inputWrap: {
     height: 58,
-    backgroundColor: 'rgba(23,23,23,0.4)',
     borderRadius: 33,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: 'rgba(23,23,23,0.4)',
     paddingHorizontal: 23,
     justifyContent: 'center',
   },
@@ -189,29 +171,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     fontFamily: 'Inter',
-    color: '#fff',
+    color: '#FFF',
   },
   dateInputWrap: {
     height: 58,
-    backgroundColor: 'rgba(23,23,23,0.4)',
     borderRadius: 33,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: 'rgba(23,23,23,0.4)',
     paddingHorizontal: 23,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  dateInputWrapAlt: {
-    backgroundColor: 'rgba(19,19,19,0.6)',
-    borderColor: 'rgba(117,117,117,0.15)',
-  },
-  dateInputInner: { flex: 1 },
 
-  // File Section
+  // File Management
   fileSection: {
     paddingHorizontal: 24,
-    gap: 12,
+    gap: 24,
   },
   fileSectionHeader: {
     flexDirection: 'row',
@@ -223,7 +200,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     fontFamily: 'Manrope',
     color: 'rgba(255,255,255,0.4)',
-    textTransform: 'capitalize',
   },
   addFileBtn: {
     flexDirection: 'row',
@@ -236,35 +212,35 @@ const styles = StyleSheet.create({
     fontFamily: 'Manrope',
     color: '#6FFB85',
     letterSpacing: 1,
-    textTransform: 'uppercase',
   },
-  uploadZone: {
+  uploadBox: {
     backgroundColor: 'rgba(23,23,23,0.4)',
     borderRadius: 33,
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.08)',
     borderStyle: 'dashed',
+    padding: 34,
     alignItems: 'center',
-    paddingVertical: 34,
-    paddingHorizontal: 34,
-    gap: 16,
+    justifyContent: 'center',
   },
   uploadIconCircle: {
     width: 64,
     height: 64,
-    backgroundColor: 'rgba(85,248,115,0.1)',
     borderRadius: 32,
+    backgroundColor: 'rgba(85,248,115,0.1)',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 16,
   },
-  uploadTextBlock: { alignItems: 'center', gap: 12 },
+  uploadTextContainer: {
+    alignItems: 'center',
+    gap: 12,
+  },
   uploadTitle: {
     fontSize: 18,
     fontWeight: '700',
     fontFamily: 'Inter',
-    color: '#fff',
-    textAlign: 'center',
-    lineHeight: 28,
+    color: '#FFF',
   },
   uploadSubtitle: {
     fontSize: 12,
@@ -274,37 +250,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 16,
   },
-  fileRow: {
-    height: 58,
-    backgroundColor: 'rgba(31,31,31,0.5)',
-    borderRadius: 33,
-    borderWidth: 1,
-    borderColor: 'rgba(68,73,51,0.1)',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 21,
-  },
-  fileRowLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  fileName: {
-    fontSize: 14,
-    fontWeight: '300',
-    fontFamily: 'Manrope',
-    color: '#fff',
-    letterSpacing: 0.35,
-  },
 
   // Bottom
   bottomBar: {
-    position: 'absolute',
-    bottom: 90,
-    left: 24,
-    right: 27,
+    paddingHorizontal: 24,
+    backgroundColor: 'transparent',
   },
   saveBtn: {
     backgroundColor: '#6FFB85',
     borderRadius: 33,
-    height: 58,
+    height: 68,
     alignItems: 'center',
     justifyContent: 'center',
   },

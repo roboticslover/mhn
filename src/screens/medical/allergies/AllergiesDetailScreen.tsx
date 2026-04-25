@@ -6,11 +6,14 @@ import {
   ScrollView,
   StatusBar,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import ScreenHeader from '../../../components/ScreenHeader';
+import BottomNavBar from '../../../components/BottomNavBar';
+
+const IMG_PROFILE = "https://images.unsplash.com/photo-1584308666744-24d5e4b6c310?q=80&w=896&auto=format&fit=crop";
 
 export default function AllergiesDetailScreen({ navigation, route }: { navigation: any; route: any }) {
   const insets = useSafeAreaInsets();
@@ -19,304 +22,271 @@ export default function AllergiesDetailScreen({ navigation, route }: { navigatio
 
   const allergy = route?.params?.allergy ?? {
     id: '1',
-    name: 'Peanut Allergy',
-    type: 'Food',
-    severity: 'Severe',
-    reaction: 'Anaphylaxis, hives, throat swelling, drop in blood pressure',
-    triggers: ['Peanuts', 'Tree nuts', 'Peanut oil', 'Mixed nuts'],
-    diagnosedDate: '2018',
-    treatment: 'Epinephrine auto-injector (EpiPen)',
-    notes: 'Patient must carry EpiPen at all times. Avoid all peanut-containing products.',
+    name: 'Food',
+    impact: 'High Impact',
+    triggers: ['Cedar', 'Shellfish', 'Latex'],
+    reactions: [
+      { title: 'Urticaria', sub: 'Localized skin inflammation' },
+      { title: 'Dyspnea', sub: 'Mild respiratory shortness' },
+    ],
   };
-
-  const severityColors = {
-    Mild: { bg: isDark ? 'rgba(96,165,250,0.1)' : 'rgba(59,130,246,0.1)', text: isDark ? '#60A5FA' : '#3B82F6' },
-    Moderate: { bg: 'rgba(255,146,0,0.1)', text: '#FF9200' },
-    Severe: { bg: isDark ? 'rgba(219,80,52,0.15)' : 'rgba(219,80,52,0.1)', text: '#DB5034' },
-  };
-  const sevCfg = severityColors[allergy.severity as keyof typeof severityColors] ?? severityColors.Moderate;
 
   return (
-    <View style={[styles.container, { backgroundColor: c.background }]}>
-      <StatusBar
-        barStyle={isDark ? 'light-content' : 'dark-content'}
-        backgroundColor="transparent"
-        translucent
-      />
+    <View style={[styles.container, { backgroundColor: '#000000' }]}>
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
 
       <ScrollView
-        contentContainerStyle={{ paddingTop: insets.top + 4, paddingBottom: 110 }}
+        contentContainerStyle={{ paddingBottom: 150 }}
         showsVerticalScrollIndicator={false}
+        bounces={false}
       >
-        <ScreenHeader
-          title="Allergies & Triggers"
-          onBack={() => navigation.goBack()}
-          rightElement={
-            <TouchableOpacity
-              style={[styles.editBtn, { backgroundColor: isDark ? 'rgba(111,251,133,0.1)' : 'rgba(57,166,87,0.1)' }]}
-              onPress={() => navigation.navigate('AllergiesAdd', { allergy })}
-            >
-              <Ionicons name="pencil-outline" size={18} color={c.primary} />
-            </TouchableOpacity>
-          }
-        />
-
-        {/* Hero */}
-        <View style={styles.heroSection}>
-          <Text style={[styles.allergyType, { color: c.primary, fontFamily: 'Inter-SemiBold' }]}>
-            {allergy.type?.toUpperCase()} ALLERGY
-          </Text>
-          <Text style={[styles.heroTitle, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-ExtraBold' }]}>
-            {allergy.name}
-          </Text>
-          <View style={[styles.severityPill, { backgroundColor: sevCfg.bg }]}>
-            <Text style={[styles.severityText, { color: sevCfg.text }]}>
-              {allergy.severity?.toUpperCase()}
-            </Text>
-          </View>
+        {/* Top Header */}
+        <View style={[styles.header, { marginTop: insets.top + 20 }]}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Allergies</Text>
+          <Image source={{ uri: IMG_PROFILE }} style={styles.profileImage} />
         </View>
 
-        {/* Diagnosed Card */}
-        <View style={[styles.infoCard, { backgroundColor: isDark ? '#2A2A2A' : c.card, borderColor: isDark ? 'rgba(255,255,255,0.06)' : c.cardBorder }]}>
-          <View style={[styles.infoIconBox, { backgroundColor: isDark ? '#353535' : '#E8E8E8' }]}>
-            <Ionicons name="calendar-outline" size={20} color={c.primary} />
-          </View>
-          <View style={styles.infoTextBox}>
-            <Text style={[styles.infoLabel, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter' }]}>
-              DIAGNOSED
-            </Text>
-            <Text style={[styles.infoValue, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-Bold' }]}>
-              {allergy.diagnosedDate ?? 'Unknown'}
-            </Text>
-          </View>
-        </View>
-
-        {/* Reactions Section */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionLabel, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter-Bold' }]}>
-            SYMPTOMS & REACTIONS
-          </Text>
-          <View style={[styles.reactionCard, { backgroundColor: isDark ? '#1F1F1F' : c.card, borderColor: isDark ? 'rgba(255,255,255,0.06)' : c.cardBorder }]}>
-            <Text style={[styles.reactionText, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter' }]}>
-              {allergy.reaction}
-            </Text>
-          </View>
-        </View>
-
-        {/* Triggers Section */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionLabel, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter-Bold' }]}>
-            KNOWN TRIGGERS
-          </Text>
-          <View style={styles.triggersGrid}>
-            {(allergy.triggers ?? []).map((trigger: string, i: number) => (
-              <View
-                key={i}
-                style={[styles.triggerCard, { backgroundColor: isDark ? '#1F1F1F' : c.card, borderColor: isDark ? 'rgba(255,255,255,0.06)' : c.cardBorder }]}
+        <View style={styles.content}>
+          {/* Sensitivity Vectors */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeaderRow}>
+              <Text style={styles.sectionLabel}>SENSITIVITY VECTORS</Text>
+              <TouchableOpacity 
+                style={styles.editIconContainer}
+                onPress={() => navigation.navigate('AllergiesAdd', { allergy })}
               >
-                <Ionicons name="alert-circle-outline" size={14} color={c.primary} />
-                <Text style={[styles.triggerText, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-SemiBold' }]}>
-                  {trigger}
+                <Ionicons name="pencil" size={18} color="#FFFFFF" />
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.vectorCard}>
+              <View style={styles.vectorIconContainer}>
+                <Ionicons 
+                  name={
+                    allergy.name === 'Food' ? "restaurant-outline" :
+                    allergy.name === 'Respiratory' ? "cloud-outline" :
+                    allergy.name === 'Medicine' ? "medical-outline" :
+                    allergy.name === 'Environment' ? "leaf-outline" :
+                    allergy.name === 'Eyes' ? "eye-outline" :
+                    "hand-left-outline"
+                  } 
+                  size={24} 
+                  color="#55EE71" 
+                />
+              </View>
+              <View style={styles.vectorInfo}>
+                <Text style={styles.vectorTitle}>{allergy.name}</Text>
+                <Text style={[styles.vectorImpact, allergy.impact === 'High Impact' && { color: '#FF6E5D' }]}>
+                  {allergy.impact || 'Moderate Impact'}
                 </Text>
               </View>
-            ))}
+            </View>
+          </View>
+
+          {/* Primary Triggers */}
+          <View style={styles.section}>
+            <View style={styles.triggerHeader}>
+              <Ionicons name="flash" size={16} color="#55EE71" />
+              <Text style={styles.sectionLabel}>PRIMARY TRIGGERS</Text>
+            </View>
+            <View style={styles.triggersWrapper}>
+              <View style={styles.triggersGrid}>
+                {allergy.triggers.map((trigger: string, i: number) => {
+                  let icon = "leaf-outline";
+                  if (trigger === 'Shellfish') icon = "fish-outline";
+                  if (trigger === 'Latex') icon = "close-circle-outline";
+                  
+                  return (
+                    <View key={i} style={styles.triggerTag}>
+                      <Ionicons name={icon as any} size={14} color="#BCCBB7" />
+                      <Text style={styles.triggerTagText}>{trigger}</Text>
+                    </View>
+                  );
+                })}
+              </View>
+            </View>
+          </View>
+
+          {/* Documented Reactions */}
+          <View style={styles.section}>
+            <View style={styles.triggerHeader}>
+              <Ionicons name="medical" size={16} color="#55EE71" />
+              <Text style={styles.sectionLabel}>DOCUMENTED REACTIONS</Text>
+            </View>
+            <View style={styles.reactionsList}>
+              {allergy.reactions.map((reaction: any, i: number) => (
+                <View key={i} style={styles.reactionItem}>
+                  <View style={styles.reactionLeft}>
+                    <View style={styles.reactionIndicator} />
+                    <View>
+                      <Text style={styles.reactionTitle}>{reaction.title}</Text>
+                      <Text style={styles.reactionSub}>{reaction.sub}</Text>
+                    </View>
+                  </View>
+                  <Ionicons name="information-circle-outline" size={20} color="rgba(255,255,255,0.4)" />
+                </View>
+              ))}
+            </View>
           </View>
         </View>
-
-        {/* Treatment */}
-        {allergy.treatment && (
-          <View style={styles.section}>
-            <Text style={[styles.sectionLabel, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter-Bold' }]}>
-              TREATMENT / MEDICATION
-            </Text>
-            <View style={[styles.detailCard, { backgroundColor: isDark ? '#1F1F1F' : c.card, borderColor: isDark ? 'rgba(255,255,255,0.06)' : c.cardBorder }]}>
-              <View style={[styles.detailIconBox, { backgroundColor: isDark ? '#353535' : '#E8E8E8' }]}>
-                <Ionicons name="medkit-outline" size={18} color={c.primary} />
-              </View>
-              <Text style={[styles.detailValue, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-SemiBold' }]}>
-                {allergy.treatment}
-              </Text>
-            </View>
-          </View>
-        )}
-
-        {/* Notes */}
-        {allergy.notes && (
-          <View style={styles.section}>
-            <Text style={[styles.sectionLabel, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter-Bold' }]}>
-              CLINICAL NOTES
-            </Text>
-            <View style={[styles.notesCard, { backgroundColor: isDark ? '#1F1F1F' : c.card, borderColor: isDark ? 'rgba(255,255,255,0.06)' : c.cardBorder }]}>
-              <Text style={[styles.notesText, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter' }]}>
-                {allergy.notes}
-              </Text>
-            </View>
-          </View>
-        )}
-
-        {/* Action Button */}
-        <TouchableOpacity
-          style={[styles.updateBtn, { backgroundColor: isDark ? '#34C759' : c.primary }]}
-          activeOpacity={0.8}
-          onPress={() => navigation.navigate('AllergiesAdd', { allergy })}
-        >
-          <Text style={[styles.updateBtnText, { fontFamily: 'Inter-Bold' }]}>
-            Update Profile
-          </Text>
-        </TouchableOpacity>
       </ScrollView>
+
+      <BottomNavBar activeTab="home" navigation={navigation} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  editBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
+  container: {
+    flex: 1,
   },
-  heroSection: {
-    paddingHorizontal: 24,
-    paddingBottom: 20,
-    gap: 6,
-  },
-  allergyType: {
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 1.2,
-    textTransform: 'uppercase',
-  },
-  heroTitle: {
-    fontSize: 36,
-    fontWeight: '800',
-    lineHeight: 45,
-    letterSpacing: -1.8,
-  },
-  severityPill: {
-    alignSelf: 'flex-start',
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    marginTop: 2,
-  },
-  severityText: {
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 1,
-  },
-  infoCard: {
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 24,
-    marginBottom: 24,
-    borderRadius: 33,
-    borderWidth: 1,
-    padding: 16,
-    gap: 18,
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    marginBottom: 35,
   },
-  infoIconBox: {
+  backButton: {
+    padding: 4,
+    marginLeft: -4,
+  },
+  headerTitle: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 28,
+    color: '#FFFFFF',
+    position: 'absolute',
+    left: 64,
+  },
+  profileImage: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  infoTextBox: { gap: 4 },
-  infoLabel: {
+  content: {
+    paddingHorizontal: 24,
+  },
+  section: {
+    marginBottom: 40,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  sectionLabel: {
+    fontFamily: 'Inter-Bold',
     fontSize: 12,
+    color: '#BCCBB7',
     letterSpacing: 1.2,
     textTransform: 'uppercase',
   },
-  infoValue: {
-    fontSize: 20,
-    fontWeight: '700',
-    lineHeight: 28,
-  },
-  section: {
-    paddingHorizontal: 24,
-    marginBottom: 24,
-    gap: 12,
-  },
-  sectionLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 2.4,
-    textTransform: 'uppercase',
-    paddingHorizontal: 4,
-  },
-  reactionCard: {
-    borderRadius: 24,
+  editIconContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
     borderWidth: 1,
-    padding: 20,
+    borderColor: 'rgba(255,255,255,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  reactionText: {
-    fontSize: 16,
-    lineHeight: 24,
+  vectorCard: {
+    backgroundColor: '#1F1F1F',
+    borderRadius: 33,
+    padding: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  vectorIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(85,238,113,0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  vectorInfo: {
+    gap: 2,
+  },
+  vectorTitle: {
+    fontFamily: 'Inter-Medium',
+    fontSize: 14,
+    color: '#FFFFFF',
+  },
+  vectorImpact: {
+    fontFamily: 'Inter-Bold',
+    fontSize: 20,
+    color: '#FF6E5D',
+  },
+  triggerHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 16,
+  },
+  triggersWrapper: {
+    backgroundColor: '#161616',
+    borderRadius: 33,
+    padding: 24,
   },
   triggersGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
+    gap: 12,
   },
-  triggerCard: {
+  triggerTag: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    borderRadius: 33,
-    borderWidth: 1,
+    backgroundColor: '#2A2A2A',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 9999,
+  },
+  triggerTagText: {
+    fontFamily: 'Inter-Medium',
+    fontSize: 14,
+    color: '#E2E2E2',
+  },
+  reactionsList: {
+    gap: 12,
+  },
+  reactionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#1F1F1F',
+    borderRadius: 9999,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  triggerText: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  detailCard: {
+  reactionLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 33,
-    borderWidth: 1,
-    padding: 16,
-    gap: 16,
+    gap: 12,
   },
-  detailIconBox: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
+  reactionIndicator: {
+    width: 4,
+    height: 32,
+    backgroundColor: '#55EE71',
+    borderRadius: 2,
   },
-  detailValue: {
+  reactionTitle: {
+    fontFamily: 'Inter-SemiBold',
     fontSize: 16,
-    fontWeight: '600',
-    flex: 1,
-    lineHeight: 24,
+    color: '#E2E2E2',
   },
-  notesCard: {
-    borderRadius: 24,
-    borderWidth: 1,
-    padding: 20,
-  },
-  notesText: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  updateBtn: {
-    height: 56,
-    borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 24,
-    marginTop: 8,
-    marginBottom: 16,
-  },
-  updateBtnText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#003910',
-    textAlign: 'center',
+  reactionSub: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 12,
+    color: '#BCCBB7',
   },
 });

@@ -127,7 +127,7 @@ export default function AllPrescriptionsScreen({ navigation }: { navigation: any
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.addBtn, { backgroundColor: c.primary }]}
-              onPress={() => navigation.navigate('PrescriptionUpload')}
+              onPress={() => navigation.navigate('PrescriptionAdd')}
               activeOpacity={0.8}
             >
               <Text style={[styles.addBtnText, { color: c.textOnPrimary }]}>ADD</Text>

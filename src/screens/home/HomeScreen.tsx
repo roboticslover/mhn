@@ -490,6 +490,29 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
             <Text style={{ color: c.textSecondary, fontSize: 12, fontWeight: '700', marginTop: 8 }}>ADD</Text>
           </TouchableOpacity>
         </View>
+        
+        {/* ══ TRACKER CAPSULE ══════════════════════════════════════════════════ */}
+        <View style={styles.trackerCapsuleContainer}>
+          <TouchableOpacity 
+            style={[styles.trackerButton, { backgroundColor: cardBg, borderColor: cardBorder }]}
+            onPress={() => navigation.navigate('PeriodTracker')}
+          >
+            <View style={[styles.trackerIconWrap, { backgroundColor: 'rgba(239,68,68,0.1)' }]}>
+              <Ionicons name="calendar-outline" size={18} color="#EF4444" />
+            </View>
+            <Text style={[styles.trackerText, { color: c.text }]}>Period</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[styles.trackerButton, { backgroundColor: cardBg, borderColor: cardBorder }]}
+            onPress={() => navigation.navigate('WeightTracker')}
+          >
+            <View style={[styles.trackerIconWrap, { backgroundColor: 'rgba(59,130,246,0.1)' }]}>
+              <Ionicons name="fitness-outline" size={18} color="#3B82F6" />
+            </View>
+            <Text style={[styles.trackerText, { color: c.text }]}>Weight</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* ══ HEALTH SCORES ═══════════════════════════════════════════════════ */}
         <SectionHeader title="Health Scores" />
@@ -882,5 +905,32 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 20,
     marginBottom: 12,
+  },
+  trackerCapsuleContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: H_PAD,
+    gap: 12,
+    marginBottom: 28,
+  },
+  trackerButton: {
+    flex: 1,
+    height: 60,
+    ...CARD_STYLE,
+    borderRadius: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    gap: 12,
+  },
+  trackerIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  trackerText: {
+    fontFamily: 'Inter-Bold',
+    fontSize: 14,
   },
 });
