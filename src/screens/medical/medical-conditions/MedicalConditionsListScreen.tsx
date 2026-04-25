@@ -87,9 +87,18 @@ export default function MedicalConditionsListScreen({ navigation }: { navigation
           <View style={[styles.liveTag, { backgroundColor: isDark ? '#353535' : '#E8E8E8' }]}>
             <Text style={[styles.liveTagText, { color: c.primary }]}>LIVE STATUS</Text>
           </View>
-          <Text style={[styles.heroTitle, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-Bold' }]}>
-            Medical Conditions
-          </Text>
+          <View style={styles.heroTitleRow}>
+            <Text style={[styles.heroTitle, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-Bold' }]}>
+              Medical Conditions
+            </Text>
+            <TouchableOpacity 
+              style={styles.editIconBtn} 
+              onPress={() => navigation.navigate('MedicalConditionsAdd')}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="pencil-outline" size={22} color={c.primary} />
+            </TouchableOpacity>
+          </View>
           <Text style={[styles.heroSubtitle, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter' }]}>
             An overview of your diagnosed pathologies and their current clinical management status.
           </Text>
@@ -178,11 +187,20 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textTransform: 'uppercase',
   },
+  heroTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
   heroTitle: {
     fontSize: 28,
     fontWeight: '700',
     lineHeight: 45,
     letterSpacing: -0.5,
+  },
+  editIconBtn: {
+    padding: 8,
+    marginTop: 2,
   },
   heroSubtitle: {
     fontSize: 16,

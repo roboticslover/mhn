@@ -6,6 +6,7 @@ import {
   ScrollView,
   StatusBar,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
@@ -17,265 +18,313 @@ export default function MedicalConditionsDetailScreen({ navigation, route }: { n
   const { theme, isDark } = useTheme();
   const c = theme.colors;
 
+  // Using the new field structure from the user's manual update
   const condition = route?.params?.condition ?? {
     id: '1',
     name: 'High Blood Pressure',
-    type: 'Chronic Condition',
     status: 'Active',
-    diagnosedDate: '3 years and 1 month ago',
+    diagnosed: '3 years and 1 month ago',
     treatments: [
-      { title: 'Vitamin Supplements', subtitle: 'Daily Dosage • morning', icon: 'medical-outline' },
-      { title: 'Lifestyle Modification', subtitle: 'Cardio & Reduced Sodium', icon: 'fitness-outline' },
-    ],
-    notes: 'Patient has been managing blood pressure through lifestyle changes and medication.',
+      { id: '1', name: 'Vitamin Supplements', dosage: 'Daily Dosage • morning', type: 'medication' },
+      { id: '2', name: 'Lifestyle Modification', dosage: 'Cardio & Reduced Sodium', type: 'lifestyle' }
+    ]
   };
 
-  const statusColors = {
-    Active: { bg: isDark ? 'rgba(48,209,88,0.1)' : 'rgba(57,166,87,0.1)', text: isDark ? '#30D158' : c.primary },
-    Resolved: { bg: isDark ? 'rgba(53,53,53,0.2)' : 'rgba(0,0,0,0.05)', text: isDark ? '#BCCBB7' : '#707070' },
-    Monitoring: { bg: 'rgba(255,146,0,0.1)', text: '#FF9200' },
-  };
-  const statusCfg = statusColors[condition.status as keyof typeof statusColors] ?? statusColors.Active;
+  const isResolved = condition.status === 'Resolved' || condition.status === 'Recovered';
 
   return (
-    <View style={[styles.container, { backgroundColor: c.background }]}>
+    <View style={[styles.container, { backgroundColor: isDark ? '#000000' : '#F8F9FA' }]}>
       <StatusBar
-        barStyle={isDark ? 'light-content' : 'dark-content'}
+        barStyle="light-content"
         backgroundColor="transparent"
         translucent
       />
 
+      {/* Header Image Background */}
+      <View style={styles.headerBackground}>
+        <Image 
+          source={{ uri: "https://www.figma.com/api/mcp/asset/0a30a913-f5f1-4a0d-92ee-885c9497e148" }} 
+          style={styles.headerImage} 
+        />
+        <View style={styles.headerOverlay} />
+      </View>
+
+      {/* Status Bar Header Area */}
+      <View style={[styles.customHeader, { paddingTop: insets.top + 10 }]}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle} numberOfLines={1}>
+          Medical Conditi...
+        </Text>
+        <TouchableOpacity 
+          style={styles.backBtn} 
+          onPress={() => navigation.navigate('MedicalConditionsAdd', { condition })}
+        >
+          <Ionicons name="create-outline" size={22} color="#FFFFFF" />
+        </TouchableOpacity>
+      </View>
+
       <ScrollView
-        contentContainerStyle={{ paddingTop: insets.top + 4, paddingBottom: 110 }}
+        contentContainerStyle={{ paddingTop: 20, paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
       >
-        <ScreenHeader
-          title="Conditions"
-          onBack={() => navigation.goBack()}
-          rightElement={
-            <TouchableOpacity
-              style={[styles.editBtn, { backgroundColor: isDark ? 'rgba(111,251,133,0.1)' : 'rgba(57,166,87,0.1)' }]}
-              onPress={() => navigation.navigate('MedicalConditionsAdd', { condition })}
-            >
-              <Ionicons name="pencil-outline" size={18} color={c.primary} />
-            </TouchableOpacity>
-          }
-        />
-
-        {/* Hero */}
+        {/* Hero Section */}
         <View style={styles.heroSection}>
-          <Text style={[styles.conditionType, { color: c.primary, fontFamily: 'Inter-SemiBold' }]}>
-            {(condition.type ?? 'Medical Condition').toUpperCase()}
-          </Text>
-          <Text style={[styles.heroTitle, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-ExtraBold' }]}>
-            {condition.name}
-          </Text>
-          <View style={[styles.statusPill, { backgroundColor: statusCfg.bg }]}>
-            <Text style={[styles.statusText, { color: statusCfg.text }]}>
+          <Text style={[styles.heroSubtitle, { color: c.primary }]}>CHRONIC CONDITION</Text>
+          <Text style={styles.heroTitle}>{condition.name}</Text>
+          
+          <View style={[styles.statusPill, { backgroundColor: isResolved ? 'rgba(255,255,255,0.1)' : 'rgba(48,209,88,0.1)' }]}>
+            <Text style={[styles.statusText, { color: isResolved ? '#BCCBB7' : '#30D158' }]}>
               {condition.status?.toUpperCase()}
             </Text>
           </View>
         </View>
 
-        {/* Diagnosed Info Card */}
-        <View style={[styles.infoCard, { backgroundColor: isDark ? '#2A2A2A' : c.card, borderColor: isDark ? 'rgba(255,255,255,0.06)' : c.cardBorder }]}>
-          <View style={[styles.infoIconBox, { backgroundColor: isDark ? '#353535' : '#E8E8E8' }]}>
-            <Ionicons name="calendar-outline" size={20} color={c.primary} />
-          </View>
-          <View style={styles.infoTextBox}>
-            <Text style={[styles.infoLabel, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter' }]}>
-              DIAGNOSED
-            </Text>
-            <Text style={[styles.infoValue, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-Bold' }]}>
-              {condition.diagnosedDate ?? 'Unknown'}
-            </Text>
+        {/* Diagnosed Info */}
+        <View style={styles.diagnosedContainer}>
+          <View style={styles.diagnosedCard}>
+            <View style={styles.diagnosedIconWrap}>
+              <Image 
+                source={{ uri: "https://www.figma.com/api/mcp/asset/05842656-769e-427a-afb3-321628d17d24" }} 
+                style={styles.diagnosedIcon} 
+              />
+            </View>
+            <View style={styles.diagnosedTextWrap}>
+              <Text style={styles.diagnosedLabel}>DIAGNOSED</Text>
+              <Text style={styles.diagnosedValue}>{condition.diagnosed}</Text>
+            </View>
           </View>
         </View>
 
         {/* Treatment Timeline */}
-        {condition.treatments && condition.treatments.length > 0 && (
-          <View style={styles.section}>
-            <Text style={[styles.sectionLabel, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter-Bold' }]}>
-              TREATMENT TIMELINE
-            </Text>
-            <View style={styles.treatmentCards}>
-              {condition.treatments.map((treatment: any, i: number) => (
-                <View
-                  key={i}
-                  style={[styles.treatmentCard, { backgroundColor: isDark ? '#1F1F1F' : c.card, borderColor: isDark ? 'rgba(255,255,255,0.06)' : c.cardBorder }]}
-                >
-                  <View style={[styles.treatmentIconBox, { backgroundColor: isDark ? '#353535' : '#E8E8E8' }]}>
-                    <Ionicons name={(treatment.icon ?? 'medical-outline') as any} size={18} color={c.primary} />
-                  </View>
-                  <View style={styles.treatmentText}>
-                    <Text style={[styles.treatmentTitle, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-SemiBold' }]}>
-                      {treatment.title}
-                    </Text>
-                    <Text style={[styles.treatmentSubtitle, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter' }]}>
-                      {treatment.subtitle}
-                    </Text>
-                  </View>
+        <View style={styles.timelineSection}>
+          <Text style={styles.sectionLabel}>TREATMENT TIMELINE</Text>
+          
+          <View style={styles.timelineCards}>
+            {condition.treatments?.map((treatment: any) => (
+              <View key={treatment.id} style={styles.treatmentCard}>
+                <View style={styles.treatmentIconWrap}>
+                  {treatment.type === 'medication' ? (
+                    <Image 
+                      source={{ uri: "https://www.figma.com/api/mcp/asset/40d19938-ca41-457e-bb11-8b4c30aa2991" }} 
+                      style={{ width: 14, height: 18 }} 
+                      resizeMode="contain"
+                    />
+                  ) : (
+                    <Image 
+                      source={{ uri: "https://www.figma.com/api/mcp/asset/ee622461-a81e-4139-ab67-17b498572597" }} 
+                      style={{ width: 20, height: 20 }} 
+                      resizeMode="contain"
+                    />
+                  )}
                 </View>
-              ))}
-            </View>
+                <View style={styles.treatmentTextWrap}>
+                  <Text style={styles.treatmentTitle}>{treatment.name}</Text>
+                  <Text style={styles.treatmentSubtitle}>{treatment.dosage}</Text>
+                </View>
+              </View>
+            ))}
           </View>
-        )}
+        </View>
+      </ScrollView>
 
-        {/* Notes */}
-        {condition.notes && (
-          <View style={styles.section}>
-            <Text style={[styles.sectionLabel, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter-Bold' }]}>
-              CLINICAL NOTES
-            </Text>
-            <View style={[styles.notesCard, { backgroundColor: isDark ? '#1F1F1F' : c.card, borderColor: isDark ? 'rgba(255,255,255,0.06)' : c.cardBorder }]}>
-              <Text style={[styles.notesText, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter' }]}>
-                {condition.notes}
-              </Text>
-            </View>
-          </View>
-        )}
-
-        {/* Update Metrics Button */}
+      {/* Bottom Button */}
+      <View style={[styles.bottomBtnContainer, { paddingBottom: Math.max(insets.bottom, 24) }]}>
         <TouchableOpacity
-          style={[styles.updateBtn, { backgroundColor: isDark ? '#34C759' : c.primary }]}
-          activeOpacity={0.8}
+          style={[styles.updateBtn, { backgroundColor: c.primary }]}
+          activeOpacity={0.85}
           onPress={() => navigation.navigate('MedicalConditionsAdd', { condition })}
         >
-          <Text style={[styles.updateBtnText, { fontFamily: 'Inter-Bold' }]}>
-            Update Metrics
-          </Text>
+          <Text style={styles.updateBtnText}>Update Metrics</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  editBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  headerBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 300,
+    zIndex: 0,
+  },
+  headerImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  headerOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+  },
+  customHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    zIndex: 10,
+  },
+  backBtn: {
+    width: 44,
+    height: 44,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  headerTitle: {
+    fontSize: 28,
+    fontFamily: 'Inter-Bold',
+    color: '#FFFFFF',
+    flex: 1,
+    textAlign: 'center',
+  },
   heroSection: {
     paddingHorizontal: 24,
-    paddingBottom: 20,
-    gap: 6,
+    marginTop: 20,
+    position: 'relative',
+    zIndex: 10,
   },
-  conditionType: {
+  heroSubtitle: {
     fontSize: 12,
-    fontWeight: '600',
+    fontFamily: 'Inter-SemiBold',
     letterSpacing: 1.2,
     textTransform: 'uppercase',
+    marginBottom: 8,
   },
   heroTitle: {
     fontSize: 36,
-    fontWeight: '800',
+    fontFamily: 'Inter-ExtraBold',
+    color: '#E2E2E2',
     lineHeight: 45,
     letterSpacing: -1.8,
+    marginBottom: 20,
   },
   statusPill: {
     alignSelf: 'flex-start',
     borderRadius: 999,
     paddingHorizontal: 12,
-    paddingVertical: 4,
-    marginTop: 2,
+    paddingVertical: 6,
+    marginTop: 10,
   },
   statusText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontFamily: 'Inter-Bold',
     letterSpacing: 1,
+    textTransform: 'uppercase',
   },
-  infoCard: {
+  diagnosedContainer: {
+    paddingHorizontal: 24,
+    marginTop: 40,
+    marginBottom: 30,
+  },
+  diagnosedCard: {
+    backgroundColor: '#2A2A2A',
+    borderRadius: 33,
+    paddingHorizontal: 24,
+    paddingVertical: 18,
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 24,
-    marginBottom: 24,
-    borderRadius: 33,
-    borderWidth: 1,
-    padding: 16,
     gap: 18,
   },
-  infoIconBox: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
+  diagnosedIconWrap: {
+    width: 42,
+    height: 44,
   },
-  infoTextBox: { gap: 4 },
-  infoLabel: {
+  diagnosedIcon: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+  },
+  diagnosedTextWrap: {
+    flex: 1,
+    gap: 4,
+  },
+  diagnosedLabel: {
     fontSize: 12,
+    fontFamily: 'Inter-Medium',
+    color: '#BCCBB7',
     letterSpacing: 1.2,
     textTransform: 'uppercase',
   },
-  infoValue: {
+  diagnosedValue: {
     fontSize: 20,
-    fontWeight: '700',
+    fontFamily: 'Inter-Bold',
+    color: '#E2E2E2',
     lineHeight: 28,
   },
-  section: {
+  timelineSection: {
     paddingHorizontal: 24,
-    marginBottom: 24,
-    gap: 12,
   },
   sectionLabel: {
     fontSize: 12,
-    fontWeight: '700',
+    fontFamily: 'Inter-Bold',
+    color: '#BCCBB7',
     letterSpacing: 2.4,
     textTransform: 'uppercase',
-    paddingHorizontal: 4,
+    marginBottom: 16,
+    marginLeft: 4,
   },
-  treatmentCards: { gap: 12 },
+  timelineCards: {
+    gap: 12,
+  },
   treatmentCard: {
+    backgroundColor: '#1F1F1F',
+    borderRadius: 33,
+    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 33,
-    borderWidth: 1,
-    padding: 16,
     gap: 16,
   },
-  treatmentIconBox: {
+  treatmentIconWrap: {
     width: 48,
     height: 48,
     borderRadius: 24,
+    backgroundColor: '#353535',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  treatmentText: { flex: 1, gap: 2 },
+  treatmentTextWrap: {
+    flex: 1,
+  },
   treatmentTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    lineHeight: 24,
+    fontFamily: 'Inter-SemiBold',
+    color: '#E2E2E2',
+    marginBottom: 2,
   },
   treatmentSubtitle: {
     fontSize: 12,
-    lineHeight: 16,
+    fontFamily: 'Inter-Regular',
+    color: '#BCCBB7',
   },
-  notesCard: {
-    borderRadius: 24,
-    borderWidth: 1,
-    padding: 20,
-  },
-  notesText: {
-    fontSize: 16,
-    lineHeight: 24,
+  bottomBtnContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    backgroundColor: 'rgba(0,0,0,0.8)',
   },
   updateBtn: {
     height: 56,
-    borderRadius: 999,
+    borderRadius: 9999,
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 24,
-    marginTop: 8,
-    marginBottom: 16,
+    shadowColor: 'rgba(85, 238, 113, 0.4)',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 16,
+    elevation: 8,
   },
   updateBtnText: {
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: 'Inter-Bold',
     color: '#003910',
-    textAlign: 'center',
   },
 });
+

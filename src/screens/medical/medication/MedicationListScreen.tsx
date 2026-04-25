@@ -108,7 +108,7 @@ export default function MedicationListScreen({ navigation }: { navigation: any }
           rightElement={
             <TouchableOpacity
               style={[styles.editIconBtn, { backgroundColor: isDark ? 'rgba(111,251,133,0.1)' : 'rgba(57,166,87,0.1)' }]}
-              onPress={() => {}}
+              onPress={() => navigation.navigate('MedicationAdd')}
             >
               <Ionicons name="create-outline" size={18} color={c.primary} />
             </TouchableOpacity>
