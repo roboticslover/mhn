@@ -10,12 +10,14 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import DeleteModal from '../../../components/DeleteModal';
 export default function PrescriptionEditScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
   const [timeline, setTimeline] = useState('');
   const [shareFamily, setShareFamily] = useState(true);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   return (
     <View style={[styles.container, { backgroundColor: '#050505' }]}>
@@ -131,7 +133,10 @@ export default function PrescriptionEditScreen({ navigation }: { navigation: any
 
             {/* Action Footer */}
             <View style={styles.actionFooter}>
-              <TouchableOpacity style={styles.deleteBtn}>
+              <TouchableOpacity
+                style={styles.deleteBtn}
+                onPress={() => setIsDeleteModalVisible(true)}
+              >
                 <Text style={styles.deleteBtnText}>DELETE Prescription</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -145,6 +150,16 @@ export default function PrescriptionEditScreen({ navigation }: { navigation: any
           </View>
         </View>
       </ScrollView>
+
+      <DeleteModal
+        visible={isDeleteModalVisible}
+        itemType="Prescription"
+        onConfirm={() => {
+          setIsDeleteModalVisible(false);
+          navigation.goBack();
+        }}
+        onCancel={() => setIsDeleteModalVisible(false)}
+      />
     </View>
   );
 }
