@@ -3,300 +3,322 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  StatusBar,
   TouchableOpacity,
+  StatusBar,
+  ImageBackground,
+  Dimensions,
   TextInput,
-  Switch,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import ScreenHeader from '../../components/ScreenHeader';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
+const DARK_MAP = "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?q=80&w=2066&auto=format&fit=crop";
+const LIGHT_MAP = "https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2074&auto=format&fit=crop";
 
 export default function AddAddressScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
   const { theme, isDark } = useTheme();
-  const c = theme.colors;
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
-  const [addressType, setAddressType] = useState('Home');
-  const [completeAddress, setCompleteAddress] = useState('Flat, House no., Building, Apartment');
-  const [landmark, setLandmark] = useState('near green park');
-  const [floor, setFloor] = useState('');
-  const [pincode, setPincode] = useState('000000');
-  const [isDefault, setIsDefault] = useState(false);
+  const textColor = isDark ? '#FFF' : '#000';
+  const subTextColor = isDark ? '#AAA' : '#666';
+  const cardBg = isDark ? 'rgba(23,23,23,0.85)' : 'rgba(255,255,255,0.95)';
+  const borderCol = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
+  const overlayCol = isDark ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.1)';
 
-  const cardBg = isDark ? 'rgba(23,23,23,0.4)' : c.card;
-  const cardBorder = isDark ? 'rgba(255,255,255,0.08)' : c.cardBorder;
-
-  return (
-    <View style={[styles.container, { backgroundColor: c.background, paddingTop: insets.top }]}>
-      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
-      
-      <ScreenHeader title="Select Address" onBack={() => navigation.goBack()} />
-
-      <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 100 }} showsVerticalScrollIndicator={false}>
-        {/* Map Preview Placeholder */}
-        <View style={styles.mapContainer}>
-          <View style={[styles.mapPlaceholder, { backgroundColor: isDark ? '#1A1A1A' : '#E5E5E5' }]}>
-            <Ionicons name="map-outline" size={48} color={c.textSecondary} />
-            <Text style={{ color: c.textSecondary, marginTop: 10 }}>Map View</Text>
-          </View>
-          <View style={styles.mapOverlay}>
-            <View style={[styles.mapBadge, { backgroundColor: cardBg, borderColor: cardBorder }]}>
-              <Ionicons name="location" size={14} color={c.primary} />
-              <Text style={[styles.mapBadgeText, { color: c.text }]}>Current Location pinned</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Search Bar overlay-like */}
-        <View style={[styles.searchBar, { backgroundColor: cardBg, borderColor: cardBorder }]}>
-          <Ionicons name="search-outline" size={20} color={c.textSecondary} />
-          <TextInput
-            style={[styles.searchInput, { color: c.text, fontFamily: 'Inter-Regular' }]}
-            placeholder="Search for area, street name..."
-            placeholderTextColor={c.textSecondary}
-          />
-        </View>
-
-        <View style={styles.formContainer}>
-          <Text style={[styles.sectionTitle, { color: c.textSecondary }]}>Save address as</Text>
-          <View style={styles.chipRow}>
-            {['Home', 'Work', 'Others'].map((type) => {
-              const selected = addressType === type;
-              return (
-                <TouchableOpacity
-                  key={type}
-                  style={[
-                    styles.chip,
-                    {
-                      backgroundColor: selected ? 'rgba(34,197,94,0.1)' : cardBg,
-                      borderColor: selected ? 'rgba(34,197,94,0.3)' : cardBorder,
-                    }
-                  ]}
-                  onPress={() => setAddressType(type)}
-                >
-                  <Ionicons 
-                    name={type === 'Home' ? 'home-outline' : type === 'Work' ? 'briefcase-outline' : 'location-outline'} 
-                    size={16} 
-                    color={selected ? c.primary : c.textSecondary} 
-                  />
-                  <Text style={[styles.chipText, { color: selected ? c.primary : c.textSecondary }]}>
-                    {type}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-
-          <Text style={[styles.inputLabel, { color: c.primary }]}>Complete Address</Text>
-          <View style={[styles.inputWrapper, { backgroundColor: cardBg, borderColor: cardBorder }]}>
+  const renderHeader = () => {
+    if (isSearching) {
+      return (
+        <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => setIsSearching(false)}
+          >
+            <Ionicons name="chevron-back" size={24} color={textColor} />
+          </TouchableOpacity>
+          <View style={[styles.searchBarContainer, { backgroundColor: cardBg, borderColor: borderCol }]}>
+            <Ionicons name="search" size={20} color="#55EE71" style={{ marginLeft: 16 }} />
             <TextInput
-              style={[styles.inputField, { color: c.text }]}
-              value={completeAddress}
-              onChangeText={setCompleteAddress}
-              multiline
+              style={[styles.searchInput, { color: textColor }]}
+              placeholder="Search for area, street..."
+              placeholderTextColor={isDark ? '#666' : '#999'}
+              value={searchText}
+              onChangeText={setSearchText}
+              autoFocus
             />
-          </View>
-
-          <View style={styles.rowInputs}>
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.inputLabel, { color: c.primary }]}>Floor</Text>
-              <View style={[styles.inputWrapper, { backgroundColor: cardBg, borderColor: cardBorder }]}>
-                <TextInput
-                  style={[styles.inputField, { color: c.text }]}
-                  placeholder="Floor number"
-                  placeholderTextColor={c.textSecondary}
-                  value={floor}
-                  onChangeText={setFloor}
-                />
-              </View>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.inputLabel, { color: c.primary }]}>Pincode</Text>
-              <View style={[styles.inputWrapper, { backgroundColor: cardBg, borderColor: cardBorder }]}>
-                <TextInput
-                  style={[styles.inputField, { color: c.text }]}
-                  placeholder="000000"
-                  placeholderTextColor={c.textSecondary}
-                  value={pincode}
-                  onChangeText={setPincode}
-                  keyboardType="numeric"
-                />
-              </View>
-            </View>
-          </View>
-
-          <Text style={[styles.inputLabel, { color: c.primary }]}>Landmark</Text>
-          <View style={[styles.inputWrapper, { backgroundColor: cardBg, borderColor: cardBorder }]}>
-            <TextInput
-              style={[styles.inputField, { color: c.text }]}
-              value={landmark}
-              onChangeText={setLandmark}
-            />
-          </View>
-
-          <View style={styles.switchRow}>
-            <View style={styles.switchIcon}>
-              <Ionicons name="information-circle-outline" size={20} color={c.textSecondary} />
-            </View>
-            <Text style={[styles.switchLabel, { color: c.text }]}>Is this where you stay?</Text>
-            <Switch
-              value={isDefault}
-              onValueChange={setIsDefault}
-              trackColor={{ false: '#3F3F46', true: c.primary }}
-              thumbColor={isDefault ? c.textOnPrimary : '#FFF'}
-            />
+            {searchText !== '' && (
+              <TouchableOpacity onPress={() => setSearchText('')}>
+                <Ionicons name="close" size={20} color={isDark ? '#666' : '#999'} style={{ marginRight: 16 }} />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
-      </ScrollView>
+      );
+    }
 
-      {/* Save Button */}
-      <View style={[styles.bottomBtnContainer, { paddingBottom: insets.bottom || 24 }]}>
-        <TouchableOpacity style={[styles.saveBtn, { backgroundColor: c.primary }]} onPress={() => navigation.goBack()}>
-          <Ionicons name="checkmark" size={20} color={c.textOnPrimary} />
-          <Text style={[styles.saveBtnText, { color: c.textOnPrimary }]}>Save Settings</Text>
+    return (
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="chevron-back" size={24} color={textColor} />
+        </TouchableOpacity>
+        
+        <Text style={[styles.headerTitle, { color: textColor }]}>Address</Text>
+
+        <TouchableOpacity 
+          style={[styles.searchButtonAbsolute, { 
+            backgroundColor: cardBg, 
+            borderColor: borderCol,
+            top: insets.top + 4 
+          }]}
+          onPress={() => setIsSearching(true)}
+        >
+          <Ionicons name="search" size={24} color="#55EE71" />
         </TouchableOpacity>
       </View>
+    );
+  };
+
+  const renderCard = () => {
+    const isSearchingState = isSearching;
+    return (
+      <View style={[styles.bottomCard, { 
+        paddingBottom: insets.bottom + 20,
+        backgroundColor: cardBg,
+        borderColor: borderCol
+      }]}>
+        <View style={styles.cardContent}>
+          {!isSearchingState && (
+            <View style={styles.tagRow}>
+              <View style={styles.tagBadge}>
+                <View style={styles.checkmarkWrap}>
+                  <Ionicons name="checkmark" size={8} color="#55EE71" />
+                </View>
+                <Text style={styles.tagText}>HOME</Text>
+              </View>
+            </View>
+          )}
+          
+          <Text style={[styles.addressLine1, { color: textColor }]}>
+            {isSearchingState ? "Umendra Shelters" : "1-2-39/1/C"}
+          </Text>
+          <Text style={[styles.addressLine2, { color: subTextColor }]}>
+            Hyderabad Telangana, India
+          </Text>
+
+          <TouchableOpacity 
+            style={styles.actionBtn}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.actionBtnText}>
+              {isSearchingState ? "Add Address" : "Edit Address"}
+            </Text>
+            <Ionicons name="arrow-forward" size={18} color="#141414" />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+  return (
+    <View style={[styles.container, { backgroundColor: isDark ? '#000' : '#F5F5F5' }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
+      
+      <ImageBackground 
+        source={{ uri: isDark ? DARK_MAP : LIGHT_MAP }} 
+        style={StyleSheet.absoluteFill}
+        imageStyle={{ opacity: isDark ? 0.8 : 1 }}
+      >
+        <View style={[StyleSheet.absoluteFill, { backgroundColor: overlayCol }]} />
+
+        {renderHeader()}
+
+        {/* Map Marker */}
+        <View style={styles.markerContainer}>
+          <View style={[styles.markerCircle, { shadowColor: isDark ? '#000' : '#FF4D4D' }]}>
+            <View style={styles.markerLogo}>
+              <Ionicons name="medical" size={24} color="#55EE71" />
+            </View>
+          </View>
+          <View style={[styles.markerDot, { backgroundColor: isDark ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.5)' }]} />
+        </View>
+
+        {/* Use Current Location Button */}
+        <TouchableOpacity style={[styles.currentLocationBtn, { backgroundColor: cardBg, borderColor: borderCol }]}>
+          <Ionicons name="locate-outline" size={20} color="#55EE71" />
+          <Text style={[styles.currentLocationText, { color: textColor }]}>Use Current Location</Text>
+        </TouchableOpacity>
+
+        {renderCard()}
+      </ImageBackground>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  mapContainer: {
-    height: 192,
-    marginHorizontal: 24,
-    borderRadius: 24,
-    overflow: 'hidden',
-    position: 'relative',
-    marginTop: 16,
+  container: {
+    flex: 1,
   },
-  mapPlaceholder: {
-    ...StyleSheet.absoluteFillObject,
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    zIndex: 10,
+  },
+  backButton: {
+    padding: 8,
+    marginRight: 12,
+  },
+  headerTitle: {
+    fontFamily: 'Inter-SemiBold',
+    fontSize: 28,
+  },
+  searchButtonAbsolute: {
+    position: 'absolute',
+    right: 20,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 20,
   },
-  mapOverlay: {
-    position: 'absolute',
-    bottom: 16,
-    left: 16,
-  },
-  mapBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+  searchBarContainer: {
+    flex: 1,
+    height: 52,
+    borderRadius: 26,
     borderWidth: 1,
-    gap: 6,
-  },
-  mapBadgeText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 12,
-  },
-  searchBar: {
-    marginHorizontal: 24,
-    height: 56,
-    borderRadius: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    gap: 12,
-    marginTop: -170, // Overlap onto map
-    marginBottom: 130,
   },
   searchInput: {
     flex: 1,
+    fontFamily: 'Inter-Medium',
     fontSize: 16,
+    paddingHorizontal: 12,
   },
-  formContainer: {
-    paddingHorizontal: 24,
-    gap: 16,
-  },
-  sectionTitle: {
-    fontFamily: 'Manrope-ExtraBold',
-    fontSize: 16,
-  },
-  chipRow: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 8,
-  },
-  chip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 33,
-    borderWidth: 1,
-    gap: 8,
-  },
-  chipText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 14,
-  },
-  inputLabel: {
-    fontFamily: 'Manrope-ExtraBold',
-    fontSize: 14,
-    marginBottom: -8,
-    zIndex: 1,
-    marginLeft: 8,
-  },
-  inputWrapper: {
-    borderRadius: 33,
-    borderWidth: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    minHeight: 58,
-  },
-  inputField: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-  },
-  rowInputs: {
-    flexDirection: 'row',
-    gap: 14,
-  },
-  switchRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 16,
-    gap: 12,
-  },
-  switchIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#1C1C1E',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  switchLabel: {
-    flex: 1,
-    fontFamily: 'Manrope-ExtraBold',
-    fontSize: 14,
-  },
-  bottomBtnContainer: {
+  markerContainer: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    backgroundColor: 'rgba(0,0,0,0.8)',
+    top: '45%',
+    left: '50%',
+    marginLeft: -32,
+    alignItems: 'center',
   },
-  saveBtn: {
-    height: 56,
+  markerCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#FF4D4D',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.5,
+    shadowRadius: 15,
+  },
+  markerLogo: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#FFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  markerDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginTop: 4,
+  },
+  currentLocationBtn: {
+    position: 'absolute',
+    bottom: 260,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 999,
+    gap: 8,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+  },
+  currentLocationText: {
+    fontFamily: 'Inter-Medium',
+    fontSize: 12,
+  },
+  bottomCard: {
+    position: 'absolute',
+    bottom: 20,
+    width: SCREEN_WIDTH - 40,
+    marginHorizontal: 20,
     borderRadius: 33,
+    padding: 20,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -5 },
+    shadowOpacity: 0.2,
+    shadowRadius: 24,
+  },
+  cardContent: {
+    width: '100%',
+  },
+  tagRow: {
+    marginBottom: 10,
+  },
+  tagBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  checkmarkWrap: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'rgba(96,254,108,0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tagText: {
+    fontFamily: 'Inter-SemiBold',
+    fontSize: 6,
+    color: '#60FE6C',
+    letterSpacing: 0.6,
+    textTransform: 'uppercase',
+  },
+  addressLine1: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 15,
+    letterSpacing: -0.4,
+    marginBottom: 4,
+  },
+  addressLine2: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 10,
+    lineHeight: 16,
+    marginBottom: 20,
+  },
+  actionBtn: {
+    backgroundColor: '#6FFB85',
+    height: 48,
+    borderRadius: 999,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: 6,
   },
-  saveBtnText: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 18,
+  actionBtnText: {
+    fontFamily: 'Manrope-Bold',
+    fontSize: 10,
+    color: '#141414',
   },
 });
