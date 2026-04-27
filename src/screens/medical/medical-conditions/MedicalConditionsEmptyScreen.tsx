@@ -15,22 +15,22 @@ export default function MedicalConditionsEmptyScreen({ navigation }: { navigatio
 
       <View style={[styles.header, { paddingTop: insets.top + 28 }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={22} color={c.text} />
+          <Ionicons name="chevron-back" size={24} color={c.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: c.text }]}>Medical Conditions</Text>
-        <View style={{ width: 22 }} />
+        <View style={{ width: 24 }} />
       </View>
 
       <View style={styles.illustrationContainer}>
         <View style={[styles.atmosphericGlow, { backgroundColor: c.accentSoft }]} />
-        <View style={[styles.mainGlassCard, { backgroundColor: isDark ? 'rgba(31,31,31,0.4)' : c.card, borderColor: c.cardGlassBorder }]}>
-          <View style={[styles.centerIconWrap, { backgroundColor: isDark ? 'rgba(52,199,89,0.26)' : c.accentSoft, borderColor: c.primary + '60' }]}>
+        <View style={[styles.mainGlassCard, { backgroundColor: c.card, borderColor: c.cardBorder }]}>
+          <View style={[styles.centerIconWrap, { backgroundColor: c.successSoft, borderColor: c.primary + '60' }]}>
             <Ionicons name="heart-outline" size={38} color={c.primary} />
           </View>
-          <View style={[styles.floatingCardTR, { backgroundColor: isDark ? 'rgba(31,31,31,0.4)' : c.card, borderColor: c.cardGlassBorder }]}>
+          <View style={[styles.floatingCardTR, { backgroundColor: c.card, borderColor: c.cardBorder }]}>
             <Ionicons name="pulse-outline" size={16} color={c.textSecondary} />
           </View>
-          <View style={[styles.floatingCardBL, { backgroundColor: isDark ? 'rgba(31,31,31,0.4)' : c.card, borderColor: c.cardGlassBorder }]}>
+          <View style={[styles.floatingCardBL, { backgroundColor: c.card, borderColor: c.cardBorder }]}>
             <Ionicons name="fitness-outline" size={14} color={c.textSecondary} />
           </View>
         </View>
@@ -45,8 +45,8 @@ export default function MedicalConditionsEmptyScreen({ navigation }: { navigatio
           activeOpacity={0.85}
           onPress={() => navigation.navigate('MedicalConditionsList')}
         >
-          <Ionicons name="add-circle-outline" size={20} color={c.textOnPrimary} />
-          <Text style={[styles.addButtonText, { color: c.textOnPrimary }]}>Add Condition</Text>
+          <Ionicons name="add-circle-outline" size={22} color={isDark ? '#003910' : '#FFFFFF'} />
+          <Text style={[styles.addButtonText, { color: isDark ? '#003910' : '#FFFFFF' }]}>Add Condition</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -59,11 +59,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 29,
+    paddingHorizontal: 24,
     paddingBottom: 16,
   },
-  backBtn: { width: 22, alignItems: 'center' },
-  headerTitle: { fontSize: 28, fontWeight: '600', fontFamily: 'Inter' },
+  backBtn: { 
+    width: 40, 
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+  },
+  headerTitle: { 
+    fontSize: 24, 
+    fontFamily: 'Inter-Bold',
+    letterSpacing: -0.5,
+  },
   illustrationContainer: {
     flex: 1,
     alignItems: 'center',
@@ -102,7 +112,7 @@ const styles = StyleSheet.create({
     right: -22,
     width: 74,
     height: 99,
-    borderRadius: 6,
+    borderRadius: 12,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -114,38 +124,41 @@ const styles = StyleSheet.create({
     left: -21,
     width: 99,
     height: 62,
-    borderRadius: 6,
+    borderRadius: 12,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
     transform: [{ rotate: '8deg' }],
   },
   bottomContent: {
-    paddingHorizontal: 25,
+    paddingHorizontal: 24,
     paddingBottom: 48,
     alignItems: 'center',
     gap: 32,
   },
   emptySubtitle: {
-    fontSize: 18,
-    fontWeight: '400',
-    fontFamily: 'Inter',
+    fontSize: 16,
+    fontFamily: 'Inter-Medium',
     textAlign: 'center',
-    lineHeight: 28,
+    lineHeight: 26,
   },
   addButton: {
     width: '100%',
-    height: 58,
-    borderRadius: 33,
+    height: 60,
+    borderRadius: 9999,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 12,
-    shadowColor: 'rgba(0,110,40,0.3)',
+    gap: 10,
+    shadowColor: 'rgba(57,166,87,0.3)',
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 1,
     shadowRadius: 24,
     elevation: 6,
   },
-  addButtonText: { fontSize: 18, fontWeight: '700', fontFamily: 'Inter' },
+  addButtonText: { 
+    fontSize: 18, 
+    fontFamily: 'Inter-Bold',
+    letterSpacing: 0.5,
+  },
 });

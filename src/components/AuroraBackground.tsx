@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
+import Svg, { Defs, Rect, Stop } from 'react-native-svg';
+// @ts-ignore
+import { RadialGradient } from 'react-native-svg';
 
 const { width: W, height: H } = Dimensions.get('window');
 

@@ -12,36 +12,89 @@ import { useTheme } from '../../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import ScreenHeader from '../../../components/ScreenHeader';
 
+interface Treatment {
+  id: string;
+  name: string;
+  dosage: string;
+  type: 'medication' | 'lifestyle' | 'other';
+}
+
 interface Condition {
   id: string;
   name: string;
   status: 'Active' | 'Resolved' | 'Monitoring';
   diagnosedDate?: string;
+  diagnosed?: string;
+  category?: string;
+  treatments?: Treatment[];
 }
 
 const SAMPLE_CONDITIONS: Condition[] = [
-  { id: '1', name: 'Diabetes Type II', status: 'Active', diagnosedDate: '2019' },
-  { id: '2', name: 'Hypertension', status: 'Resolved', diagnosedDate: '2017' },
-  { id: '3', name: 'Seasonal Allergies', status: 'Monitoring', diagnosedDate: '2015' },
-  { id: '4', name: 'Asthma', status: 'Active', diagnosedDate: '2010' },
+  { 
+    id: '1', 
+    name: 'High Blood Pressure', 
+    status: 'Active', 
+    diagnosedDate: '2021',
+    diagnosed: '3 years and 1 month ago',
+    category: 'Chronic Condition',
+    treatments: [
+      { id: '1', name: 'Vitamin Supplements', dosage: 'Daily Dosage • morning', type: 'medication' },
+      { id: '2', name: 'Lifestyle Modification', dosage: 'Cardio & Reduced Sodium', type: 'lifestyle' },
+    ]
+  },
+  { 
+    id: '2', 
+    name: 'Diabetes Type II', 
+    status: 'Active', 
+    diagnosedDate: '2019',
+    diagnosed: '5 years ago',
+    category: 'Metabolic Disorder',
+    treatments: [
+      { id: '1', name: 'Metformin', dosage: '500mg • twice daily', type: 'medication' },
+      { id: '2', name: 'Dietary Changes', dosage: 'Low carb, high protein', type: 'lifestyle' },
+    ]
+  },
+  { 
+    id: '3', 
+    name: 'Hypertension', 
+    status: 'Resolved', 
+    diagnosedDate: '2017',
+    diagnosed: '7 years ago',
+    category: 'Cardiovascular',
+    treatments: []
+  },
+  { 
+    id: '4', 
+    name: 'Seasonal Allergies', 
+    status: 'Monitoring', 
+    diagnosedDate: '2015',
+    diagnosed: '9 years ago',
+    category: 'Allergy',
+    treatments: [
+      { id: '1', name: 'Antihistamines', dosage: '10mg • as needed', type: 'medication' }
+    ]
+  },
 ];
 
-function StatusBadge({ status, isDark }: { status: Condition['status']; isDark: boolean }) {
+function StatusBadge({ status, theme }: { status: Condition['status']; theme: any }) {
+  const c = theme.colors;
+  const isDark = theme.dark;
+  
   const configs = {
     Active: {
-      bg: isDark ? 'rgba(85,238,113,0.1)' : 'rgba(57,166,87,0.1)',
+      bg: c.successSoft,
       border: isDark ? 'rgba(85,238,113,0.2)' : 'rgba(57,166,87,0.25)',
-      text: isDark ? '#55EE71' : '#39A657',
+      text: c.success,
     },
     Resolved: {
       bg: isDark ? 'rgba(53,53,53,0.2)' : 'rgba(0,0,0,0.05)',
-      border: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.08)',
-      text: isDark ? '#BCCBB7' : '#707070',
+      border: c.cardBorder,
+      text: isDark ? '#BCCBB7' : c.textSecondary,
     },
     Monitoring: {
-      bg: isDark ? 'rgba(255,146,0,0.1)' : 'rgba(255,146,0,0.1)',
+      bg: c.warningSoft,
       border: isDark ? 'rgba(255,146,0,0.2)' : 'rgba(255,146,0,0.2)',
-      text: '#FF9200',
+      text: c.warning,
     },
   };
   const cfg = configs[status];
@@ -88,7 +141,7 @@ export default function MedicalConditionsListScreen({ navigation }: { navigation
             <Text style={[styles.liveTagText, { color: c.primary }]}>LIVE STATUS</Text>
           </View>
           <View style={styles.heroTitleRow}>
-            <Text style={[styles.heroTitle, { color: isDark ? '#E2E2E2' : c.text, fontFamily: 'Inter-Bold' }]}>
+            <Text style={[styles.heroTitle, { color: c.text }]}>
               Medical Conditions
             </Text>
             <TouchableOpacity 
@@ -99,14 +152,14 @@ export default function MedicalConditionsListScreen({ navigation }: { navigation
               <Ionicons name="pencil-outline" size={22} color={c.primary} />
             </TouchableOpacity>
           </View>
-          <Text style={[styles.heroSubtitle, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter' }]}>
+          <Text style={[styles.heroSubtitle, { color: c.textSecondary }]}>
             An overview of your diagnosed pathologies and their current clinical management status.
           </Text>
         </View>
 
         {/* Section label */}
         <View style={styles.sectionRow}>
-          <Text style={[styles.sectionLabel, { color: isDark ? 'rgba(188,203,183,0.5)' : c.textTertiary, fontFamily: 'Inter-Black' }]}>
+          <Text style={[styles.sectionLabel, { color: c.textTertiary }]}>
             CURRENT PROFILES
           </Text>
         </View>
@@ -119,23 +172,23 @@ export default function MedicalConditionsListScreen({ navigation }: { navigation
               style={[
                 styles.card,
                 {
-                  backgroundColor: isDark ? '#1F1F1F' : c.card,
-                  borderColor: isDark ? 'rgba(255,255,255,0.06)' : c.cardBorder,
+                  backgroundColor: c.card,
+                  borderColor: c.cardBorder,
                 },
               ]}
               activeOpacity={0.75}
               onPress={() => navigation.navigate('MedicalConditionsDetail', { condition })}
             >
               <View style={styles.cardRow}>
-                <Text style={[styles.cardTitle, { color: c.text, fontFamily: 'Inter-Bold' }]}>
+                <Text style={[styles.cardTitle, { color: c.text }]}>
                   {condition.name}
                 </Text>
-                <StatusBadge status={condition.status} isDark={isDark} />
+                <StatusBadge status={condition.status} theme={theme} />
               </View>
               {condition.diagnosedDate && (
                 <View style={styles.metaRow}>
-                  <Ionicons name="calendar-outline" size={12} color={isDark ? '#BCCBB7' : c.textSecondary} />
-                  <Text style={[styles.metaText, { color: isDark ? '#BCCBB7' : c.textSecondary, fontFamily: 'Inter' }]}>
+                  <Ionicons name="calendar-outline" size={14} color={c.textSecondary} />
+                  <Text style={[styles.metaText, { color: c.textSecondary }]}>
                     Since {condition.diagnosedDate}
                   </Text>
                 </View>
@@ -150,8 +203,8 @@ export default function MedicalConditionsListScreen({ navigation }: { navigation
           activeOpacity={0.8}
           onPress={() => navigation.navigate('MedicalConditionsAdd')}
         >
-          <Ionicons name="add" size={20} color="#000" />
-          <Text style={[styles.addBtnText, { fontFamily: 'Manrope-ExtraBold' }]}>
+          <Ionicons name="add" size={22} color={isDark ? '#003910' : '#FFFFFF'} />
+          <Text style={[styles.addBtnText, { color: isDark ? '#003910' : '#FFFFFF' }]}>
             ADD CONDITION
           </Text>
         </TouchableOpacity>
@@ -163,28 +216,28 @@ export default function MedicalConditionsListScreen({ navigation }: { navigation
 const styles = StyleSheet.create({
   container: { flex: 1 },
   addIconBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
   editorialHeader: {
     paddingHorizontal: 24,
-    paddingBottom: 24,
-    gap: 8,
+    paddingBottom: 32,
+    gap: 12,
   },
   liveTag: {
     alignSelf: 'flex-start',
     borderRadius: 999,
     paddingHorizontal: 12,
-    paddingVertical: 4,
+    paddingVertical: 6,
     marginBottom: 4,
   },
   liveTagText: {
     fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 1,
+    fontFamily: 'Inter-Bold',
+    letterSpacing: 1.5,
     textTransform: 'uppercase',
   },
   heroTitleRow: {
@@ -193,89 +246,89 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   heroTitle: {
-    fontSize: 28,
-    fontWeight: '700',
-    lineHeight: 45,
+    fontSize: 32,
+    fontFamily: 'Inter-Bold',
+    lineHeight: 40,
     letterSpacing: -0.5,
   },
   editIconBtn: {
     padding: 8,
-    marginTop: 2,
   },
   heroSubtitle: {
     fontSize: 16,
-    fontWeight: '400',
+    fontFamily: 'Inter-Regular',
     lineHeight: 24,
-    maxWidth: 280,
+    maxWidth: 300,
   },
   sectionRow: {
     paddingHorizontal: 24,
-    marginBottom: 12,
+    marginBottom: 16,
   },
   sectionLabel: {
     fontSize: 12,
-    fontWeight: '900',
-    letterSpacing: 2.4,
+    fontFamily: 'Inter-Black',
+    letterSpacing: 2,
     textTransform: 'uppercase',
   },
   cardsContainer: {
     paddingHorizontal: 24,
-    gap: 12,
+    gap: 16,
   },
   card: {
-    borderRadius: 33,
+    borderRadius: 24,
     borderWidth: 1,
     padding: 24,
-    gap: 10,
+    gap: 12,
   },
   cardRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
+    gap: 12,
   },
   cardTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontFamily: 'Inter-Bold',
     letterSpacing: -0.5,
     lineHeight: 28,
     flex: 1,
-    marginRight: 12,
   },
   badge: {
     borderRadius: 999,
     borderWidth: 1,
-    paddingHorizontal: 13,
-    paddingVertical: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginTop: 2,
   },
   badgeText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontFamily: 'Inter-Bold',
     letterSpacing: 0.5,
   },
   metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 8,
   },
   metaText: {
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: 14,
+    fontFamily: 'Inter-Medium',
+    lineHeight: 20,
   },
   addBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    height: 56,
+    height: 60,
     borderRadius: 999,
     marginHorizontal: 24,
-    marginTop: 24,
+    marginTop: 32,
   },
   addBtnText: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#000',
-    letterSpacing: 1.4,
+    fontSize: 16,
+    fontFamily: 'Inter-Bold',
+    letterSpacing: 1.5,
     textTransform: 'uppercase',
   },
 });

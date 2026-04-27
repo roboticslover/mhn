@@ -91,8 +91,10 @@ export default function AllSetScreen({ navigation }: Props) {
         >
           <SvgIcon name="arrow-left" size={26} color={c.text} />
         </TouchableOpacity>
+        <View style={{ position: 'absolute', top: insets.top + 20, right: 20, zIndex: 10 }}>
+          <ThemeToggle size={36} />
+        </View>
         <View style={{ flex: 1 }} />
-        <ThemeToggle variant="onboarding" size={36} />
       </View>
 
       {/* Content */}

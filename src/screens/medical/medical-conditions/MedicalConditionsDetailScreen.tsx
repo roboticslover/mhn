@@ -11,132 +11,156 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import ScreenHeader from '../../../components/ScreenHeader';
+
+interface Treatment {
+  id: string;
+  name: string;
+  dosage: string;
+  type: 'medication' | 'lifestyle' | 'other';
+}
+
+interface Condition {
+  id: string;
+  name: string;
+  status: string;
+  category?: string;
+  diagnosed?: string;
+  treatments?: Treatment[];
+}
+
+const TREATMENT_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
+  medication: 'medkit-outline',
+  lifestyle:  'barbell-outline',
+  other:      'pulse-outline',
+};
 
 export default function MedicalConditionsDetailScreen({ navigation, route }: { navigation: any; route: any }) {
   const insets = useSafeAreaInsets();
   const { theme, isDark } = useTheme();
   const c = theme.colors;
 
-  // Using the new field structure from the user's manual update
-  const condition = route?.params?.condition ?? {
+  const condition: Condition = route?.params?.condition ?? {
     id: '1',
     name: 'High Blood Pressure',
     status: 'Active',
+    category: 'Chronic Condition',
     diagnosed: '3 years and 1 month ago',
     treatments: [
-      { id: '1', name: 'Vitamin Supplements', dosage: 'Daily Dosage • morning', type: 'medication' },
-      { id: '2', name: 'Lifestyle Modification', dosage: 'Cardio & Reduced Sodium', type: 'lifestyle' }
-    ]
+      { id: '1', name: 'Vitamin Supplements',   dosage: 'Daily Dosage • morning',  type: 'medication' },
+      { id: '2', name: 'Lifestyle Modification', dosage: 'Cardio & Reduced Sodium', type: 'lifestyle'  },
+    ],
   };
 
+  const isActive   = condition.status === 'Active';
   const isResolved = condition.status === 'Resolved' || condition.status === 'Recovered';
 
+  const statusBg    = isActive   ? c.successSoft
+                    : isResolved ? (isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)')
+                    :               c.warningSoft;
+  const statusColor = isActive   ? c.success
+                    : isResolved ? (isDark ? '#BCCBB7' : c.textSecondary)
+                    :               c.warning;
+
+  const bg           = c.background;
+  const cardBg       = c.card;
+  const treatBg      = c.card;
+  const diagLabelClr = c.textSecondary;
+  const diagValueClr = c.text;
+  const sectionClr   = c.textTertiary;
+  const treatTitleClr= c.text;
+  const treatSubClr  = c.textSecondary;
+  const bottomBarBg  = c.surface;
+
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? '#000000' : '#F8F9FA' }]}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="transparent"
-        translucent
-      />
+    <View style={[styles.container, { backgroundColor: bg }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
-      {/* Header Image Background */}
-      <View style={styles.headerBackground}>
-        <Image 
-          source={{ uri: "https://www.figma.com/api/mcp/asset/0a30a913-f5f1-4a0d-92ee-885c9497e148" }} 
-          style={styles.headerImage} 
-        />
-        <View style={styles.headerOverlay} />
-      </View>
-
-      {/* Status Bar Header Area */}
-      <View style={[styles.customHeader, { paddingTop: insets.top + 10 }]}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
+      {/* ── Header ── */}
+      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+        <TouchableOpacity 
+          style={[styles.backBtn, { backgroundColor: c.cardGlassBorder }]} 
+          onPress={() => navigation.goBack()} 
+          activeOpacity={0.7}
+        >
+          <Ionicons name="chevron-back" size={24} color={c.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle} numberOfLines={1}>
+        <Text style={[styles.headerTitle, { color: c.text }]} numberOfLines={1}>
           Medical Conditi...
         </Text>
-        <TouchableOpacity 
-          style={styles.backBtn} 
-          onPress={() => navigation.navigate('MedicalConditionsAdd', { condition })}
-        >
-          <Ionicons name="create-outline" size={22} color="#FFFFFF" />
-        </TouchableOpacity>
+        <View style={styles.avatarWrap}>
+          <Image
+            source={{ uri: 'https://i.pravatar.cc/96?img=47' }}
+            style={styles.avatarImg}
+          />
+        </View>
       </View>
 
       <ScrollView
-        contentContainerStyle={{ paddingTop: 20, paddingBottom: 100 }}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: 110 + insets.bottom }]}
         showsVerticalScrollIndicator={false}
       >
-        {/* Hero Section */}
+        {/* ── Hero ── */}
         <View style={styles.heroSection}>
-          <Text style={[styles.heroSubtitle, { color: c.primary }]}>CHRONIC CONDITION</Text>
-          <Text style={styles.heroTitle}>{condition.name}</Text>
-          
-          <View style={[styles.statusPill, { backgroundColor: isResolved ? 'rgba(255,255,255,0.1)' : 'rgba(48,209,88,0.1)' }]}>
-            <Text style={[styles.statusText, { color: isResolved ? '#BCCBB7' : '#30D158' }]}>
+          <Text style={[styles.heroCategory, { color: c.primary }]}>
+            {(condition.category ?? 'Chronic Condition').toUpperCase()}
+          </Text>
+          <Text style={[styles.heroTitle, { color: c.text }]}>
+            {condition.name}
+          </Text>
+          <View style={[styles.statusPill, { backgroundColor: statusBg }]}>
+            <Text style={[styles.statusText, { color: statusColor }]}>
               {condition.status?.toUpperCase()}
             </Text>
           </View>
         </View>
 
-        {/* Diagnosed Info */}
-        <View style={styles.diagnosedContainer}>
-          <View style={styles.diagnosedCard}>
-            <View style={styles.diagnosedIconWrap}>
-              <Image 
-                source={{ uri: "https://www.figma.com/api/mcp/asset/05842656-769e-427a-afb3-321628d17d24" }} 
-                style={styles.diagnosedIcon} 
-              />
+        {/* ── Diagnosed Card ── */}
+        <View style={styles.diagnosedSection}>
+          <View style={[styles.diagnosedCard, { backgroundColor: cardBg, borderColor: c.cardBorder, borderWidth: 1 }]}>
+            <View style={[styles.iconSquare, { backgroundColor: isDark ? 'rgba(111,251,133,0.1)' : 'rgba(57,166,87,0.1)' }]}>
+              <Ionicons name="calendar-outline" size={22} color={c.primary} />
             </View>
             <View style={styles.diagnosedTextWrap}>
-              <Text style={styles.diagnosedLabel}>DIAGNOSED</Text>
-              <Text style={styles.diagnosedValue}>{condition.diagnosed}</Text>
+              <Text style={[styles.diagnosedLabel, { color: diagLabelClr }]}>DIAGNOSED</Text>
+              <Text style={[styles.diagnosedValue, { color: diagValueClr }]}>
+                {condition.diagnosed ?? '—'}
+              </Text>
             </View>
           </View>
         </View>
 
-        {/* Treatment Timeline */}
+        {/* ── Treatment Timeline ── */}
         <View style={styles.timelineSection}>
-          <Text style={styles.sectionLabel}>TREATMENT TIMELINE</Text>
-          
+          <Text style={[styles.sectionLabel, { color: sectionClr }]}>TREATMENT TIMELINE</Text>
           <View style={styles.timelineCards}>
-            {condition.treatments?.map((treatment: any) => (
-              <View key={treatment.id} style={styles.treatmentCard}>
-                <View style={styles.treatmentIconWrap}>
-                  {treatment.type === 'medication' ? (
-                    <Image 
-                      source={{ uri: "https://www.figma.com/api/mcp/asset/40d19938-ca41-457e-bb11-8b4c30aa2991" }} 
-                      style={{ width: 14, height: 18 }} 
-                      resizeMode="contain"
-                    />
-                  ) : (
-                    <Image 
-                      source={{ uri: "https://www.figma.com/api/mcp/asset/ee622461-a81e-4139-ab67-17b498572597" }} 
-                      style={{ width: 20, height: 20 }} 
-                      resizeMode="contain"
-                    />
-                  )}
+            {(condition.treatments ?? []).map((t) => {
+              const iconName = TREATMENT_ICONS[t.type] ?? TREATMENT_ICONS.other;
+              return (
+                <View key={t.id} style={[styles.treatmentCard, { backgroundColor: treatBg, borderColor: c.cardBorder, borderWidth: 1 }]}>
+                  <View style={[styles.treatmentIconCircle, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }]}>
+                    <Ionicons name={iconName} size={20} color={c.success} />
+                  </View>
+                  <View style={styles.treatmentTextWrap}>
+                    <Text style={[styles.treatmentTitle, { color: treatTitleClr }]} numberOfLines={2}>{t.name}</Text>
+                    <Text style={[styles.treatmentSub,   { color: treatSubClr   }]}>{t.dosage}</Text>
+                  </View>
                 </View>
-                <View style={styles.treatmentTextWrap}>
-                  <Text style={styles.treatmentTitle}>{treatment.name}</Text>
-                  <Text style={styles.treatmentSubtitle}>{treatment.dosage}</Text>
-                </View>
-              </View>
-            ))}
+              );
+            })}
           </View>
         </View>
       </ScrollView>
 
-      {/* Bottom Button */}
-      <View style={[styles.bottomBtnContainer, { paddingBottom: Math.max(insets.bottom, 24) }]}>
+      {/* ── Update Metrics Button ── */}
+      <View style={[styles.bottomBar, { backgroundColor: bottomBarBg, paddingBottom: Math.max(insets.bottom, 28) }]}>
         <TouchableOpacity
           style={[styles.updateBtn, { backgroundColor: c.primary }]}
           activeOpacity={0.85}
           onPress={() => navigation.navigate('MedicalConditionsAdd', { condition })}
         >
-          <Text style={styles.updateBtnText}>Update Metrics</Text>
+          <Text style={[styles.updateBtnText, { color: isDark ? '#003910' : '#fff' }]}>
+            Update Metrics
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -145,186 +169,187 @@ export default function MedicalConditionsDetailScreen({ navigation, route }: { n
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  headerBackground: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 300,
-    zIndex: 0,
-  },
-  headerImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  headerOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-  },
-  customHeader: {
+
+  /* ── Header ── */
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    zIndex: 10,
+    paddingHorizontal: 24,
+    paddingBottom: 16,
+    gap: 12,
   },
   backBtn: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
   headerTitle: {
-    fontSize: 28,
-    fontFamily: 'Inter-Bold',
-    color: '#FFFFFF',
     flex: 1,
-    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    letterSpacing: -0.5,
   },
+  avatarWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    overflow: 'hidden',
+    flexShrink: 0,
+  },
+  avatarImg: {
+    width: '100%',
+    height: '100%',
+  },
+
+  /* ── Scroll ── */
+  scrollContent: {
+    paddingTop: 16,
+  },
+
+  /* ── Hero ── */
   heroSection: {
     paddingHorizontal: 24,
-    marginTop: 20,
-    position: 'relative',
-    zIndex: 10,
+    marginBottom: 32,
+    gap: 12,
   },
-  heroSubtitle: {
+  heroCategory: {
     fontSize: 12,
-    fontFamily: 'Inter-SemiBold',
-    letterSpacing: 1.2,
+    fontWeight: '800',
+    fontFamily: 'Inter',
+    letterSpacing: 2,
     textTransform: 'uppercase',
-    marginBottom: 8,
   },
   heroTitle: {
     fontSize: 36,
-    fontFamily: 'Inter-ExtraBold',
-    color: '#E2E2E2',
-    lineHeight: 45,
-    letterSpacing: -1.8,
-    marginBottom: 20,
+    fontWeight: '800',
+    fontFamily: 'Inter',
+    letterSpacing: -1,
+    lineHeight: 44,
   },
   statusPill: {
     alignSelf: 'flex-start',
     borderRadius: 999,
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
     paddingVertical: 6,
-    marginTop: 10,
+    marginTop: 4,
   },
   statusText: {
-    fontSize: 10,
-    fontFamily: 'Inter-Bold',
+    fontSize: 12,
+    fontWeight: '800',
+    fontFamily: 'Inter',
     letterSpacing: 1,
     textTransform: 'uppercase',
   },
-  diagnosedContainer: {
+
+  /* ── Diagnosed ── */
+  diagnosedSection: {
     paddingHorizontal: 24,
-    marginTop: 40,
-    marginBottom: 30,
+    marginBottom: 32,
   },
   diagnosedCard: {
-    backgroundColor: '#2A2A2A',
-    borderRadius: 33,
-    paddingHorizontal: 24,
-    paddingVertical: 18,
+    borderRadius: 28,
+    padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 18,
+    gap: 16,
   },
-  diagnosedIconWrap: {
-    width: 42,
-    height: 44,
-  },
-  diagnosedIcon: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain',
+  iconSquare: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
   },
   diagnosedTextWrap: {
     flex: 1,
     gap: 4,
   },
   diagnosedLabel: {
-    fontSize: 12,
-    fontFamily: 'Inter-Medium',
-    color: '#BCCBB7',
-    letterSpacing: 1.2,
+    fontSize: 11,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    letterSpacing: 1.5,
     textTransform: 'uppercase',
   },
   diagnosedValue: {
-    fontSize: 20,
-    fontFamily: 'Inter-Bold',
-    color: '#E2E2E2',
+    fontSize: 22,
+    fontWeight: '700',
+    fontFamily: 'Inter',
     lineHeight: 28,
+    letterSpacing: -0.3,
   },
+
+  /* ── Treatment Timeline ── */
   timelineSection: {
     paddingHorizontal: 24,
   },
   sectionLabel: {
     fontSize: 12,
-    fontFamily: 'Inter-Bold',
-    color: '#BCCBB7',
-    letterSpacing: 2.4,
+    fontWeight: '800',
+    fontFamily: 'Inter',
+    letterSpacing: 2,
     textTransform: 'uppercase',
-    marginBottom: 16,
     marginLeft: 4,
+    marginBottom: 16,
   },
   timelineCards: {
     gap: 12,
   },
   treatmentCard: {
-    backgroundColor: '#1F1F1F',
-    borderRadius: 33,
-    padding: 16,
+    borderRadius: 28,
+    padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
   },
-  treatmentIconWrap: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#353535',
+  treatmentIconCircle: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
-  treatmentTextWrap: {
-    flex: 1,
-  },
+  treatmentTextWrap: { flex: 1 },
   treatmentTitle: {
     fontSize: 16,
-    fontFamily: 'Inter-SemiBold',
-    color: '#E2E2E2',
-    marginBottom: 2,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    lineHeight: 22,
+    marginBottom: 4,
   },
-  treatmentSubtitle: {
-    fontSize: 12,
-    fontFamily: 'Inter-Regular',
-    color: '#BCCBB7',
+  treatmentSub: {
+    fontSize: 14,
+    fontWeight: '500',
+    fontFamily: 'Inter',
+    lineHeight: 20,
   },
-  bottomBtnContainer: {
+
+  /* ── Bottom CTA ── */
+  bottomBar: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     paddingHorizontal: 24,
     paddingTop: 16,
-    backgroundColor: 'rgba(0,0,0,0.8)',
   },
   updateBtn: {
-    height: 56,
+    height: 60,
     borderRadius: 9999,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: 'rgba(85, 238, 113, 0.4)',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 1,
-    shadowRadius: 16,
-    elevation: 8,
   },
   updateBtnText: {
     fontSize: 18,
-    fontFamily: 'Inter-Bold',
-    color: '#003910',
+    fontWeight: '800',
+    fontFamily: 'Inter',
+    letterSpacing: -0.2,
   },
 });
 

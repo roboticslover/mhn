@@ -514,6 +514,46 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
           </TouchableOpacity>
         </View>
 
+        <View style={styles.trackerCapsuleContainer}>
+          <TouchableOpacity 
+            style={[styles.trackerButton, { backgroundColor: cardBg, borderColor: cardBorder }]}
+            onPress={() => navigation.navigate('ServerError')}
+          >
+            <View style={[styles.trackerIconWrap, { backgroundColor: 'rgba(239,68,68,0.1)' }]}>
+              <Ionicons name="warning-outline" size={18} color="#EF4444" />
+            </View>
+            <Text style={[styles.trackerText, { color: c.text }]}>Server Error</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[styles.trackerButton, { backgroundColor: cardBg, borderColor: cardBorder }]}
+            onPress={() => navigation.navigate('NoInternet')}
+          >
+            <View style={[styles.trackerIconWrap, { backgroundColor: 'rgba(245,158,11,0.1)' }]}>
+              <Ionicons name="wifi-outline" size={18} color="#F59E0B" />
+            </View>
+            <Text style={[styles.trackerText, { color: c.text }]}>No Internet</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* ══ LIFESTYLE TRACKING ═════════════════════════════════════════════ */}
+        <TouchableOpacity
+          style={[styles.lifestyleButton, { backgroundColor: c.primary }]}
+          onPress={() => navigation.navigate('Lifestyle')}
+          activeOpacity={0.8}
+        >
+          <View style={styles.lifestyleBtnContent}>
+            <View style={styles.lifestyleBtnLeft}>
+              <Ionicons name="leaf" size={22} color="#141414" />
+              <View>
+                <Text style={[styles.lifestyleBtnTitle, { fontFamily: 'Inter' }]}>Lifestyle Tracking</Text>
+                <Text style={[styles.lifestyleBtnSub, { fontFamily: 'Inter' }]}>Coffee, Alcohol, Water & Smoking</Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#141414" />
+          </View>
+        </TouchableOpacity>
+
         {/* ══ HEALTH SCORES ═══════════════════════════════════════════════════ */}
         <SectionHeader title="Health Scores" />
         <View style={styles.scoresList}>
@@ -932,5 +972,33 @@ const styles = StyleSheet.create({
   trackerText: {
     fontFamily: 'Inter-Bold',
     fontSize: 14,
+  },
+  lifestyleButton: {
+    marginHorizontal: H_PAD,
+    borderRadius: 33,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    marginBottom: 28,
+  },
+  lifestyleBtnContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  lifestyleBtnLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+  },
+  lifestyleBtnTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#141414',
+  },
+  lifestyleBtnSub: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: 'rgba(20,20,20,0.6)',
+    marginTop: 2,
   },
 });

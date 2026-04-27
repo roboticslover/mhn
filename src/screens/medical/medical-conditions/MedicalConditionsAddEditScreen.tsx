@@ -40,7 +40,7 @@ export default function MedicalConditionsAddEditScreen({ navigation, route }: { 
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <View style={[styles.container, { backgroundColor: isDark ? '#000000' : '#F8F9FA' }]}>
+      <View style={[styles.container, { backgroundColor: c.background }]}>
         <StatusBar
           barStyle={isDark ? 'light-content' : 'dark-content'}
           backgroundColor="transparent"
@@ -58,63 +58,64 @@ export default function MedicalConditionsAddEditScreen({ navigation, route }: { 
           />
 
           <View style={styles.headerSection}>
-            <Text style={[styles.heading1, { color: isDark ? '#E2E2E2' : '#141414' }]}>Medical Conditions</Text>
-            <Text style={[styles.subtitle, { color: isDark ? '#BCCBB7' : '#6C757D' }]}>
+            <Text style={[styles.heading1, { color: c.text }]}>Medical Conditions</Text>
+            <Text style={[styles.subtitle, { color: c.textSecondary }]}>
               Please document your current health status to help personalize your care journey.
             </Text>
           </View>
 
           {/* Condition Input */}
           <View style={styles.fieldSection}>
-            <Text style={[styles.label, { color: isDark ? '#BCCBB7' : '#6C757D' }]}>CONDITION OR CONCERN</Text>
+            <Text style={[styles.label, { color: c.textSecondary }]}>CONDITION OR CONCERN</Text>
             <View style={[styles.inputContainer, { 
-              backgroundColor: isDark ? 'rgba(28,28,30,0.7)' : '#FFFFFF',
-              borderColor: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0,0,0,0.08)'
+              backgroundColor: c.inputBackground,
+              borderColor: c.inputBorder,
+              borderWidth: 1,
             }]}>
               <TextInput
-                style={[styles.textInput, { color: isDark ? '#FFFFFF' : '#141414' }]}
+                style={[styles.textInput, { color: c.text }]}
                 placeholder="e.g., High Blood Pressure"
-                placeholderTextColor={isDark ? 'rgba(170,170,170,0.4)' : '#999'}
+                placeholderTextColor={c.textTertiary}
                 value={name}
                 onChangeText={setName}
               />
-              <Ionicons name="medical-outline" size={16} color={isDark ? '#AAA' : '#999'} />
+              <Ionicons name="medical-outline" size={20} color={c.textTertiary} />
             </View>
           </View>
 
           {/* Bento Grid */}
           <View style={styles.bentoGrid}>
             {/* Time Since Diagnosis */}
-            <View style={[styles.bentoCard, { backgroundColor: isDark ? '#1F1F1F' : '#FFFFFF' }]}>
-              <Text style={[styles.label, { color: isDark ? '#BCCBB7' : '#6C757D' }]}>TIME SINCE DIAGNOSIS</Text>
+            <View style={[styles.bentoCard, { backgroundColor: c.card, borderColor: c.cardBorder, borderWidth: 1 }]}>
+              <Text style={[styles.label, { color: c.textSecondary }]}>TIME SINCE DIAGNOSIS</Text>
               <View style={styles.pickersRow}>
-                <View style={[styles.pickerBox, { backgroundColor: isDark ? '#353535' : '#F0F0F0' }]}>
+                <View style={[styles.pickerBox, { backgroundColor: c.inputBackground, borderColor: c.inputBorder, borderWidth: 1 }]}>
                   <TextInput 
-                    style={[styles.pickerText, { color: isDark ? '#E2E2E2' : '#141414' }]}
+                    style={[styles.pickerText, { color: c.text }]}
                     value={years}
                     onChangeText={setYears}
                     keyboardType="numeric"
                   />
-                  <Text style={[styles.pickerLabel, { color: isDark ? '#E2E2E2' : '#141414' }]}>Years</Text>
-                  <Ionicons name="chevron-down" size={14} color={isDark ? '#BCCBB7' : '#666'} />
+                  <Text style={[styles.pickerLabel, { color: c.text }]}>Years</Text>
+                  <Ionicons name="chevron-down" size={16} color={c.textSecondary} />
                 </View>
-                <View style={[styles.pickerBox, { backgroundColor: isDark ? '#353535' : '#F0F0F0' }]}>
+                <View style={[styles.pickerBox, { backgroundColor: c.inputBackground, borderColor: c.inputBorder, borderWidth: 1 }]}>
                   <TextInput 
-                    style={[styles.pickerText, { color: isDark ? '#E2E2E2' : '#141414' }]}
+                    style={[styles.pickerText, { color: c.text }]}
                     value={months}
                     onChangeText={setMonths}
                     keyboardType="numeric"
                   />
-                  <Text style={[styles.pickerLabel, { color: isDark ? '#E2E2E2' : '#141414' }]}>Months</Text>
-                  <Ionicons name="chevron-down" size={14} color={isDark ? '#BCCBB7' : '#666'} />
+                  <Text style={[styles.pickerLabel, { color: c.text }]}>Months</Text>
+                  <Ionicons name="chevron-down" size={16} color={c.textSecondary} />
                 </View>
               </View>
             </View>
 
             {/* Current Status */}
-            <View style={[styles.bentoCard, { backgroundColor: isDark ? '#1F1F1F' : '#FFFFFF' }]}>
-              <Text style={[styles.label, { color: isDark ? '#BCCBB7' : '#6C757D', marginBottom: 16 }]}>CURRENT STATUS</Text>
-              <View style={[styles.statusToggleContainer, { backgroundColor: isDark ? '#0E0E0E' : '#F0F0F0' }]}>
+            <View style={[styles.bentoCard, { backgroundColor: c.card, borderColor: c.cardBorder, borderWidth: 1 }]}>
+              <Text style={[styles.label, { color: c.textSecondary, marginBottom: 16 }]}>CURRENT STATUS</Text>
+              <View style={[styles.statusToggleContainer, { backgroundColor: c.inputBackground }]}>
                 {(['Active', 'Resolved'] as const).map((s) => {
                   const isActive = status === s;
                   return (
@@ -129,7 +130,7 @@ export default function MedicalConditionsAddEditScreen({ navigation, route }: { 
                     >
                       <Text style={[
                         styles.statusBtnText,
-                        { color: isActive ? '#131313' : (isDark ? '#BCCBB7' : '#6C757D') }
+                        { color: isActive ? (isDark ? '#003910' : '#FFFFFF') : c.textSecondary }
                       ]}>
                         {s}
                       </Text>
@@ -142,7 +143,7 @@ export default function MedicalConditionsAddEditScreen({ navigation, route }: { 
 
           {/* Approximate Onset */}
           <View style={styles.fieldSection}>
-            <Text style={[styles.label, { color: isDark ? '#BCCBB7' : '#6C757D', marginBottom: 12 }]}>APPROXIMATE ONSET</Text>
+            <Text style={[styles.label, { color: c.textSecondary, marginBottom: 12 }]}>APPROXIMATE ONSET</Text>
             <View style={{ gap: 12 }}>
               {onsetOptions.map(option => {
                 const isSelected = approximateOnset === option;
@@ -152,22 +153,20 @@ export default function MedicalConditionsAddEditScreen({ navigation, route }: { 
                     style={[
                       styles.radioCard, 
                       { 
-                        backgroundColor: isDark ? 'rgba(31,31,31,0.5)' : '#FFFFFF',
-                        borderColor: isSelected 
-                          ? (isDark ? '#30D158' : c.primary) 
-                          : (isDark ? 'transparent' : 'rgba(0,0,0,0.05)')
-                      },
-                      isSelected && { borderWidth: 1 }
+                        backgroundColor: c.card,
+                        borderColor: isSelected ? c.primary : c.cardBorder,
+                        borderWidth: 1,
+                      }
                     ]}
                     onPress={() => setApproximateOnset(option)}
                     activeOpacity={0.8}
                   >
-                    <Text style={[styles.radioText, { color: isDark ? '#BCCBB7' : '#141414' }]}>{option}</Text>
+                    <Text style={[styles.radioText, { color: c.text }]}>{option}</Text>
                     <View style={[
                       styles.radioOuter, 
-                      { borderColor: isSelected ? (isDark ? '#30D158' : c.primary) : (isDark ? '#3D4A3B' : '#CCC') }
+                      { borderColor: isSelected ? c.primary : c.textTertiary }
                     ]}>
-                      {isSelected && <View style={[styles.radioInner, { backgroundColor: isDark ? '#55EE71' : c.primary }]} />}
+                      {isSelected && <View style={[styles.radioInner, { backgroundColor: c.primary }]} />}
                     </View>
                   </TouchableOpacity>
                 );
@@ -177,12 +176,12 @@ export default function MedicalConditionsAddEditScreen({ navigation, route }: { 
 
           {/* Current Treatments */}
           <View style={styles.fieldSection}>
-            <Text style={[styles.label, { color: isDark ? '#BCCBB7' : '#6C757D', marginBottom: 12 }]}>CURRENT TREATMENTS</Text>
-            <View style={[styles.textAreaContainer, { backgroundColor: isDark ? '#353535' : '#FFFFFF' }]}>
+            <Text style={[styles.label, { color: c.textSecondary, marginBottom: 12 }]}>CURRENT TREATMENTS</Text>
+            <View style={[styles.textAreaContainer, { backgroundColor: c.inputBackground, borderColor: c.inputBorder, borderWidth: 1 }]}>
               <TextInput
-                style={[styles.textArea, { color: isDark ? '#E2E2E2' : '#141414' }]}
+                style={[styles.textArea, { color: c.text }]}
                 placeholder="List medications, therapies, or lifestyle adjustments..."
-                placeholderTextColor={isDark ? 'rgba(188,203,183,0.4)' : '#999'}
+                placeholderTextColor={c.textTertiary}
                 value={treatments}
                 onChangeText={setTreatments}
                 multiline
@@ -193,12 +192,12 @@ export default function MedicalConditionsAddEditScreen({ navigation, route }: { 
 
           {/* Daily Life Impact */}
           <View style={styles.fieldSection}>
-            <Text style={[styles.label, { color: isDark ? '#BCCBB7' : '#6C757D', marginBottom: 12 }]}>DAILY LIFE IMPACT (OPTIONAL)</Text>
-            <View style={[styles.textAreaContainer, { backgroundColor: isDark ? '#1B1B1B' : '#FFFFFF' }]}>
+            <Text style={[styles.label, { color: c.textSecondary, marginBottom: 12 }]}>DAILY LIFE IMPACT (OPTIONAL)</Text>
+            <View style={[styles.textAreaContainer, { backgroundColor: c.inputBackground, borderColor: c.inputBorder, borderWidth: 1 }]}>
               <TextInput
-                style={[styles.textArea, { color: isDark ? '#E2E2E2' : '#141414' }]}
+                style={[styles.textArea, { color: c.text }]}
                 placeholder="e.g., Difficulty climbing stairs, affects sleep..."
-                placeholderTextColor={isDark ? 'rgba(188,203,183,0.4)' : '#999'}
+                placeholderTextColor={c.textTertiary}
                 value={impact}
                 onChangeText={setImpact}
                 multiline
@@ -214,16 +213,16 @@ export default function MedicalConditionsAddEditScreen({ navigation, route }: { 
               activeOpacity={0.85}
               onPress={() => navigation.goBack()}
             >
-              <Text style={[styles.saveBtnText, { color: '#003910' }]}>Save Medical Profile</Text>
+              <Text style={[styles.saveBtnText, { color: isDark ? '#003910' : '#FFFFFF' }]}>Save Medical Profile</Text>
             </TouchableOpacity>
 
             {isEdit && (
               <TouchableOpacity
-                style={[styles.deleteBtn, { borderColor: 'rgba(255, 75, 75, 0.3)' }]}
+                style={[styles.deleteBtn, { borderColor: c.errorSoft }]}
                 activeOpacity={0.8}
                 onPress={() => navigation.goBack()}
               >
-                <Text style={styles.deleteBtnText}>DELETE</Text>
+                <Text style={[styles.deleteBtnText, { color: c.error }]}>DELETE PROFILE</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -237,21 +236,21 @@ export default function MedicalConditionsAddEditScreen({ navigation, route }: { 
 const styles = StyleSheet.create({
   container: { flex: 1 },
   headerSection: {
-    paddingHorizontal: 29,
-    marginTop: 10,
+    paddingHorizontal: 24,
+    marginTop: 8,
     marginBottom: 32,
     gap: 8,
   },
   heading1: {
-    fontSize: 28,
+    fontSize: 32,
     fontFamily: 'Inter-Bold',
     lineHeight: 40,
+    letterSpacing: -0.5,
   },
   subtitle: {
     fontSize: 16,
     fontFamily: 'Inter-Regular',
-    lineHeight: 26,
-    opacity: 0.8,
+    lineHeight: 24,
   },
   fieldSection: {
     paddingHorizontal: 24,
@@ -260,17 +259,16 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontFamily: 'Inter-Bold',
-    letterSpacing: 1.2,
+    letterSpacing: 1.5,
     textTransform: 'uppercase',
     marginBottom: 12,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 33,
-    borderWidth: 1,
-    paddingHorizontal: 21,
-    paddingVertical: 17,
+    borderRadius: 24,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
   },
   textInput: {
     flex: 1,
@@ -280,10 +278,10 @@ const styles = StyleSheet.create({
   bentoGrid: {
     paddingHorizontal: 24,
     marginBottom: 24,
-    gap: 24,
+    gap: 16,
   },
   bentoCard: {
-    borderRadius: 33,
+    borderRadius: 24,
     padding: 24,
   },
   pickersRow: {
@@ -295,20 +293,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius: 12,
-    padding: 12,
+    borderRadius: 16,
+    padding: 16,
   },
   pickerText: {
-    fontSize: 14,
-    fontFamily: 'Inter-Medium',
-    minWidth: 20,
+    fontSize: 16,
+    fontFamily: 'Inter-Bold',
+    minWidth: 24,
     padding: 0,
   },
   pickerLabel: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: 'Inter-Medium',
-    marginLeft: 4,
+    marginLeft: 8,
   },
   statusToggleContainer: {
     flexDirection: 'row',
@@ -318,25 +316,25 @@ const styles = StyleSheet.create({
   statusBtn: {
     flex: 1,
     borderRadius: 9999,
-    paddingVertical: 12,
+    paddingVertical: 14,
     alignItems: 'center',
     justifyContent: 'center',
   },
   statusBtnText: {
     fontSize: 14,
     fontFamily: 'Inter-Bold',
+    letterSpacing: 0.5,
   },
   radioCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 21,
-    borderRadius: 33,
-    borderWidth: 1,
+    padding: 20,
+    borderRadius: 24,
   },
   radioText: {
     fontSize: 16,
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Inter-Medium',
   },
   radioOuter: {
     width: 24,
@@ -352,37 +350,33 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   textAreaContainer: {
-    borderRadius: 33,
+    borderRadius: 24,
     padding: 20,
-    minHeight: 120,
+    minHeight: 140,
   },
   textArea: {
     fontSize: 16,
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Inter-Medium',
     lineHeight: 24,
   },
   saveBtnContainer: {
     paddingHorizontal: 24,
     marginTop: 16,
-    marginBottom: 30,
+    marginBottom: 32,
   },
   saveBtn: {
-    height: 56,
+    height: 60,
     borderRadius: 9999,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: 'rgba(48,209,88,0.25)',
-    shadowOffset: { width: 0, height: 16 },
-    shadowOpacity: 1,
-    shadowRadius: 16,
-    elevation: 8,
   },
   saveBtnText: {
     fontSize: 16,
     fontFamily: 'Inter-Bold',
+    letterSpacing: 0.5,
   },
   deleteBtn: {
-    height: 56,
+    height: 60,
     borderRadius: 9999,
     borderWidth: 1,
     alignItems: 'center',
@@ -393,7 +387,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Inter-Bold',
     letterSpacing: 1,
-    color: '#FF4B4B',
   },
 });
 

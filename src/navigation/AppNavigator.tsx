@@ -142,6 +142,20 @@ import AddPeriodScreen from "../screens/tracker/period/AddPeriodScreen";
 import WeightTrackerScreen from "../screens/tracker/weight/WeightTrackerScreen";
 import AddWeightScreen from "../screens/tracker/weight/AddWeightScreen";
 
+// Error
+import ServerErrorScreen from "../screens/error/ServerErrorScreen";
+import NoInternetScreen from "../screens/error/NoInternetScreen";
+
+// Lifestyle
+import LifestyleScreen from "../screens/lifestyle/LifestyleScreen";
+import CaffeineInputScreen from "../screens/lifestyle/caffeine/CaffeineInputScreen";
+import CaffeineSummaryScreen from "../screens/lifestyle/caffeine/CaffeineSummaryScreen";
+import AlcoholInputScreen from "../screens/lifestyle/alcohol/AlcoholInputScreen";
+import AlcoholSummaryScreen from "../screens/lifestyle/alcohol/AlcoholSummaryScreen";
+import WaterTrackingScreen from "../screens/lifestyle/water/WaterTrackingScreen";
+import SmokingInputScreen from "../screens/lifestyle/smoking/SmokingInputScreen";
+import SmokingSummaryScreen from "../screens/lifestyle/smoking/SmokingSummaryScreen";
+
 export type RootStackParamList = {
   Login: undefined;
   EnterMobileNumber: undefined;
@@ -266,6 +280,18 @@ export type RootStackParamList = {
   AddPeriod: undefined;
   WeightTracker: undefined;
   AddWeight: undefined;
+  // Error
+  ServerError: undefined;
+  NoInternet: undefined;
+  // Lifestyle
+  Lifestyle: undefined;
+  CaffeineInput: undefined;
+  CaffeineSummary: undefined;
+  AlcoholInput: undefined;
+  AlcoholSummary: undefined;
+  WaterTracking: undefined;
+  SmokingInput: undefined;
+  SmokingSummary: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -538,6 +564,20 @@ export default function AppNavigator() {
       <Stack.Screen name="AddPeriod" component={AddPeriodScreen} />
       <Stack.Screen name="WeightTracker" component={WeightTrackerScreen} />
       <Stack.Screen name="AddWeight" component={AddWeightScreen} />
+
+      {/* Error */}
+      <Stack.Screen name="ServerError" component={ServerErrorScreen} />
+      <Stack.Screen name="NoInternet" component={NoInternetScreen} />
+
+      {/* Lifestyle */}
+      <Stack.Screen name="Lifestyle" component={LifestyleScreen} />
+      <Stack.Screen name="CaffeineInput" component={CaffeineInputScreen} />
+      <Stack.Screen name="CaffeineSummary" component={CaffeineSummaryScreen} />
+      <Stack.Screen name="AlcoholInput" component={AlcoholInputScreen} />
+      <Stack.Screen name="AlcoholSummary" component={AlcoholSummaryScreen} />
+      <Stack.Screen name="WaterTracking" component={WaterTrackingScreen} />
+      <Stack.Screen name="SmokingInput" component={SmokingInputScreen} />
+      <Stack.Screen name="SmokingSummary" component={SmokingSummaryScreen} />
     </Stack.Navigator>
   );
 }
