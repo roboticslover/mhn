@@ -13,55 +13,61 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 
 function ActivePrescriptionCard({ onPress, onEdit, c }: { onPress: () => void; onEdit: () => void; c: any }) {
+  const [expanded, setExpanded] = useState(false);
   return (
     <TouchableOpacity style={[styles.activeCard, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]} activeOpacity={0.8} onPress={onPress}>
       <TouchableOpacity style={styles.editIconBtn} onPress={onEdit}>
         <Ionicons name="create-outline" size={15} color={c.textMuted} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.collapseIconBtn}>
-        <Ionicons name="chevron-up" size={16} color={c.textSecondary} />
+      <TouchableOpacity style={styles.collapseIconBtn} onPress={() => setExpanded(prev => !prev)}>
+        <Ionicons name={expanded ? 'chevron-up' : 'chevron-down'} size={16} color={c.textSecondary} />
       </TouchableOpacity>
 
       <View style={[styles.latestBadge, { backgroundColor: c.successSoft, borderColor: c.primary + '70' }]}>
         <Text style={[styles.latestBadgeText, { color: c.primary }]}>LATEST</Text>
       </View>
 
-      <Text style={[styles.activePrescName, { color: c.text }]}>Nexus Prescription</Text>
-      <Text style={[styles.activePrescMeta, { color: c.textSecondary }]}>Date: 23 March              Timeline: 3 months</Text>
+      {expanded && (
+        <>
+          <Text style={[styles.activePrescName, { color: c.text }]}>Nexus Prescription</Text>
+          <Text style={[styles.activePrescMeta, { color: c.textSecondary }]}>Date: 23 March              Timeline: 3 months</Text>
 
-      <Text style={[styles.statusLabel, { color: c.textSecondary }]}>Prescription status</Text>
-      <Text style={[styles.statusValue, { color: c.text }]}>In Progress</Text>
+          <Text style={[styles.statusLabel, { color: c.textSecondary }]}>Prescription status</Text>
+          <Text style={[styles.statusValue, { color: c.text }]}>In Progress</Text>
 
-      <View style={styles.progressRow}>
-        <Text style={[styles.endDateText, { color: c.textSecondary }]}>END DATE: 31 March</Text>
-        <Text style={[styles.progressPct, { color: c.text }]}>85%</Text>
-      </View>
-      <View style={[styles.progressTrack, { backgroundColor: c.divider }]}>
-        <View style={[styles.progressFill, { width: '85%', backgroundColor: c.primary }]} />
-      </View>
+          <View style={styles.progressRow}>
+            <Text style={[styles.endDateText, { color: c.textSecondary }]}>END DATE: 31 March</Text>
+            <Text style={[styles.progressPct, { color: c.text }]}>85%</Text>
+          </View>
+          <View style={[styles.progressTrack, { backgroundColor: c.divider }]}>
+            <View style={[styles.progressFill, { width: '85%', backgroundColor: c.primary }]} />
+          </View>
 
-      <View style={styles.cardActions}>
-        <TouchableOpacity style={[styles.viewDigitalBtn, { backgroundColor: c.primary }]}>
-          <Text style={[styles.viewDigitalText, { color: c.textOnPrimary }]}>VIEW DIGITAL{'\n'}COPY</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.downloadBtn, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}>
-          <Text style={[styles.downloadBtnText, { color: c.text }]}>DOWNLOAD</Text>
-        </TouchableOpacity>
-      </View>
+          <View style={styles.cardActions}>
+            <TouchableOpacity style={[styles.viewDigitalBtn, { backgroundColor: c.primary }]}>
+              <Text style={[styles.viewDigitalText, { color: c.textOnPrimary }]}>VIEW DIGITAL{'\n'}COPY</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.downloadBtn, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}>
+              <Text style={[styles.downloadBtnText, { color: c.text }]}>DOWNLOAD</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </TouchableOpacity>
   );
 }
 
 function FinishedPrescriptionCard({
-  name, onPress, onEdit, collapsed, c,
-}: { name: string; onPress: () => void; onEdit: () => void; collapsed?: boolean; c: any }) {
+  name, onPress, onEdit, c,
+}: { name: string; onPress: () => void; onEdit: () => void; c: any }) {
+  const [expanded, setExpanded] = useState(false);
   return (
     <TouchableOpacity style={[styles.finishedCard, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]} activeOpacity={0.8} onPress={onPress}>
       <TouchableOpacity style={styles.editIconBtn} onPress={onEdit}>
         <Ionicons name="create-outline" size={15} color={c.textMuted} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.collapseIconBtn}>
-        <Ionicons name={collapsed ? 'chevron-down' : 'chevron-up'} size={16} color={c.textSecondary} />
+      <TouchableOpacity style={styles.collapseIconBtn} onPress={() => setExpanded(prev => !prev)}>
+        <Ionicons name={expanded ? 'chevron-up' : 'chevron-down'} size={16} color={c.textSecondary} />
       </TouchableOpacity>
 
       <View style={styles.finishedTopRow}>
@@ -70,17 +76,22 @@ function FinishedPrescriptionCard({
           <Text style={[styles.finishedBadgeText, { color: c.primary }]}>FINISHED</Text>
         </View>
       </View>
-      <Text style={[styles.finishedMeta, { color: c.textSecondary }]}>Date: 23 March              Timeline: 3 months</Text>
-      <Text style={[styles.completedStatus, { color: c.text }]}>Course Completed</Text>
-      <View style={[styles.completedLine, { backgroundColor: c.primary }]} />
-      <View style={styles.cardActions}>
-        <TouchableOpacity style={[styles.viewDigitalBtn, { backgroundColor: c.primary }]}>
-          <Text style={[styles.viewDigitalText, { color: c.textOnPrimary }]}>VIEW DIGITAL{'\n'}COPY</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.downloadBtn, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}>
-          <Text style={[styles.downloadBtnText, { color: c.text }]}>DOWNLOAD</Text>
-        </TouchableOpacity>
-      </View>
+
+      {expanded && (
+        <>
+          <Text style={[styles.finishedMeta, { color: c.textSecondary }]}>Date: 23 March              Timeline: 3 months</Text>
+          <Text style={[styles.completedStatus, { color: c.text }]}>Course Completed</Text>
+          <View style={[styles.completedLine, { backgroundColor: c.primary }]} />
+          <View style={styles.cardActions}>
+            <TouchableOpacity style={[styles.viewDigitalBtn, { backgroundColor: c.primary }]}>
+              <Text style={[styles.viewDigitalText, { color: c.textOnPrimary }]}>VIEW DIGITAL{'\n'}COPY</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.downloadBtn, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}>
+              <Text style={[styles.downloadBtnText, { color: c.text }]}>DOWNLOAD</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </TouchableOpacity>
   );
 }
@@ -147,7 +158,7 @@ export default function AllPrescriptionsScreen({ navigation }: { navigation: any
         <Text style={[styles.sectionTitle, { color: c.text, marginTop: 16 }]}>All Prescriptions</Text>
         <FinishedPrescriptionCard name="Apollo" onPress={() => navigation.navigate('PrescriptionDetail')} onEdit={() => navigation.navigate('PrescriptionEdit')} c={c} />
         <FinishedPrescriptionCard name="Apollo" onPress={() => navigation.navigate('PrescriptionDetail')} onEdit={() => navigation.navigate('PrescriptionEdit')} c={c} />
-        <FinishedPrescriptionCard name="Apollo" onPress={() => navigation.navigate('PrescriptionDetail')} onEdit={() => navigation.navigate('PrescriptionEdit')} collapsed c={c} />
+        <FinishedPrescriptionCard name="Apollo" onPress={() => navigation.navigate('PrescriptionDetail')} onEdit={() => navigation.navigate('PrescriptionEdit')} c={c} />
 
         {/* See All */}
         <TouchableOpacity style={styles.seeAllBtn}>
