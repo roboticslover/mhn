@@ -85,6 +85,7 @@ import FamilyListScreen from "../screens/connect/family/FamilyListScreen";
 import FamilyAddScreen from "../screens/connect/family/FamilyAddScreen";
 import FamilyMemberDetailScreen from "../screens/connect/family/FamilyMemberDetailScreen";
 import FamilySharedReportsScreen from "../screens/connect/family/FamilySharedReportsScreen";
+import FamilyConnectProfileScreen from "../screens/connect/family/FamilyConnectProfileScreen";
 
 // Medical Information
 import MedicalInformationScreen from "../screens/medical/MedicalInformationScreen";
@@ -215,7 +216,8 @@ export type RootStackParamList = {
   FamilyListScreen: undefined;
   FamilyAddScreen: undefined;
   FamilyMemberDetailScreen: { member?: any } | undefined;
-  FamilySharedReportsScreen: { member?: any } | undefined;
+  FamilySharedReportsScreen: { member?: any; type?: string } | undefined;
+  FamilyConnectProfileScreen: { member?: any } | undefined;
   // Medical Information
   MedicalInformation: undefined;
   // Surgical History
@@ -436,6 +438,10 @@ export default function AppNavigator() {
       <Stack.Screen
         name="FamilySharedReportsScreen"
         component={FamilySharedReportsScreen}
+      />
+      <Stack.Screen
+        name="FamilyConnectProfileScreen"
+        component={FamilyConnectProfileScreen}
       />
 
       {/* Medical Information */}

@@ -164,6 +164,23 @@ export default function DoctorDetailScreen({ navigation, route }: { navigation: 
           </TouchableOpacity>
         </View>
 
+        {/* Connected Button */}
+        <LinearGradient 
+          colors={gradientColors} 
+          start={{ x: 0, y: 0 }} 
+          end={{ x: 1, y: 0 }} 
+          style={styles.connectedBtn}
+        >
+          <TouchableOpacity
+            style={styles.connectedBtnInner}
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate('DoctorDetailConnectedScreen', { doctor: route?.params?.doctor })}
+          >
+            <Ionicons name="checkmark-circle" size={20} color="#003910" />
+            <Text style={[styles.connectedBtnText, { fontFamily: 'Inter-Bold' }]}>Connected</Text>
+          </TouchableOpacity>
+        </LinearGradient>
+
         {/* Stats */}
         <View style={styles.statsRow}>
           <View style={[styles.statCard, { backgroundColor: statCardBg }]}>
@@ -257,7 +274,7 @@ export default function DoctorDetailScreen({ navigation, route }: { navigation: 
           </LinearGradient>
         </View>
 
-        <View style={{ height: insets.bottom + 24 }} />
+        <View style={{ height: insets.bottom + 80 }} />
       </ScrollView>
     </View>
   );
@@ -303,7 +320,7 @@ const styles = StyleSheet.create({
   ratingOf: { fontSize: 14, lineHeight: 20 },
   dot: { fontSize: 16 },
   reviews: { fontSize: 14, lineHeight: 20 },
-  actionRow: { flexDirection: 'row', gap: 12, marginBottom: 24, justifyContent: 'center' },
+  actionRow: { flexDirection: 'row', gap: 12, marginBottom: 16, justifyContent: 'center' },
   actionBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -311,6 +328,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 10,
     borderRadius: 999,
+  },
+  connectedBtn: {
+    borderRadius: 999,
+    marginBottom: 24,
+  },
+  connectedBtnInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+  },
+  connectedBtnText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#003910',
+    lineHeight: 24,
   },
   actionBtnText: { fontSize: 14, fontWeight: '600' },
   statsRow: { flexDirection: 'row', gap: 12, marginBottom: 24 },

@@ -173,7 +173,7 @@ export default function FamilyListScreen({ navigation }: { navigation: any }) {
                   idx < MEMBERS.length - 1 && { borderBottomWidth: 1, borderBottomColor: isDark ? 'rgba(61,74,59,0.1)' : c.divider },
                 ]}
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('FamilyMemberDetailScreen', { member })}
+                onPress={() => navigation.navigate('FamilyConnectProfileScreen', { member })}
               >
                 <MemberAvatar name={member.name} size={48} />
                 <Text style={[styles.memberName, { color: headText, fontFamily: 'Inter-Bold' }]}>{member.name}</Text>

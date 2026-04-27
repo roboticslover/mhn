@@ -10,146 +10,145 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import Svg, { Path, Circle, Rect } from 'react-native-svg';
+import Svg, { Path, Rect, Circle } from 'react-native-svg';
 
+// ─── SVG Icons ────────────────────────────────────────────
 function PrescriptionIcon({ color }: { color: string }) {
   return (
     <Svg width={14} height={18} viewBox="0 0 14 18" fill="none">
       <Path d="M9 1H2C1.44772 1 1 1.44772 1 2V16C1 16.5523 1.44772 17 2 17H12C12.5523 17 13 16.5523 13 16V5L9 1Z" stroke={color} strokeWidth={1.5} strokeLinejoin="round" />
       <Path d="M9 1V5H13" stroke={color} strokeWidth={1.5} strokeLinejoin="round" />
-      <Path d="M4 9H7M4 12H10" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
-      <Circle cx={7} cy={9} r={1} fill={color} />
-    </Svg>
-  );
-}
-
-function ScanIcon({ color }: { color: string }) {
-  return (
-    <Svg width={18} height={18} viewBox="0 0 18 18" fill="none">
-      <Path d="M1 6V3C1 1.89543 1.89543 1 3 1H6" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
-      <Path d="M17 6V3C17 1.89543 16.1046 1 15 1H12" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
-      <Path d="M1 12V15C1 16.1046 1.89543 17 3 17H6" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
-      <Path d="M17 12V15C17 16.1046 16.1046 17 15 17H12" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
-      <Path d="M4 9H14" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
+      <Path d="M4 9H10M4 12H7" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
     </Svg>
   );
 }
 
 function ReportIcon({ color }: { color: string }) {
   return (
-    <Svg width={19} height={18} viewBox="0 0 19 18" fill="none">
-      <Rect x={1} y={1} width={17} height={16} rx={2} stroke={color} strokeWidth={1.5} />
-      <Path d="M5 7H9M5 11H14M5 4H14" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
+    <Svg width={18} height={18} viewBox="0 0 18 18" fill="none">
+      <Rect x={1} y={1} width={16} height={16} rx={2} stroke={color} strokeWidth={1.5} />
+      <Path d="M5 7H9M5 11H13M5 4H13" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
     </Svg>
   );
 }
 
-function ChevronRightIcon({ color }: { color: string }) {
+function VaccineIcon({ color }: { color: string }) {
   return (
-    <Svg width={7.4} height={12} viewBox="0 0 8 13" fill="none">
+    <Svg width={18} height={19} viewBox="0 0 18 19" fill="none">
+      <Path d="M11 2L16 7M13 4L6 11M9 8L5 12M8 13L4 17M14 5L17 2M6 11L3 14" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+      <Circle cx={9} cy={10} r={2} stroke={color} strokeWidth={1.5} />
+    </Svg>
+  );
+}
+
+function ChevronIcon({ color }: { color: string }) {
+  return (
+    <Svg width={7} height={12} viewBox="0 0 8 13" fill="none">
       <Path d="M1 1L7 6.5L1 12" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
     </Svg>
   );
 }
 
+// ─── Avatar ────────────────────────────────────────────────
 function MemberAvatar({ name, size = 128 }: { name: string; size?: number }) {
-  const initials = name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
-  const colors = ['#55EE71', '#60A5FA', '#F59E0B', '#EC4899', '#8B5CF6'];
-  const bg = colors[name.charCodeAt(0) % colors.length];
+  const initials = name.split(' ').slice(0, 2).map((w: string) => w[0]).join('').toUpperCase();
+  const palette = ['#55EE71', '#60A5FA', '#F59E0B', '#EC4899', '#8B5CF6'];
+  const bg = palette[name.charCodeAt(0) % palette.length];
   return (
-    <View style={{
-      width: size, height: size,
-      borderRadius: 24,
-      backgroundColor: bg + '33',
-      alignItems: 'center', justifyContent: 'center',
-    }}>
-      <Text style={{ color: bg, fontSize: size * 0.28, fontWeight: '700', fontFamily: 'Inter-Bold' }}>
-        {initials}
-      </Text>
+    <View style={{ width: size, height: size, borderRadius: 24, backgroundColor: bg + '30', alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ color: bg, fontSize: size * 0.28, fontWeight: '700', fontFamily: 'Inter-Bold' }}>{initials}</Text>
     </View>
   );
 }
 
-const SHARED_DOCS = [
-  { id: '1', type: 'prescription', title: 'Prescription Test 1', date: 'Issued on Jan 21, 2026' },
-  { id: '2', type: 'scan', title: 'Prescription Test 1', date: 'Issued on Jan 21, 2026' },
-  { id: '3', type: 'report', title: 'Prescription Test 1', date: 'Issued on Jan 21, 2026' },
+// ─── Data ──────────────────────────────────────────────────
+const DOCUMENTS = [
+  { id: '1', title: 'Prescription Test 1', date: 'Issued on Jan 21, 2026', icon: 'prescription' },
+  { id: '2', title: 'Prescription Test 1', date: 'Issued on Jan 21, 2026', icon: 'report' },
+  { id: '3', title: 'Prescription Test 1', date: 'Issued on Jan 21, 2026', icon: 'vaccine' },
 ];
 
 export default function FamilySharedReportsScreen({ navigation, route }: { navigation: any; route: any }) {
   const insets = useSafeAreaInsets();
   const { theme, isDark } = useTheme();
   const c = theme.colors;
-  const member = route?.params?.member || { name: 'Sarah Mitchell' };
+  const member = route?.params?.member || { name: 'Kajal', relation: 'Sister' };
 
-  const primaryGreen = isDark ? '#55EE71' : c.primary;
-  const cardBg = isDark ? '#2A2A2A' : c.card;
-  const iconBg = isDark ? 'rgba(48,209,88,0.2)' : c.accentSoft;
-  const subText = isDark ? '#BCCBB7' : c.textSecondary;
-  const headText = isDark ? '#E2E2E2' : c.text;
+  const primaryGreen = isDark ? '#55EE71' : '#39A657';
+  const cardBg = isDark ? '#2A2A2A' : '#F2F2F2';
+  const iconBg = isDark ? 'rgba(48,209,88,0.2)' : 'rgba(57,166,87,0.12)';
+  const subText = isDark ? '#BCCBB7' : '#6B7280';
+  const headText = isDark ? '#E2E2E2' : '#111827';
 
   return (
     <View style={[styles.container, { backgroundColor: c.background }]}>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
-      <View style={{ paddingTop: insets.top + 4 }}>
+      {/* Header */}
+      <View style={{ paddingTop: insets.top + 6 }}>
         <View style={styles.headerRow}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={[styles.backBtn, { backgroundColor: c.cardGlassBorder }]}
+            style={[styles.backBtn, { backgroundColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)' }]}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Ionicons name="chevron-back" size={24} color={c.text} />
+            <Ionicons name="chevron-back" size={22} color={c.text} />
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: c.text, fontFamily: 'Manrope-Bold' }]}>
-            Family Connect
-          </Text>
-          <View style={styles.headerRight} />
+          <Text style={[styles.headerTitle, { color: c.text }]}>Family Connect</Text>
+          <View style={{ width: 38 }} />
         </View>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        {/* Profile Hero */}
+      <ScrollView
+        contentContainerStyle={[styles.scroll, { paddingBottom: insets.bottom + 90 }]}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ── Hero Section ── */}
         <View style={styles.heroSection}>
-          <View style={styles.avatarWrapper}>
+          {/* Avatar with verified badge */}
+          <View style={styles.heroAvatarWrapper}>
             <MemberAvatar name={member.name} size={128} />
-            <View style={[styles.onlineBadge, { backgroundColor: primaryGreen, borderColor: c.background }]}>
-              <Ionicons name="checkmark" size={10} color="#003910" />
+            <View style={[styles.verifiedBadge, { borderColor: c.background }]}>
+              <View style={[styles.verifiedDot, { backgroundColor: primaryGreen }]}>
+                <Ionicons name="checkmark" size={12} color="#003910" />
+              </View>
             </View>
           </View>
-          <View style={styles.heroText}>
-            <Text style={[styles.heroTitle, { color: headText, fontFamily: 'Inter-Bold' }]}>
-              {'Shared Health\nReports'}
-            </Text>
-          </View>
+
+          {/* Big Title */}
+          <Text style={[styles.heroTitle, { color: headText }]}>
+            {'Shared Health\nReports'}
+          </Text>
         </View>
 
-        {/* Section */}
-        <View style={styles.section}>
+        {/* ── Shared Documents Section ── */}
+        <View style={styles.documentsSection}>
           <Text style={[styles.sectionLabel, { color: subText }]}>SHARED DOCUMENTS</Text>
+
           <View style={styles.docList}>
-            {SHARED_DOCS.map(doc => (
+            {DOCUMENTS.map((doc) => (
               <TouchableOpacity
                 key={doc.id}
                 style={[styles.docCard, { backgroundColor: cardBg }]}
                 activeOpacity={0.8}
               >
+                {/* Icon */}
                 <View style={[styles.docIconBg, { backgroundColor: iconBg }]}>
-                  {doc.type === 'prescription' && <PrescriptionIcon color={primaryGreen} />}
-                  {doc.type === 'scan' && <ScanIcon color={primaryGreen} />}
-                  {doc.type === 'report' && <ReportIcon color={primaryGreen} />}
+                  {doc.icon === 'prescription' && <PrescriptionIcon color={primaryGreen} />}
+                  {doc.icon === 'report' && <ReportIcon color={primaryGreen} />}
+                  {doc.icon === 'vaccine' && <VaccineIcon color={primaryGreen} />}
                 </View>
+                {/* Info */}
                 <View style={styles.docInfo}>
-                  <Text style={[styles.docTitle, { color: headText, fontFamily: 'Inter' }]}>{doc.title}</Text>
-                  <Text style={[styles.docDate, { color: subText, fontFamily: 'Inter' }]}>{doc.date}</Text>
+                  <Text style={[styles.docTitle, { color: headText }]}>{doc.title}</Text>
+                  <Text style={[styles.docDate, { color: subText }]}>{doc.date}</Text>
                 </View>
-                <ChevronRightIcon color={subText} />
+                {/* Chevron */}
+                <ChevronIcon color={subText} />
               </TouchableOpacity>
             ))}
           </View>
         </View>
-
-        <View style={{ height: insets.bottom + 24 }} />
       </ScrollView>
     </View>
   );
@@ -158,65 +157,43 @@ export default function FamilySharedReportsScreen({ navigation, route }: { navig
 const styles = StyleSheet.create({
   container: { flex: 1 },
   headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row', alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 24,
-    paddingBottom: 16,
+    paddingHorizontal: 20, paddingBottom: 14,
   },
-  backBtn: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
-  headerTitle: { fontSize: 28, fontWeight: '700', lineHeight: 36 },
-  headerRight: { width: 40 },
-  scroll: { paddingHorizontal: 24, paddingTop: 8 },
-  heroSection: {
-    flexDirection: 'row',
-    gap: 32,
-    marginBottom: 40,
+  backBtn: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' },
+  headerTitle: { fontSize: 22, fontWeight: '700', fontFamily: 'Manrope-Bold' },
+  scroll: { paddingHorizontal: 24, paddingTop: 4 },
+
+  // Hero
+  heroSection: { marginBottom: 32, gap: 32 },
+  heroAvatarWrapper: { position: 'relative', alignSelf: 'flex-start' },
+  verifiedBadge: {
+    position: 'absolute', bottom: -8, right: -8,
+    borderWidth: 4, borderRadius: 999,
   },
-  avatarWrapper: { position: 'relative' },
-  onlineBadge: {
-    position: 'absolute',
-    bottom: -8,
-    right: -8,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
+  verifiedDot: {
+    width: 32, height: 32, borderRadius: 16,
+    alignItems: 'center', justifyContent: 'center',
   },
-  heroText: { flex: 1, justifyContent: 'flex-end', paddingBottom: 8 },
   heroTitle: {
-    fontSize: 36,
-    fontWeight: '800',
-    lineHeight: 40,
-    letterSpacing: -1.8,
+    fontSize: 36, fontWeight: '800', fontFamily: 'Inter-ExtraBold',
+    lineHeight: 40, letterSpacing: -1.8,
   },
-  section: { marginBottom: 24 },
+
+  // Documents
+  documentsSection: { paddingTop: 96 },
   sectionLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    letterSpacing: 1.4,
-    textTransform: 'uppercase',
-    marginBottom: 16,
-    fontFamily: 'Inter',
+    fontSize: 14, fontWeight: '600', fontFamily: 'Inter-SemiBold',
+    letterSpacing: 1.4, textTransform: 'uppercase', marginBottom: 24,
   },
   docList: { gap: 16 },
   docCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-    padding: 20,
-    borderRadius: 12,
+    flexDirection: 'row', alignItems: 'center', gap: 16,
+    padding: 20, borderRadius: 12,
   },
-  docIconBg: {
-    width: 48,
-    height: 48,
-    borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  docIconBg: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
   docInfo: { flex: 1 },
-  docTitle: { fontSize: 18, fontWeight: '600', lineHeight: 28 },
-  docDate: { fontSize: 14, lineHeight: 20, marginTop: 2 },
+  docTitle: { fontSize: 18, fontWeight: '600', fontFamily: 'Inter-SemiBold', lineHeight: 28 },
+  docDate: { fontSize: 14, fontFamily: 'Inter', lineHeight: 20 },
 });
