@@ -295,8 +295,10 @@ export default function FamilyMemberDetailScreen({ navigation, route }: { naviga
                 <MemberAvatar name={member.name} size={96} />
               </View>
             </LinearGradient>
-            <View style={[styles.relationTag, { backgroundColor: primaryGreen }]}>
-              <Text style={styles.relationTagText}>{relationTag.toUpperCase()}</Text>
+            <View style={styles.relationTag}>
+              <View style={[styles.relationTagPill, { backgroundColor: primaryGreen }]}>
+                <Text style={styles.relationTagText}>{relationTag.toUpperCase()}</Text>
+              </View>
             </View>
           </View>
           <Text style={[styles.memberName, { color: headText }]}>{member.name}</Text>
@@ -305,7 +307,7 @@ export default function FamilyMemberDetailScreen({ navigation, route }: { naviga
 
         {/* ── Describe Relationship ── */}
         <View style={styles.section}>
-          <Text style={[styles.sectionLabel, { color: subText, opacity: 0.6 }]}>Describe Relationship</Text>
+          <Text style={[styles.descLabel, { color: subText }]}>Describe Relationship</Text>
           <View style={[styles.descInput, {
             backgroundColor: isDark ? '#0E0E0E' : '#F3F4F6',
             borderColor: isDark ? 'rgba(68,73,51,0.2)' : 'rgba(209,213,219,0.4)',
@@ -318,28 +320,6 @@ export default function FamilyMemberDetailScreen({ navigation, route }: { naviga
               onChangeText={setDescText}
               multiline
             />
-          </View>
-        </View>
-
-        {/* ── Relationship Context ── */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionLabel, { color: subText }]}>RELATIONSHIP CONTEXT</Text>
-          <View style={styles.relationsGrid}>
-            {RELATION_OPTIONS.map(opt => (
-              <TouchableOpacity
-                key={opt}
-                style={[
-                  styles.relationChip,
-                  { backgroundColor: relationTag === opt ? primaryGreen : cardBg },
-                ]}
-                onPress={() => setRelationTag(opt)}
-                activeOpacity={0.8}
-              >
-                <Text style={[styles.relationChipText, {
-                  color: relationTag === opt ? '#003910' : headText,
-                }]}>{opt}</Text>
-              </TouchableOpacity>
-            ))}
           </View>
         </View>
 
@@ -434,15 +414,19 @@ const styles = StyleSheet.create({
   scroll: { paddingHorizontal: 20, paddingTop: 4 },
 
   // Profile
-  profileSection: { alignItems: 'center', marginBottom: 28, gap: 6 },
-  avatarContainer: { position: 'relative', marginBottom: 14 },
-  avatarGradientRing: { width: 116, height: 116, borderRadius: 58, padding: 3, alignItems: 'center', justifyContent: 'center' },
-  avatarInner: { flex: 1, width: '100%', borderRadius: 54, borderWidth: 3, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
+  profileSection: { alignItems: 'center', marginBottom: 28, gap: 4 },
+  avatarContainer: { position: 'relative', marginBottom: 20 },
+  avatarGradientRing: { width: 112, height: 112, borderRadius: 56, padding: 4, alignItems: 'center', justifyContent: 'center' },
+  avatarInner: { flex: 1, width: '100%', borderRadius: 52, borderWidth: 4, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
   relationTag: {
-    position: 'absolute', bottom: -10,
-    alignSelf: 'center', left: '20%', right: '20%',
-    paddingHorizontal: 12, paddingVertical: 3,
-    borderRadius: 999, alignItems: 'center',
+    position: 'absolute', bottom: -8,
+    left: 0, right: 0,
+    alignItems: 'center', justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  relationTagPill: {
+    paddingHorizontal: 12, paddingVertical: 4,
+    borderRadius: 999,
   },
   relationTagText: { fontSize: 10, fontWeight: '700', fontFamily: 'Inter-Bold', color: '#003910', letterSpacing: 1 },
   memberName: { fontSize: 24, fontWeight: '700', fontFamily: 'Inter-Bold', letterSpacing: -0.6 },
@@ -456,9 +440,10 @@ const styles = StyleSheet.create({
   },
 
   // Describe input
+  descLabel: { fontSize: 14, fontFamily: 'Inter-Medium', letterSpacing: 0.7, opacity: 0.6, marginBottom: 10 },
   descInput: {
-    borderRadius: 24, borderWidth: 1,
-    padding: 17, minHeight: 80,
+    borderRadius: 32, borderWidth: 1,
+    padding: 17, minHeight: 96,
   },
   descInputText: { fontSize: 14, fontFamily: 'Inter', lineHeight: 22 },
 

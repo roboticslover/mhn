@@ -64,14 +64,6 @@ function ChevronIcon({ color }: { color: string }) {
   );
 }
 
-function ChevronDownIcon({ color }: { color: string }) {
-  return (
-    <Svg width={12} height={7} viewBox="0 0 13 8" fill="none">
-      <Path d="M1 1L6.5 7L12 1" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
-    </Svg>
-  );
-}
-
 function RemoveIcon({ color }: { color: string }) {
   return (
     <Svg width={16} height={16} viewBox="0 0 16 16" fill="none">
@@ -99,84 +91,35 @@ function HealthCard({ name, isDark }: { name: string; isDark: boolean }) {
     <View
       style={[
         styles.healthCard,
-        isDark
-          ? { backgroundColor: '#0f0f0f' }
-          : { backgroundColor: '#EBEBEB' },
+        isDark ? { backgroundColor: '#0f0f0f' } : { backgroundColor: '#EBEBEB' },
       ]}
     >
-      {/* Top row: brand label + watermark icon */}
       <View style={styles.healthCardHeader}>
-        <Text
-          style={[
-            styles.healthCardBrandLabel,
-            { color: isDark ? 'rgba(255,255,255,0.6)' : '#38A62F' },
-          ]}
-        >
+        <Text style={[styles.healthCardBrandLabel, { color: isDark ? 'rgba(255,255,255,0.6)' : '#38A62F' }]}>
           MY HEALTH NOTION
         </Text>
         <Image
           source={require('../../../../assets/health-card-icon.png')}
-          style={[
-            styles.healthCardWatermark,
-            { opacity: isDark ? 0.25 : 0.55 },
-          ]}
+          style={[styles.healthCardWatermark, { opacity: isDark ? 0.25 : 0.55 }]}
         />
       </View>
-
-      {/* Member ID section */}
       <View style={styles.healthCardSection}>
-        <Text
-          style={[
-            styles.healthCardSectionLabel,
-            { color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(20,20,20,0.55)' },
-          ]}
-        >
+        <Text style={[styles.healthCardSectionLabel, { color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(20,20,20,0.55)' }]}>
           MEMBER ID
         </Text>
-        <Text
-          style={[
-            styles.healthCardId,
-            { color: isDark ? '#FFFFFF' : '#111111' },
-          ]}
-        >
+        <Text style={[styles.healthCardId, { color: isDark ? '#FFFFFF' : '#111111' }]}>
           4829  1042  9928
         </Text>
       </View>
-
-      {/* Card Holder + HEALTH CARD badge */}
       <View style={styles.healthCardBottom}>
         <View>
-          <Text
-            style={[
-              styles.healthCardSectionLabel,
-              { color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(20,20,20,0.55)' },
-            ]}
-          >
+          <Text style={[styles.healthCardSectionLabel, { color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(20,20,20,0.55)' }]}>
             CARD HOLDER
           </Text>
-          <Text
-            style={[
-              styles.healthCardName,
-              { color: isDark ? '#FFFFFF' : '#141414' },
-            ]}
-          >
-            {name}
-          </Text>
+          <Text style={[styles.healthCardName, { color: isDark ? '#FFFFFF' : '#141414' }]}>{name}</Text>
         </View>
-        <View
-          style={[
-            styles.healthCardBadge,
-            { backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(20,20,20,0.08)' },
-          ]}
-        >
-          <Text
-            style={[
-              styles.healthCardBadgeText,
-              { color: isDark ? '#FFFFFF' : '#141414' },
-            ]}
-          >
-            HEALTH CARD
-          </Text>
+        <View style={[styles.healthCardBadge, { backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(20,20,20,0.08)' }]}>
+          <Text style={[styles.healthCardBadgeText, { color: isDark ? '#FFFFFF' : '#141414' }]}>HEALTH CARD</Text>
         </View>
       </View>
     </View>
@@ -185,10 +128,10 @@ function HealthCard({ name, isDark }: { name: string; isDark: boolean }) {
 
 // ─── Data ──────────────────────────────────────────────────
 const RECORD_ITEMS = [
-  { key: 'reports', icon: 'report', label: 'Health Reports', sub: '3 new reports available' },
-  { key: 'prescriptions', icon: 'prescription', label: 'Prescriptions', sub: 'Updated yesterday • 2 active' },
-  { key: 'vaccinations', icon: 'vaccine', label: 'Vaccinations', sub: 'Digital certificate verified' },
-  { key: 'scans', icon: 'scan', label: 'Scans', sub: 'New medical updates available' },
+  { key: 'reports',       icon: 'report',       label: 'Health Reports',  sub: '3 new reports available' },
+  { key: 'prescriptions', icon: 'prescription', label: 'Prescriptions',   sub: 'Updated yesterday • 2 active' },
+  { key: 'vaccinations',  icon: 'vaccine',       label: 'Vaccinations',    sub: 'Digital certificate verified' },
+  { key: 'scans',         icon: 'scan',          label: 'Scans',           sub: 'New medical updates available' },
 ];
 
 // ─── Remove From Family Modal ──────────────────────────────
@@ -199,7 +142,6 @@ function RemoveFromFamilyModal({
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.modalOverlay}>
         <View style={styles.removeModal}>
-          {/* Top glow area */}
           <View style={styles.removeModalHeader}>
             <View style={styles.removeGlow} />
             <View style={styles.removeAvatarRing}>
@@ -211,7 +153,6 @@ function RemoveFromFamilyModal({
               </View>
             </View>
           </View>
-          {/* Content */}
           <View style={styles.removeModalContent}>
             <Text style={styles.removeModalTitle}>Remove from Family?</Text>
             <Text style={styles.removeModalDesc}>
@@ -267,13 +208,7 @@ export default function FamilyConnectProfileScreen({ navigation, route }: { navi
             <Ionicons name="chevron-back" size={22} color={c.text} />
           </TouchableOpacity>
           <Text style={[styles.headerTitle, { color: c.text }]}>Family Connect</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('FamilyMemberDetailScreen', { member })}
-            style={[styles.backBtn, { backgroundColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)' }]}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <Ionicons name="settings-outline" size={20} color={c.text} />
-          </TouchableOpacity>
+          <View style={{ width: 38 }} />
         </View>
       </View>
 
@@ -293,7 +228,7 @@ export default function FamilyConnectProfileScreen({ navigation, route }: { navi
           <Text style={[styles.memberRelation, { color: subText }]}>{member.relation || 'Sister'}</Text>
         </View>
 
-        {/* ── Health Card (like HealthWallet main screen) ── */}
+        {/* ── Health Card ── */}
         <View style={styles.cardSection}>
           <HealthCard name={member.name} isDark={isDark} />
         </View>
@@ -301,7 +236,6 @@ export default function FamilyConnectProfileScreen({ navigation, route }: { navi
         {/* ── Vital Insights ── */}
         <Text style={[styles.sectionLabel, { color: subText }]}>VITAL INSIGHTS</Text>
 
-        {/* Stability Index Card */}
         <View style={[styles.vitalCard, { backgroundColor: cardBg }]}>
           <View style={styles.vitalCardHeader}>
             <View style={{ flex: 1 }}>
@@ -319,27 +253,18 @@ export default function FamilyConnectProfileScreen({ navigation, route }: { navi
               <Text style={[styles.progressPct, { color: headText, opacity: 0.4 }]}>92%</Text>
             </View>
             <View style={[styles.progressTrack, { backgroundColor: isDark ? '#0E0E0E' : '#E0E0E0' }]}>
-              <LinearGradient
-                colors={['#55EE71', '#30D158']}
-                start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                style={[styles.progressFill, { width: '92%' }]}
-              />
+              <LinearGradient colors={['#55EE71', '#30D158']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={[styles.progressFill, { width: '92%' }]} />
             </View>
             <View style={[styles.progressRow, { marginTop: 10 }]}>
               <Text style={[styles.progressLabel, { color: headText, opacity: 0.4 }]}>STRESS RECOVERY</Text>
               <Text style={[styles.progressPct, { color: headText, opacity: 0.4 }]}>84%</Text>
             </View>
             <View style={[styles.progressTrack, { backgroundColor: isDark ? '#0E0E0E' : '#E0E0E0' }]}>
-              <LinearGradient
-                colors={['#55EE71', '#30D158']}
-                start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                style={[styles.progressFill, { width: '84%', opacity: 0.8 }]}
-              />
+              <LinearGradient colors={['#55EE71', '#30D158']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={[styles.progressFill, { width: '84%', opacity: 0.8 }]} />
             </View>
           </View>
         </View>
 
-        {/* Heart Rate Trend Card */}
         <View style={[styles.vitalCard, { backgroundColor: cardBg, marginTop: 12 }]}>
           <View style={styles.vitalCardHeader}>
             <View style={{ flex: 1 }}>
@@ -351,17 +276,9 @@ export default function FamilyConnectProfileScreen({ navigation, route }: { navi
             </View>
             <Ionicons name="pulse-outline" size={18} color={primaryGreen} />
           </View>
-          {/* Bar chart */}
           <View style={styles.barChart}>
             {[40, 55, 45, 70, 85, 60, 50, 75, 90, 70, 55, 45, 80, 95, 65, 50].map((h, i) => (
-              <View
-                key={i}
-                style={[styles.bar, {
-                  height: h * 0.96,
-                  backgroundColor: primaryGreen,
-                  opacity: 0.1 + (i / 16) * 0.55,
-                }]}
-              />
+              <View key={i} style={[styles.bar, { height: h * 0.96, backgroundColor: primaryGreen, opacity: 0.1 + (i / 16) * 0.55 }]} />
             ))}
           </View>
         </View>
@@ -369,7 +286,6 @@ export default function FamilyConnectProfileScreen({ navigation, route }: { navi
         {/* ── Shared Records ── */}
         <Text style={[styles.sectionLabel, { color: subText, marginTop: 20, marginBottom: 12 }]}>SHARED RECORDS</Text>
 
-        {/* View Records Row */}
         <View style={[styles.sharedRecordsContainer, { backgroundColor: isDark ? 'rgba(23,23,23,0.88)' : '#F5F5F5' }]}>
           <TouchableOpacity
             style={[styles.viewRecordsRow, { backgroundColor: cardBg }]}
@@ -386,21 +302,18 @@ export default function FamilyConnectProfileScreen({ navigation, route }: { navi
             <ChevronIcon color={subText} />
           </TouchableOpacity>
 
-          {/* Record Items */}
           {RECORD_ITEMS.map(item => (
             <TouchableOpacity
               key={item.key}
               style={[styles.recordRow, { backgroundColor: cardBg }]}
               activeOpacity={0.8}
-              onPress={() => {
-                navigation.navigate('FamilySharedReportsScreen', { member, type: item.key });
-              }}
+              onPress={() => navigation.navigate('FamilySharedReportsScreen', { member, type: item.key })}
             >
               <View style={[styles.recordIconBox, { backgroundColor: iconBg }]}>
-                {item.icon === 'report' && <ReportIcon color={primaryGreen} />}
+                {item.icon === 'report'       && <ReportIcon color={primaryGreen} />}
                 {item.icon === 'prescription' && <PrescriptionIcon color={primaryGreen} />}
-                {item.icon === 'vaccine' && <VaccineIcon color={primaryGreen} />}
-                {item.icon === 'scan' && <ScanIcon color={primaryGreen} />}
+                {item.icon === 'vaccine'      && <VaccineIcon color={primaryGreen} />}
+                {item.icon === 'scan'         && <ScanIcon color={primaryGreen} />}
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={[styles.recordLabel, { color: headText }]}>{item.label}</Text>
@@ -420,6 +333,22 @@ export default function FamilyConnectProfileScreen({ navigation, route }: { navi
           <RemoveIcon color={isDark ? '#FFB4AB' : '#DC2626'} />
           <Text style={[styles.removeBtnText, { color: isDark ? '#FFB4AB' : '#DC2626' }]}>Remove from Family</Text>
         </TouchableOpacity>
+
+        {/* ── Update Connection ── */}
+        <LinearGradient
+          colors={isDark ? ['#55EE71', '#30D158'] : ['#39A657', '#2D8A47']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.updateBtn}
+        >
+          <TouchableOpacity
+            style={styles.updateBtnInner}
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate('FamilyMemberDetailScreen', { member })}
+          >
+            <Text style={styles.updateBtnText}>Update Connection</Text>
+          </TouchableOpacity>
+        </LinearGradient>
       </ScrollView>
 
       {/* Modal */}
@@ -447,71 +376,22 @@ const styles = StyleSheet.create({
   // Profile Hero
   profileHero: { alignItems: 'center', marginBottom: 20, gap: 4 },
   avatarWrapper: { position: 'relative', marginBottom: 12 },
-  verifiedBadge: {
-    position: 'absolute', bottom: -2, right: -2,
-    borderWidth: 3, borderRadius: 999,
-    backgroundColor: '#000',
-  },
+  verifiedBadge: { position: 'absolute', bottom: -2, right: -2, borderWidth: 3, borderRadius: 999, backgroundColor: '#000' },
   memberName: { fontSize: 26, fontWeight: '700', fontFamily: 'Inter-Bold', letterSpacing: -0.5, marginTop: 4 },
   memberRelation: { fontSize: 14, fontFamily: 'Inter' },
 
-  // Health Card (matching HealthWallet)
+  // Health Card
   cardSection: { marginBottom: 16 },
-  healthCard: {
-    borderRadius: 24,
-    paddingHorizontal: 32,
-    paddingTop: 32,
-    paddingBottom: 28,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  healthCardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 24,
-  },
-  healthCardWatermark: {
-    width: 22,
-    height: 36,
-    resizeMode: 'contain',
-  },
-  healthCardBrandLabel: {
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-    fontFamily: 'Inter',
-    lineHeight: 15,
-  },
+  healthCard: { borderRadius: 24, paddingHorizontal: 32, paddingTop: 32, paddingBottom: 28, overflow: 'hidden' },
+  healthCardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 },
+  healthCardWatermark: { width: 22, height: 36, resizeMode: 'contain' },
+  healthCardBrandLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1, textTransform: 'uppercase', fontFamily: 'Inter', lineHeight: 15 },
   healthCardSection: { marginBottom: 24 },
-  healthCardSectionLabel: {
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-    fontFamily: 'Inter',
-    lineHeight: 15,
-    marginBottom: 4,
-  },
-  healthCardId: {
-    fontSize: 18,
-    fontWeight: '400',
-    fontFamily: 'Inter',
-    lineHeight: 28,
-    letterSpacing: 2,
-  },
-  healthCardBottom: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-  },
+  healthCardSectionLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1, textTransform: 'uppercase', fontFamily: 'Inter', lineHeight: 15, marginBottom: 4 },
+  healthCardId: { fontSize: 18, fontWeight: '400', fontFamily: 'Inter', lineHeight: 28, letterSpacing: 2 },
+  healthCardBottom: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
   healthCardName: { fontSize: 18, fontWeight: '600', fontFamily: 'Inter', lineHeight: 28 },
-  healthCardBadge: {
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-  },
+  healthCardBadge: { borderRadius: 8, paddingHorizontal: 12, paddingVertical: 6 },
   healthCardBadgeText: { fontSize: 10, fontWeight: '700', fontFamily: 'Inter', lineHeight: 15 },
 
   // Vital Insights
@@ -533,79 +413,35 @@ const styles = StyleSheet.create({
 
   // Shared Records
   sharedRecordsContainer: { borderRadius: 33, padding: 12, gap: 10, marginBottom: 16 },
-  viewRecordsRow: {
-    flexDirection: 'row', alignItems: 'center', gap: 14,
-    padding: 16, borderRadius: 22,
-  },
+  viewRecordsRow: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 16, borderRadius: 22 },
   viewRecordsTitle: { fontSize: 12, fontWeight: '800', fontFamily: 'Inter-Bold', letterSpacing: 1, textTransform: 'uppercase' },
   viewRecordsSub: { fontSize: 12, fontFamily: 'Inter', marginTop: 2 },
-  recordRow: {
-    flexDirection: 'row', alignItems: 'center', gap: 14,
-    padding: 16, borderRadius: 22,
-  },
+  recordRow: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 16, borderRadius: 22 },
   recordIconBox: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   recordLabel: { fontSize: 14, fontWeight: '700', fontFamily: 'Inter-Bold', lineHeight: 22 },
   recordSub: { fontSize: 12, fontFamily: 'Inter', marginTop: 1 },
 
   // Remove
-  removeBtn: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    gap: 8, height: 56, borderRadius: 40, marginTop: 4,
-  },
+  removeBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, height: 56, borderRadius: 40, marginTop: 4 },
   removeBtnText: { fontSize: 16, fontWeight: '600', fontFamily: 'Inter-SemiBold' },
+  updateBtn: { borderRadius: 999, marginTop: 12 },
+  updateBtnInner: { height: 56, alignItems: 'center', justifyContent: 'center' },
+  updateBtnText: { fontSize: 18, fontWeight: '700', fontFamily: 'Inter-Bold', color: '#003910', lineHeight: 28 },
 
   // Modal
-  modalOverlay: {
-    flex: 1, backgroundColor: 'rgba(0,0,0,0.75)',
-    alignItems: 'center', justifyContent: 'center', padding: 24,
-  },
-  removeModal: {
-    width: '100%', maxWidth: 400, backgroundColor: '#131313',
-    borderRadius: 48, overflow: 'hidden',
-  },
-  removeModalHeader: {
-    height: 256, backgroundColor: '#0E0E0E',
-    alignItems: 'center', justifyContent: 'center',
-  },
-  removeGlow: {
-    position: 'absolute', width: 192, height: 192, borderRadius: 96,
-    backgroundColor: 'rgba(213,61,24,0.2)', top: 32,
-  },
-  removeAvatarRing: {
-    width: 128, height: 128, borderRadius: 64,
-    borderWidth: 2, borderColor: 'rgba(213,61,24,0.3)',
-    alignItems: 'center', justifyContent: 'center',
-    backgroundColor: 'rgba(38,38,38,0.5)',
-  },
-  removeAvatarInner: {
-    width: 96, height: 96, borderRadius: 48,
-    overflow: 'hidden', alignItems: 'center', justifyContent: 'center',
-    backgroundColor: '#1A1A1A',
-  },
-  removeXBadge: {
-    position: 'absolute', bottom: -8, right: -8,
-    width: 48, height: 48, borderRadius: 24,
-    backgroundColor: '#FF7351', borderWidth: 4, borderColor: '#131313',
-    alignItems: 'center', justifyContent: 'center',
-  },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.75)', alignItems: 'center', justifyContent: 'center', padding: 24 },
+  removeModal: { width: '100%', maxWidth: 400, backgroundColor: '#131313', borderRadius: 48, overflow: 'hidden' },
+  removeModalHeader: { height: 256, backgroundColor: '#0E0E0E', alignItems: 'center', justifyContent: 'center' },
+  removeGlow: { position: 'absolute', width: 192, height: 192, borderRadius: 96, backgroundColor: 'rgba(213,61,24,0.2)', top: 32 },
+  removeAvatarRing: { width: 128, height: 128, borderRadius: 64, borderWidth: 2, borderColor: 'rgba(213,61,24,0.3)', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(38,38,38,0.5)' },
+  removeAvatarInner: { width: 96, height: 96, borderRadius: 48, overflow: 'hidden', alignItems: 'center', justifyContent: 'center', backgroundColor: '#1A1A1A' },
+  removeXBadge: { position: 'absolute', bottom: -8, right: -8, width: 48, height: 48, borderRadius: 24, backgroundColor: '#FF7351', borderWidth: 4, borderColor: '#131313', alignItems: 'center', justifyContent: 'center' },
   removeModalContent: { padding: 32, gap: 7 },
-  removeModalTitle: {
-    fontSize: 24, fontWeight: '700', fontFamily: 'Manrope-Bold',
-    color: '#FFFFFF', textAlign: 'center', letterSpacing: -0.6,
-  },
-  removeModalDesc: {
-    fontSize: 18, fontFamily: 'Manrope', color: '#ABABAB',
-    textAlign: 'center', lineHeight: 29,
-  },
+  removeModalTitle: { fontSize: 24, fontWeight: '700', fontFamily: 'Manrope-Bold', color: '#FFFFFF', textAlign: 'center', letterSpacing: -0.6 },
+  removeModalDesc: { fontSize: 18, fontFamily: 'Manrope', color: '#ABABAB', textAlign: 'center', lineHeight: 29 },
   removeModalActions: { gap: 12, marginTop: 16 },
-  removeConfirmBtn: {
-    backgroundColor: '#6FFB85', height: 58, borderRadius: 999,
-    alignItems: 'center', justifyContent: 'center',
-  },
+  removeConfirmBtn: { backgroundColor: '#6FFB85', height: 58, borderRadius: 999, alignItems: 'center', justifyContent: 'center' },
   removeConfirmText: { fontSize: 18, fontWeight: '700', fontFamily: 'Manrope-Bold', color: '#005D21', letterSpacing: -0.45 },
-  removeCancelBtn: {
-    backgroundColor: '#262626', height: 52, borderRadius: 999,
-    alignItems: 'center', justifyContent: 'center',
-  },
+  removeCancelBtn: { backgroundColor: '#262626', height: 52, borderRadius: 999, alignItems: 'center', justifyContent: 'center' },
   removeCancelText: { fontSize: 16, fontWeight: '600', fontFamily: 'Manrope-SemiBold', color: '#FFFFFF' },
 });
