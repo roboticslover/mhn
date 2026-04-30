@@ -27,11 +27,14 @@ function ActivePrescriptionCard({ onPress, onEdit, c }: { onPress: () => void; o
         <Text style={[styles.latestBadgeText, { color: c.primary }]}>LATEST</Text>
       </View>
 
+      <Text style={[styles.activePrescName, { color: c.text }]}>Nexus Prescription</Text>
+      <View style={styles.metaRow}>
+        <Text style={[styles.metaText, { color: c.textSecondary }]}>Date: 23 March</Text>
+        <Text style={[styles.metaText, { color: c.textSecondary }]}>Timeline: 3 months</Text>
+      </View>
+
       {expanded && (
         <>
-          <Text style={[styles.activePrescName, { color: c.text }]}>Nexus Prescription</Text>
-          <Text style={[styles.activePrescMeta, { color: c.textSecondary }]}>Date: 23 March              Timeline: 3 months</Text>
-
           <Text style={[styles.statusLabel, { color: c.textSecondary }]}>Prescription status</Text>
           <Text style={[styles.statusValue, { color: c.text }]}>In Progress</Text>
 
@@ -77,9 +80,13 @@ function FinishedPrescriptionCard({
         </View>
       </View>
 
+      <View style={styles.metaRow}>
+        <Text style={[styles.metaText, { color: c.textSecondary }]}>Date: 23 March</Text>
+        <Text style={[styles.metaText, { color: c.textSecondary }]}>Timeline: 3 months</Text>
+      </View>
+
       {expanded && (
         <>
-          <Text style={[styles.finishedMeta, { color: c.textSecondary }]}>Date: 23 March              Timeline: 3 months</Text>
           <Text style={[styles.completedStatus, { color: c.text }]}>Course Completed</Text>
           <View style={[styles.completedLine, { backgroundColor: c.primary }]} />
           <View style={styles.cardActions}>
@@ -247,7 +254,8 @@ const styles = StyleSheet.create({
   },
   latestBadgeText: { fontSize: 10, fontWeight: '800', fontFamily: 'Manrope', letterSpacing: 1 },
   activePrescName: { fontSize: 24, fontWeight: '700', fontFamily: 'Inter', letterSpacing: -0.6, marginBottom: 6 },
-  activePrescMeta: { fontSize: 12, fontFamily: 'Inter', marginBottom: 16 },
+  metaRow: { flexDirection: 'row', gap: 45, marginBottom: 16 },
+  metaText: { fontSize: 12, fontFamily: 'Inter' },
   statusLabel: { fontSize: 12, fontFamily: 'Inter', marginBottom: 4 },
   statusValue: { fontSize: 20, fontWeight: '700', fontFamily: 'Inter', marginBottom: 8 },
   progressRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
@@ -272,7 +280,6 @@ const styles = StyleSheet.create({
   finishedName: { fontSize: 24, fontWeight: '700', fontFamily: 'Inter', letterSpacing: -0.6 },
   finishedBadge: { borderWidth: 1, borderRadius: 12, paddingHorizontal: 10, paddingVertical: 3 },
   finishedBadgeText: { fontSize: 10, fontWeight: '800', fontFamily: 'Manrope', letterSpacing: 1 },
-  finishedMeta: { fontSize: 12, fontFamily: 'Inter', marginBottom: 12 },
   completedStatus: { fontSize: 18, fontWeight: '700', fontFamily: 'Inter', marginBottom: 8 },
   completedLine: { height: 2, borderRadius: 1, marginBottom: 16 },
   seeAllBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 16 },
