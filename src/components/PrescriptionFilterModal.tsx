@@ -168,7 +168,7 @@ export default function PrescriptionFilterModal({
                 : { borderColor: checkboxBorder },
             ]}
           >
-            {hasValue && <CheckIcon size={10} />}
+            {hasValue && <CheckIcon size={15} />}
           </View>
 
           {/* Label */}
@@ -176,7 +176,7 @@ export default function PrescriptionFilterModal({
 
           {/* Chevron */}
           <View style={[styles.chevronWrap, { transform: [{ rotate: isOpen ? '90deg' : '-90deg' }] }]}>
-            <ChevronIcon color={chevronColor} size={11} />
+            <ChevronIcon color={chevronColor} size={16} />
           </View>
         </TouchableOpacity>
 
@@ -207,7 +207,7 @@ export default function PrescriptionFilterModal({
                         : { borderColor: checkboxBorder },
                     ]}
                   >
-                    {isSelected && <CheckIcon size={10} />}
+                    {isSelected && <CheckIcon size={15} />}
                   </View>
 
                   {/* Option Text */}
@@ -281,41 +281,41 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    width: 214,
-    borderRadius: 16,
+    width: 321,
+    borderRadius: 24,
     borderWidth: 1,
-    padding: 16,
-    gap: 4,
+    padding: 24,
+    gap: 6,
   },
 
   // ── Section Header ────────────────────────
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 5,
-    paddingHorizontal: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
     borderWidth: 1,
-    borderRadius: 8,
-    gap: 8,
+    borderRadius: 12,
+    gap: 12,
   },
   sectionCheckbox: {
-    width: 16,
-    height: 16,
-    borderRadius: 4,
-    borderWidth: 1,
+    width: 24,
+    height: 24,
+    borderRadius: 6,
+    borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   sectionLabel: {
     flex: 1,
-    fontSize: 12,
+    fontSize: 18,
     fontWeight: '500',
     fontFamily: 'Inter',
     letterSpacing: -0.6,
   },
   chevronWrap: {
-    width: 20,
-    height: 11,
+    width: 30,
+    height: 17,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -324,32 +324,32 @@ const styles = StyleSheet.create({
   optionsList: {
     borderWidth: 1,
     borderTopWidth: 0,
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
-    paddingHorizontal: 4,
-    paddingBottom: 4,
-    paddingTop: 4,
-    gap: 2,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    paddingHorizontal: 6,
+    paddingBottom: 6,
+    paddingTop: 6,
+    gap: 3,
   },
   optionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 26,
-    borderRadius: 8,
+    height: 39,
+    borderRadius: 12,
     borderWidth: 1,
-    paddingHorizontal: 4,
-    gap: 8,
+    paddingHorizontal: 6,
+    gap: 12,
   },
   optionCheckbox: {
-    width: 16,
-    height: 16,
-    borderRadius: 4,
-    borderWidth: 1,
+    width: 24,
+    height: 24,
+    borderRadius: 6,
+    borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   optionText: {
-    fontSize: 10,
+    fontSize: 15,
     fontWeight: '500',
     fontFamily: 'Inter',
   },
@@ -359,16 +359,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 8,
-    paddingHorizontal: 2,
+    marginTop: 12,
+    paddingHorizontal: 3,
   },
   selectedText: {
-    fontSize: 9,
+    fontSize: 13,
     fontWeight: '500',
     fontFamily: 'Inter',
   },
   clearAllText: {
-    fontSize: 9,
+    fontSize: 13,
     fontWeight: '800',
     fontFamily: 'Manrope',
     letterSpacing: 0.5,
@@ -376,14 +376,14 @@ const styles = StyleSheet.create({
 
   // ── Save Button ───────────────────────────
   saveBtn: {
-    marginTop: 12,
-    height: 40,
+    marginTop: 18,
+    height: 56,
     borderRadius: 33,
     alignItems: 'center',
     justifyContent: 'center',
   },
   saveBtnText: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '800',
     fontFamily: 'Manrope',
     textTransform: 'uppercase',
