@@ -11,6 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
+import PrescriptionFilterModal, { FilterState } from '../../../components/PrescriptionFilterModal';
 
 function ActivePrescriptionCard({ onPress, onEdit, c }: { onPress: () => void; onEdit: () => void; c: any }) {
   const [expanded, setExpanded] = useState(false);
@@ -108,6 +109,8 @@ export default function AllPrescriptionsScreen({ navigation }: { navigation: any
   const { theme, isDark } = useTheme();
   const c = theme.colors;
   const [search, setSearch] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState<FilterState>({ sortOrder: null, visibility: null, status: null });
 
   return (
     <View style={[styles.container, { backgroundColor: c.background }]}>
@@ -139,7 +142,10 @@ export default function AllPrescriptionsScreen({ navigation }: { navigation: any
             />
           </View>
           <View style={styles.filterRow}>
-            <TouchableOpacity style={[styles.filterBtn, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}>
+            <TouchableOpacity
+              style={[styles.filterBtn, { backgroundColor: c.card, borderColor: c.cardGlassBorder }]}
+              onPress={() => setShowFilters(true)}
+            >
               <Ionicons name="options-outline" size={10} color={c.text} />
               <Text style={[styles.filterBtnText, { color: c.text }]}>FILTERS</Text>
             </TouchableOpacity>
@@ -173,6 +179,13 @@ export default function AllPrescriptionsScreen({ navigation }: { navigation: any
           <Ionicons name="chevron-down" size={14} color={c.primary} />
         </TouchableOpacity>
       </ScrollView>
+
+      <PrescriptionFilterModal
+        visible={showFilters}
+        onClose={() => setShowFilters(false)}
+        onSave={(newFilters) => setFilters(newFilters)}
+        initialFilters={filters}
+      />
     </View>
   );
 }
