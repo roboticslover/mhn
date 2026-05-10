@@ -554,6 +554,24 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
           </View>
         </TouchableOpacity>
 
+        {/* ══ VITALS TRACKING ═════════════════════════════════════════════════ */}
+        <TouchableOpacity
+          style={[styles.lifestyleButton, { backgroundColor: isDark ? '#6366F1' : '#7C3AED', marginTop: 12 }]}
+          onPress={() => navigation.navigate('VitalsHub')}
+          activeOpacity={0.8}
+        >
+          <View style={styles.lifestyleBtnContent}>
+            <View style={styles.lifestyleBtnLeft}>
+              <Ionicons name="pulse" size={22} color="#FFFFFF" />
+              <View>
+                <Text style={[styles.lifestyleBtnTitle, { fontFamily: 'Inter', color: '#FFFFFF' }]}>Vitals Tracking</Text>
+                <Text style={[styles.lifestyleBtnSub, { fontFamily: 'Inter', color: 'rgba(255,255,255,0.7)' }]}>Heart Rate, Sleep, Activity & More</Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#FFFFFF" />
+          </View>
+        </TouchableOpacity>
+
         {/* ══ HEALTH SCORES ═══════════════════════════════════════════════════ */}
         <SectionHeader title="Health Scores" />
         <View style={styles.scoresList}>

@@ -156,6 +156,14 @@ import WaterTrackingScreen from "../screens/lifestyle/water/WaterTrackingScreen"
 import SmokingInputScreen from "../screens/lifestyle/smoking/SmokingInputScreen";
 import SmokingSummaryScreen from "../screens/lifestyle/smoking/SmokingSummaryScreen";
 
+// Vitals
+import VitalsHubScreen from "../screens/vitals/VitalsHubScreen";
+import VitalsMainScreen from "../screens/vitals/VitalsMainScreen";
+import VitalsNoWearableScreen from "../screens/vitals/VitalsNoWearableScreen";
+import VitalsSleepScreen from "../screens/vitals/VitalsSleepScreen";
+import VitalsHeartRateScreen from "../screens/vitals/VitalsHeartRateScreen";
+import VitalsActivityScreen from "../screens/vitals/VitalsActivityScreen";
+
 export type RootStackParamList = {
   Login: undefined;
   EnterMobileNumber: undefined;
@@ -292,6 +300,13 @@ export type RootStackParamList = {
   WaterTracking: undefined;
   SmokingInput: undefined;
   SmokingSummary: undefined;
+  // Vitals
+  VitalsHub: undefined;
+  VitalsMain: undefined;
+  VitalsNoWearable: undefined;
+  VitalsSleep: undefined;
+  VitalsHeartRate: undefined;
+  VitalsActivity: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -578,6 +593,14 @@ export default function AppNavigator() {
       <Stack.Screen name="WaterTracking" component={WaterTrackingScreen} />
       <Stack.Screen name="SmokingInput" component={SmokingInputScreen} />
       <Stack.Screen name="SmokingSummary" component={SmokingSummaryScreen} />
+
+      {/* Vitals */}
+      <Stack.Screen name="VitalsHub" component={VitalsHubScreen} />
+      <Stack.Screen name="VitalsMain" component={VitalsMainScreen} />
+      <Stack.Screen name="VitalsNoWearable" component={VitalsNoWearableScreen} />
+      <Stack.Screen name="VitalsSleep" component={VitalsSleepScreen} />
+      <Stack.Screen name="VitalsHeartRate" component={VitalsHeartRateScreen} />
+      <Stack.Screen name="VitalsActivity" component={VitalsActivityScreen} />
     </Stack.Navigator>
   );
 }
