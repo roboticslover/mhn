@@ -188,6 +188,66 @@ function WeightBars({ color, width: w, height: h }: { color: string; width: numb
 }
 
 /* ─── Swipe Hook for Slider ─── */
+function describeWedge(x: number, y: number, innerRadius: number, outerRadius: number, startAngle: number, endAngle: number) {
+  const polarToCartesian = (centerX: number, centerY: number, radius: number, angleInDegrees: number) => {
+    const angleInRadians = (angleInDegrees) * Math.PI / 180.0;
+    return {
+      x: centerX + (radius * Math.cos(angleInRadians)),
+      y: centerY - (radius * Math.sin(angleInRadians))
+    };
+  };
+
+  const startOuter = polarToCartesian(x, y, outerRadius, startAngle);
+  const endOuter = polarToCartesian(x, y, outerRadius, endAngle);
+  const startInner = polarToCartesian(x, y, innerRadius, startAngle);
+  const endInner = polarToCartesian(x, y, innerRadius, endAngle);
+
+  const d = [
+    "M", startOuter.x, startOuter.y,
+    "A", outerRadius, outerRadius, 0, 0, 1, endOuter.x, endOuter.y,
+    "L", endInner.x, endInner.y,
+    "A", innerRadius, innerRadius, 0, 0, 0, startInner.x, startInner.y,
+    "Z"
+  ].join(" ");
+
+  return d;
+}
+
+function ActiveEnergyGauge({ progress = 7/11, isDark }: { progress?: number; isDark: boolean }) {
+  const numWedges = 11;
+  const activeWedges = Math.round(progress * numWedges);
+  const outerRadius = 50;
+  const innerRadius = 25;
+  const center = { x: 55, y: 55 };
+  const gapAngle = 4;
+  const totalAngle = 180;
+  const wedgeAngle = (totalAngle - (numWedges - 1) * gapAngle) / numWedges;
+  
+  const wedges = [];
+  let currentAngle = 180;
+  
+  for (let i = 0; i < numWedges; i++) {
+    const startAngle = currentAngle;
+    const endAngle = currentAngle - wedgeAngle;
+    
+    wedges.push(
+      <Path
+        key={i}
+        d={describeWedge(center.x, center.y, innerRadius, outerRadius, startAngle, endAngle)}
+        fill={i < activeWedges ? '#FBD607' : (isDark ? '#2A2A2A' : '#EAEAEA')}
+      />
+    );
+    
+    currentAngle = endAngle - gapAngle;
+  }
+  
+  return (
+    <Svg width="110" height="60" viewBox="0 0 110 60">
+      {wedges}
+    </Svg>
+  );
+}
+
 function useSwipe(count: number, indexRef: React.MutableRefObject<number>, setCurrent: (v: number) => void) {
   const panResponder = useRef(
     PanResponder.create({
@@ -221,6 +281,10 @@ export default function VitalsMainScreen({ navigation }: { navigation: any }) {
   const waterGoal = 2500;
   const waterProgress = Math.min(waterMl / waterGoal, 1);
   const waterPercent = Math.round(waterProgress * 100);
+
+  const [activeEnergy, setActiveEnergy] = useState(1164);
+  const energyGoal = 2000;
+  const energyProgress = Math.min(activeEnergy / energyGoal, 1);
 
   const coffeeIndexRef = useRef(0);
   const medIndexRef = useRef(0);
@@ -442,7 +506,7 @@ export default function VitalsMainScreen({ navigation }: { navigation: any }) {
         <View style={[styles.gridContainer, { paddingHorizontal: 24 }]}>
 
           {/* ── Floors Climbed ── */}
-          <View style={[styles.vitalsCard, { backgroundColor: cardBg, borderColor: cardBorder, width: CARD_SIZE, height: CARD_SIZE }]}>
+          <View style={[styles.vitalsCard, { backgroundColor: cardBg, borderColor: cardBorder, width: CARD_SIZE, height: CARD_SIZE, position: 'relative' }]}>
             <View style={[styles.vitalsIconWrap, { backgroundColor: 'rgba(243,39,136,0.16)' }]}>
               <Ionicons name="trending-up" size={18} color="#F32788" />
             </View>
@@ -450,6 +514,11 @@ export default function VitalsMainScreen({ navigation }: { navigation: any }) {
             <View style={{ flexDirection: 'row', alignItems: 'baseline', marginTop: 4 }}>
               <Text style={[styles.vitalsValueLg, { color: textPrimary }]}>12</Text>
               <Text style={{ color: '#F32788', fontSize: 14, fontFamily: 'Inter', marginLeft: 2 }}>/15</Text>
+            </View>
+            <View style={{ position: 'absolute', bottom: 18, right: 18 }}>
+              <Svg width="45" height="35" viewBox="0 0 45 35">
+                <Path d="M 0 33 L 11 33 L 11 22 L 22 22 L 22 11 L 33 11 L 33 0 L 44 0" stroke="#F32788" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              </Svg>
             </View>
           </View>
 
@@ -502,14 +571,36 @@ export default function VitalsMainScreen({ navigation }: { navigation: any }) {
           </View>
 
           {/* ── Active Energy ── */}
-          <View style={[styles.vitalsCard, { backgroundColor: cardBg, borderColor: cardBorder, width: CARD_SIZE, height: CARD_SIZE }]}>
-            <View style={[styles.vitalsIconWrap, { backgroundColor: 'rgba(251,214,7,0.16)' }]}>
-              <Ionicons name="flash" size={18} color="#FBD607" />
+          <View style={[styles.vitalsCard, { backgroundColor: cardBg, borderColor: cardBorder, width: CARD_SIZE, height: CARD_SIZE, padding: 0 }]}>
+            <View style={{ padding: 19, flex: 1, zIndex: 2 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+                <View style={[styles.vitalsIconWrap, { backgroundColor: 'rgba(251,214,7,0.16)' }]}>
+                  <Ionicons name="flame" size={18} color="#FBD607" />
+                </View>
+                <View style={{ flexDirection: 'row', gap: 6 }}>
+                  <TouchableOpacity 
+                    style={[styles.addBtn, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)' }]}
+                    onPress={() => setActiveEnergy(prev => Math.max(0, prev - 50))}
+                  >
+                    <Ionicons name="remove" size={16} color={textPrimary} />
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    style={[styles.addBtn, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)' }]}
+                    onPress={() => setActiveEnergy(prev => prev + 50)}
+                  >
+                    <Ionicons name="add" size={16} color={textPrimary} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={{ flex: 1, justifyContent: 'flex-start', marginTop: 16 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                  <Text style={[styles.vitalsValueLg, { color: textPrimary, fontSize: 30 }]} numberOfLines={1} adjustsFontSizeToFit>{activeEnergy}</Text>
+                  <Text style={{ color: '#FBD607', fontSize: 12, fontFamily: 'Inter', marginLeft: 4, fontWeight: '600' }}>Kcal</Text>
+                </View>
+              </View>
             </View>
-            <Text style={[styles.vitalsLabel, { color: textSecondary }]}>Active Energy</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'baseline', marginTop: 4 }}>
-              <Text style={[styles.vitalsValueLg, { color: textPrimary }]}>1164</Text>
-              <Text style={{ color: '#FBD607', fontSize: 12, fontFamily: 'Inter', marginLeft: 4 }}>Kcal</Text>
+            <View style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 1 }}>
+               <ActiveEnergyGauge isDark={isDark} progress={energyProgress} />
             </View>
           </View>
 
